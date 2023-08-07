@@ -1,0 +1,51 @@
+{
+  "name": "@hashflow/contracts-evm",
+  "version": "2.0.0",
+  "description": "EVM Smart Contracts for Solidity",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.ts",
+  "scripts": {
+    "test": "yarn hardhat test",
+    "build:contracts": "hardhat compile",
+    "build:abi": "ts-node scripts/extractABI.ts",
+    "build:tsc": "tsc",
+    "build": "yarn build:contracts && yarn build:abi && yarn build:tsc"
+  },
+  "files": [
+    "contracts",
+    "types",
+    "dist/src",
+    "dist/types",
+    "abi"
+  ],
+  "keywords": [
+    "ethereum",
+    "defi"
+  ],
+  "author": "Victor Ionescu <victor@hashflow.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-chai-matchers": "^2.0.0",
+    "@nomicfoundation/hardhat-ethers": "^3.0.0",
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.0",
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+    "@nomicfoundation/hardhat-verify": "^1.0.0",
+    "@typechain/ethers-v6": "^0.4.0",
+    "@typechain/hardhat": "^8.0.0",
+    "@types/chai": "^4.2.0",
+    "@types/mocha": ">=9.1.0",
+    "@types/node": ">=16.0.0",
+    "chai": "^4.2.0",
+    "hardhat": "^2.17.1",
+    "hardhat-contract-sizer": "^2.10.0",
+    "hardhat-gas-reporter": "^1.0.9",
+    "solidity-coverage": "^0.8.0",
+    "ts-node": ">=8.0.0",
+    "typechain": "^8.1.0",
+    "typescript": ">=4.5.0"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "4.9.2",
+    "ethers": "^6.4.0"
+  }
+}

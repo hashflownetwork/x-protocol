@@ -1,0 +1,8 @@
+node_modules
+.env
+yarn-error.log
+dist
+
+# Hardhat files
+cache
+artifacts

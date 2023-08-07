@@ -1,0 +1,26 @@
+[
+    {
+        "inputs": [
+            {
+                "internalType": "uint16",
+                "name": "dstChainId",
+                "type": "uint16"
+            },
+            {
+                "internalType": "bytes",
+                "name": "path",
+                "type": "bytes"
+            }
+        ],
+        "name": "outboundNonce",
+        "outputs": [
+            {
+                "internalType": "uint64",
+                "name": "",
+                "type": "uint64"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    }
+]
