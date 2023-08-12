@@ -1,6 +1,6 @@
 {
   "name": "@hashflow/contracts-evm",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "EVM Smart Contracts for Solidity",
   "main": "dist/src/index.js",
   "types": "dist/src/index.ts",
@@ -16,7 +16,6 @@
     "deployed-contracts",
     "types",
     "dist/src",
-    "dist/types",
     "abi"
   ],
   "keywords": [
@@ -45,10 +44,10 @@
     "solidity-coverage": "^0.8.0",
     "ts-node": ">=8.0.0",
     "typechain": "^8.1.0",
-    "typescript": ">=4.5.0"
+    "typescript": ">=4.5.0",
+    "ethers": "^6.4.0"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "4.9.2",
-    "ethers": "^6.4.0"
+    "@openzeppelin/contracts": "4.9.2"
   }
 }
