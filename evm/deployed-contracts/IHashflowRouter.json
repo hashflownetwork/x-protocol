@@ -1,0 +1,14 @@
+{
+    "goerli": {
+        "address": "0xdE828fdc3F497F16416D1bB645261C7C6a62DAb5",
+        "deploymentTransactionHash": "0x3d9a317ca5f324c097c8aa152cd10e4aed59c0bec02fa093b4aa6c559f089ffa"
+    },
+    "mumbai": {
+        "address": "0xdE828fdc3F497F16416D1bB645261C7C6a62DAb5",
+        "deploymentTransactionHash": "0x70f770aa4d21b3771bb3cc847641853f3c2809b3375222ee286af60c9a2717d8"
+    },
+    "bnb-testnet": {
+        "address": "0xdE828fdc3F497F16416D1bB645261C7C6a62DAb5",
+        "deploymentTransactionHash": "0x5c0d45fce292bffa157d03b7f84613934af9988f6a73f4562e40347b66792535"
+    }
+}

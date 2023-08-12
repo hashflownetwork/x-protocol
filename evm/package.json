@@ -1,6 +1,6 @@
 {
   "name": "@hashflow/contracts-evm",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "EVM Smart Contracts for Solidity",
   "main": "dist/src/index.js",
   "types": "dist/src/index.ts",
@@ -13,6 +13,7 @@
   },
   "files": [
     "contracts",
+    "deployed-contracts",
     "types",
     "dist/src",
     "dist/types",
@@ -25,6 +26,7 @@
   "author": "Victor Ionescu <victor@hashflow.com>",
   "license": "MIT",
   "devDependencies": {
+    "@fireblocks/fireblocks-web3-provider": "^1.2.3",
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.0",
     "@nomicfoundation/hardhat-ethers": "^3.0.0",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.0",
@@ -36,6 +38,7 @@
     "@types/mocha": ">=9.1.0",
     "@types/node": ">=16.0.0",
     "chai": "^4.2.0",
+    "dotenv": "^16.3.1",
     "hardhat": "^2.17.1",
     "hardhat-contract-sizer": "^2.10.0",
     "hardhat-gas-reporter": "^1.0.9",
