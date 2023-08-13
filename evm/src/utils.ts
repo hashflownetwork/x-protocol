@@ -41,6 +41,8 @@ export type ChainId = MainnetChainId | TestnetChainId;
 
 export type ChainIdExtended = ChainId | 1337 | 31337 | 1397 | 1338;
 
+export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
+
 interface NetworkConfigBase {
   nativeTokenSymbol: string;
   nativeTokenName: string;
@@ -309,3 +311,15 @@ export const HARDHAT_NETWORK_CONFIG_BY_NAME: Record<
   'bnb-testnet': BNB_TESTNET,
   'zksync-testnet': ZKSYNC_TESTNET,
 };
+
+export function padAddressTo32Bytes(address: string | Buffer): Buffer {
+  const strAddress = address.toString();
+  let paddedAddress =
+    strAddress.indexOf('0x') === -1 ? strAddress : strAddress.slice(2);
+
+  while (paddedAddress.length < 64) {
+    paddedAddress = `00${paddedAddress}`;
+  }
+
+  return Buffer.from(paddedAddress, 'hex');
+}

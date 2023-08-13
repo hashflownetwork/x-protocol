@@ -10,5 +10,13 @@
     "bnb-testnet": {
         "address": "0x55084eE0fEf03f14a305cd24286359A35D735151",
         "deploymentTransactionHash": "0x1e71855047176095c6bb298f71089788f19de3e32bdb6a0ef13afe74acbafe8d"
+    },
+    "wormhole1": {
+        "address": "0x2f3efA6bbDC5fAf4dC1a600765c7B7829e47bE10",
+        "deploymentTransactionHash": "0x7aa7d8a104aef95b070b4f3c68ef137bb0b129eef2ab49973f8f8a3748c08e36"
+    },
+    "wormhole2": {
+        "address": "0x2f3efA6bbDC5fAf4dC1a600765c7B7829e47bE10",
+        "deploymentTransactionHash": "0x85f5ac2939dfe49617114b087f049f84a22ca42d4c825661e11981cde0c6ee48"
     }
 }
