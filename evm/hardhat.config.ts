@@ -11,7 +11,10 @@ import {
 } from './src/utils';
 import { NetworkUserConfig } from 'hardhat/types';
 
+import './tasks/core';
 import './tasks/deploy';
+import './tasks/integration-tests/wormhole-setup';
+import './tasks/integration-tests/wormhole-trade';
 
 dotenv.config();
 
@@ -46,6 +49,29 @@ const networks: Partial<
     };
   })
   .reduce((acc, el) => ({ ...acc, ...el }), {});
+
+// These networks are used to test Wormhole x-calls locally.
+// They are run in two different Ganache EVM processes
+
+networks['wormhole1'] = {
+  chainId: 1,
+  url: 'http://localhost:8545',
+  accounts: [
+    '0x4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b1d', // Main address
+    '0x6cbed15c793ce57650b9877cf6fa156fbef513c4e6134f022a85b1ffdd59b2a1', // Signer
+    '0x6370fd033278c143179d81c5526140625662b8daa446c22ee2d73db3707e620c', // Trader
+  ],
+};
+
+networks['wormhole2'] = {
+  chainId: 1397,
+  url: 'http://localhost:8546',
+  accounts: [
+    '0x4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b1d', // Main address
+    '0x6cbed15c793ce57650b9877cf6fa156fbef513c4e6134f022a85b1ffdd59b2a1', // Signer
+    '0x6370fd033278c143179d81c5526140625662b8daa446c22ee2d73db3707e620c', // Trader
+  ],
+};
 
 const blockscanApiKeys: Record<string, string> = {};
 

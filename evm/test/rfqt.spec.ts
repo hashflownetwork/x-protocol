@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { ethers } from 'hardhat';
+import hre from 'hardhat';
 import { hashMessage, mineBlock, sendETH } from './utils';
 import {
   ZERO_ADDRESS,
@@ -49,7 +49,7 @@ describe('RFQ-T', () => {
         .map((evt) => evt.args.pool);
       privPoolAddress = pools[0];
 
-      privPoolContract = await ethers.getContractAt(
+      privPoolContract = await hre.ethers.getContractAt(
         'HashflowPool',
         privPoolAddress
       );
@@ -89,7 +89,7 @@ describe('RFQ-T', () => {
     it('should trade ETH for ERC-20 token', async () => {
       const { router, signers, trader, effectiveTrader, tt1 } = contracts;
       const traderRouter = router.connect(signers[3]);
-      const latestBlock = await ethers.provider.getBlock('latest');
+      const latestBlock = await hre.ethers.provider.getBlock('latest');
       if (!latestBlock) {
         throw new Error(`Could not get latest block`);
       }
@@ -173,7 +173,7 @@ describe('RFQ-T', () => {
 
     it('should fail if user has insufficient allowance or balance', async () => {
       const { router, signers, trader, effectiveTrader, tt1 } = contracts;
-      const latestBlock = await ethers.provider.getBlock('latest');
+      const latestBlock = await hre.ethers.provider.getBlock('latest');
       if (!latestBlock) {
         throw new Error(`Could not get latest block`);
       }
@@ -215,7 +215,7 @@ describe('RFQ-T', () => {
 
     it('should trade ERC-20 token for ETH', async () => {
       const { router, signers, trader, effectiveTrader, tt1 } = contracts;
-      const latestBlock = await ethers.provider.getBlock('latest');
+      const latestBlock = await hre.ethers.provider.getBlock('latest');
       if (!latestBlock) {
         throw new Error(`Could not get latest block`);
       }
@@ -261,7 +261,7 @@ describe('RFQ-T', () => {
 
     it('should fail if the quote expires', async () => {
       const { router, trader, effectiveTrader, tt1, signers } = contracts;
-      const latestBlock = await ethers.provider.getBlock('latest');
+      const latestBlock = await hre.ethers.provider.getBlock('latest');
       if (!latestBlock) {
         throw new Error(`Could not get latest block`);
       }
@@ -288,7 +288,7 @@ describe('RFQ-T', () => {
         signature: await signQuote(quoteData, signers[2]),
       };
 
-      mineBlock(now + 20);
+      mineBlock(hre, now + 20);
       await expect(router.tradeRFQT(quote)).to.be.revertedWith(
         'HashflowRouter::_validateRFQTQuote Quote has expired.'
       );
@@ -296,7 +296,7 @@ describe('RFQ-T', () => {
 
     it('should trade ERC-20 for ERC-20 token', async () => {
       const { router, signers, trader, effectiveTrader, tt1, tt2 } = contracts;
-      const latestBlock = await ethers.provider.getBlock('latest');
+      const latestBlock = await hre.ethers.provider.getBlock('latest');
       if (!latestBlock) {
         throw new Error(`Could not get latest block`);
       }
@@ -338,7 +338,7 @@ describe('RFQ-T', () => {
 
     it('should fail if effective base token exceeds max', async () => {
       const { router, signers, trader, effectiveTrader, tt1, tt2 } = contracts;
-      const latestBlock = await ethers.provider.getBlock('latest');
+      const latestBlock = await hre.ethers.provider.getBlock('latest');
       if (!latestBlock) {
         throw new Error(`Could not get latest block`);
       }
@@ -375,7 +375,7 @@ describe('RFQ-T', () => {
 
     it('should trade if effective base token less than max', async () => {
       const { router, signers, trader, effectiveTrader, tt1, tt2 } = contracts;
-      const latestBlock = await ethers.provider.getBlock('latest');
+      const latestBlock = await hre.ethers.provider.getBlock('latest');
       if (!latestBlock) {
         throw new Error(`Could not get latest block`);
       }

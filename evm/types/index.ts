@@ -70,6 +70,8 @@ export type { HashflowPool } from "./contracts/pools/HashflowPool.sol/HashflowPo
 export { HashflowPool__factory } from "./factories/contracts/pools/HashflowPool.sol/HashflowPool__factory";
 export type { IERC20AllowanceExtension } from "./contracts/pools/HashflowPool.sol/IERC20AllowanceExtension";
 export { IERC20AllowanceExtension__factory } from "./factories/contracts/pools/HashflowPool.sol/IERC20AllowanceExtension__factory";
+export type { DummyXChainApp } from "./contracts/testing/DummyXChainApp";
+export { DummyXChainApp__factory } from "./factories/contracts/testing/DummyXChainApp__factory";
 export type { LZEndpointMock } from "./contracts/testing/LZEndpointMock";
 export { LZEndpointMock__factory } from "./factories/contracts/testing/LZEndpointMock__factory";
 export type { TestToken1 } from "./contracts/testing/TestToken1";

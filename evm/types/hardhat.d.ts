@@ -142,6 +142,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IERC20AllowanceExtension__factory>;
     getContractFactory(
+      name: "DummyXChainApp",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.DummyXChainApp__factory>;
+    getContractFactory(
       name: "LZEndpointMock",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.LZEndpointMock__factory>;
@@ -331,6 +335,11 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.IERC20AllowanceExtension>;
     getContractAt(
+      name: "DummyXChainApp",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.DummyXChainApp>;
+    getContractAt(
       name: "LZEndpointMock",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -495,6 +504,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IERC20AllowanceExtension>;
     deployContract(
+      name: "DummyXChainApp",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.DummyXChainApp>;
+    deployContract(
       name: "LZEndpointMock",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.LZEndpointMock>;
@@ -683,6 +696,11 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IERC20AllowanceExtension>;
+    deployContract(
+      name: "DummyXChainApp",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.DummyXChainApp>;
     deployContract(
       name: "LZEndpointMock",
       args: any[],

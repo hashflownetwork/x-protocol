@@ -3,6 +3,9 @@ import fs from 'fs';
 import path from 'path';
 import {
   HARDHAT_NETWORK_CONFIG_BY_NAME,
+  MAIN_NETWORK_NAMES,
+  TEST_NETWORK_NAMES,
+  WORMHOLE_NETWORK_NAMES,
   NetworkConfigExtended,
   NetworkNameExtended,
 } from '../src/utils';
@@ -14,7 +17,8 @@ export type ContractName =
   | 'IHashflowFactory'
   | 'IHashflowRouter'
   | 'IHashflowWormholeMessenger'
-  | 'IHashflowLayerZeroMessenger';
+  | 'IHashflowLayerZeroMessenger'
+  | 'IHashflowPool';
 
 export type SingleContractMetadata = {
   address: string;
@@ -24,6 +28,18 @@ export type SingleContractMetadata = {
 type ContractMetadata = Partial<
   Record<NetworkNameExtended, SingleContractMetadata>
 >;
+
+export function isHardhatMainnet(networkName: NetworkNameExtended): boolean {
+  return (MAIN_NETWORK_NAMES as unknown as string[]).includes(networkName);
+}
+
+export function isHardhatTestnet(networkName: NetworkNameExtended): boolean {
+  return (TEST_NETWORK_NAMES as unknown as string[]).includes(networkName);
+}
+
+export function isWormholeTestnet(networkName: NetworkNameExtended): boolean {
+  return (WORMHOLE_NETWORK_NAMES as unknown as string[]).includes(networkName);
+}
 
 export function getDeployedContractMetadata(
   contractName: ContractName,

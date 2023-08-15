@@ -13,4 +13,5 @@ export {
   MUMBAI,
   GOERLI,
   ZKSYNC_TESTNET,
+  ZERO_ADDRESS,
 } from './utils';

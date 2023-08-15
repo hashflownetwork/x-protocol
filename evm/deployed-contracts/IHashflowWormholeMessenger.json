@@ -1,0 +1,10 @@
+{
+    "wormhole1": {
+        "address": "0x1aBE68277AE236083947f2551FEe8b885efCA8f5",
+        "deploymentTransactionHash": "0x3517a1012a06e80cb76e1b84ff3e0cb81fdafa62eb17162825caf41af3ac79e9"
+    },
+    "wormhole2": {
+        "address": "0x1aBE68277AE236083947f2551FEe8b885efCA8f5",
+        "deploymentTransactionHash": "0x63ef4f75222e2b3a7296f239cde5a6ebf9d24d2a0611937e0cc9d4a4768a4283"
+    }
+}

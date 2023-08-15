@@ -1,5 +1,3 @@
-import { ethers } from 'hardhat';
-
 import {
   BigNumberish,
   TransactionResponse,
@@ -11,6 +9,7 @@ import {
   HardhatEthersSigner,
   SignerWithAddress,
 } from '@nomicfoundation/hardhat-ethers/signers';
+import { HardhatRuntimeEnvironment } from 'hardhat/types';
 
 export async function sendETH(
   signer: SignerWithAddress,
@@ -400,8 +399,11 @@ export function expandTo18Decimals(n: number): bigint {
   return BigInt(n) * BigInt(10) ** BigInt(18);
 }
 
-export async function mineBlock(timestamp: number): Promise<void> {
-  return ethers.provider.send('evm_mine', [timestamp]);
+export async function mineBlock(
+  hre: HardhatRuntimeEnvironment,
+  timestamp: number
+): Promise<void> {
+  return hre.ethers.provider.send('evm_mine', [timestamp]);
 }
 
 export function hashMessage(message: string): string {
