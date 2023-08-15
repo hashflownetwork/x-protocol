@@ -1,6 +1,6 @@
 {
   "name": "@hashflow/contracts-evm",
-  "version": "2.0.3",
+  "version": "2.0.6",
   "description": "EVM Smart Contracts for Solidity",
   "main": "dist/src/index.js",
   "types": "dist/src/index.ts",
