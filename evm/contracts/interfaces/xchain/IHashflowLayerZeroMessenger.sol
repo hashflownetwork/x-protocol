@@ -1,7 +1,7 @@
 /**
  * SPDX-License-Identifier: UNLICENSED
  */
-pragma solidity 0.8.18;
+pragma solidity >=0.8.0;
 
 import '../external/ILayerZeroReceiver.sol';
 import '../external/ILayerZeroUserApplicationConfig.sol';

@@ -66,7 +66,7 @@ contract HashflowRouter is
     /// @dev To be used for cross-chain RFQ-m trades, verified by the router.
     bytes32 internal constant XCHAIN_QUOTE_TYPEHASH =
         keccak256(
-            'XChainQuote(bytes32 txid,uint256 srcChainId,uint256 dstChainId,address trader,address srcPool,address srcExternalAccount,bytes32 dstPool,bytes32 dstExternalAccount,address baseToken,bytes32 quoteToken,uint256 baseTokenAmount,uint256 quoteTokenAmount,uint256 quoteExpiry)'
+            'XChainQuote(bytes32 txid,uint256 srcChainId,uint256 dstChainId,bytes32 dstTrader,address srcPool,address srcExternalAccount,bytes32 dstPool,bytes32 dstExternalAccount,address baseToken,bytes32 quoteToken,uint256 baseTokenAmount,uint256 quoteTokenAmount,uint256 quoteExpiry)'
         );
 
     mapping(bytes32 => bool) private _usedTxids;
@@ -916,7 +916,7 @@ contract HashflowRouter is
                         quote.txid,
                         uint256(quote.srcChainId),
                         uint256(quote.dstChainId),
-                        quote.trader,
+                        quote.dstTrader,
                         quote.srcPool,
                         quote.srcExternalAccount,
                         quote.dstPool,
