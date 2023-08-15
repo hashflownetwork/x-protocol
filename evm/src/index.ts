@@ -1,6 +1,7 @@
 export {
   NetworkName,
   ChainId,
+  NetworkConfig,
   MAIN_NETWORK_NAMES,
   TEST_NETWORK_NAMES,
   ETHEREUM,
