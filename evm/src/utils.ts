@@ -293,13 +293,7 @@ export const WORMHOLE2 = {
   zksync: false,
 } as const;
 
-export const HARDHAT_NETWORK_CONFIG_BY_NAME: Record<
-  NetworkNameExtended,
-  NetworkConfigExtended
-> = {
-  localhost: LOCALHOST,
-  wormhole1: WORMHOLE1,
-  wormhole2: WORMHOLE2,
+export const NETWORK_CONFIG_BY_NAME: Record<NetworkName, NetworkConfig> = {
   ethereum: ETHEREUM,
   arbitrum: ARBITRUM,
   optimism: OPTIMISM,
@@ -310,7 +304,17 @@ export const HARDHAT_NETWORK_CONFIG_BY_NAME: Record<
   mumbai: MUMBAI,
   'bnb-testnet': BNB_TESTNET,
   'zksync-testnet': ZKSYNC_TESTNET,
-};
+} as const;
+
+export const HARDHAT_NETWORK_CONFIG_BY_NAME: Record<
+  NetworkNameExtended,
+  NetworkConfigExtended
+> = {
+  ...NETWORK_CONFIG_BY_NAME,
+  localhost: LOCALHOST,
+  wormhole1: WORMHOLE1,
+  wormhole2: WORMHOLE2,
+} as const;
 
 export function padAddressTo32Bytes(address: string | Buffer): Buffer {
   const strAddress = address.toString();

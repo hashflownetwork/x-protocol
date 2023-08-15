@@ -14,4 +14,5 @@ export {
   GOERLI,
   ZKSYNC_TESTNET,
   ZERO_ADDRESS,
+  NETWORK_CONFIG_BY_NAME,
 } from './utils';
