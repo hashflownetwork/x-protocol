@@ -1,15 +1,15 @@
 {
     "goerli": {
-        "address": "0x55084eE0fEf03f14a305cd24286359A35D735151",
-        "deploymentTransactionHash": "0x9f5754ff4fb00cd5063531badcfcef6cb11659fa63ab877eb5f9b7860d6104f1"
+        "address": "0x2524923e88Cc8356B35753C270214a2e2d70745F",
+        "deploymentTransactionHash": "0xd3bf482baa6df617e7fa33670e7f84b314997b0cb7a73e291efd0fa89011ab4d"
     },
     "mumbai": {
-        "address": "0x55084eE0fEf03f14a305cd24286359A35D735151",
-        "deploymentTransactionHash": "0x74a8c25d56e22311e67ee7c14e3382253f51c76a59e4e6998ba9418eb011ebc3"
+        "address": "0x7D916a5b5A23A9FB583Cd9B227B0a0b9C01eAA85",
+        "deploymentTransactionHash": "0xfd1fd40b1a849af3a932eb0f4cffbfb8ead28a572bd132e978599cae8922aad4"
     },
     "bnb-testnet": {
-        "address": "0x55084eE0fEf03f14a305cd24286359A35D735151",
-        "deploymentTransactionHash": "0x1e71855047176095c6bb298f71089788f19de3e32bdb6a0ef13afe74acbafe8d"
+        "address": "0x7D916a5b5A23A9FB583Cd9B227B0a0b9C01eAA85",
+        "deploymentTransactionHash": "0x77116ffad3898d9db3970d41416e6c438754a42514b9525f9c24f04eb2667872"
     },
     "wormhole1": {
         "address": "0x2f3efA6bbDC5fAf4dC1a600765c7B7829e47bE10",
