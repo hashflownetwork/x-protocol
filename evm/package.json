@@ -1,9 +1,9 @@
 {
   "name": "@hashflow/contracts-evm",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "description": "EVM Smart Contracts for Solidity",
   "main": "dist/src/index.js",
-  "types": "dist/src/index.ts",
+  "types": "dist/src/index.d.ts",
   "scripts": {
     "test": "yarn hardhat test",
     "build:contracts": "hardhat compile",
