@@ -28,8 +28,8 @@ export interface RenovaAvatarInterface extends Interface {
     nameOrSignature:
       | "approve"
       | "balanceOf"
+      | "characterIds"
       | "factions"
-      | "genders"
       | "getApproved"
       | "initialize"
       | "isApprovedForAll"
@@ -37,7 +37,6 @@ export interface RenovaAvatarInterface extends Interface {
       | "name"
       | "owner"
       | "ownerOf"
-      | "races"
       | "refreshAllMetadata"
       | "refreshMetadata"
       | "renounceOwnership"
@@ -51,6 +50,7 @@ export interface RenovaAvatarInterface extends Interface {
       | "tokenURI"
       | "transferFrom"
       | "transferOwnership"
+      | "updateMaxCharacterId"
       | "updateMinStakePower"
       | "updateStakingVault"
       | "updateWormhole"
@@ -71,6 +71,7 @@ export interface RenovaAvatarInterface extends Interface {
       | "OwnershipTransferred"
       | "Transfer"
       | "UpdateCustomURI"
+      | "UpdateMaxCharacterId"
       | "UpdateMinStakePower"
       | "UpdateStakingVault"
       | "UpdateWormhole"
@@ -91,11 +92,11 @@ export interface RenovaAvatarInterface extends Interface {
     values: [AddressLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "factions",
+    functionFragment: "characterIds",
     values: [AddressLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "genders",
+    functionFragment: "factions",
     values: [AddressLike]
   ): string;
   encodeFunctionData(
@@ -112,7 +113,7 @@ export interface RenovaAvatarInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "mint",
-    values: [BigNumberish, BigNumberish, BigNumberish]
+    values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
@@ -120,7 +121,6 @@ export interface RenovaAvatarInterface extends Interface {
     functionFragment: "ownerOf",
     values: [BigNumberish]
   ): string;
-  encodeFunctionData(functionFragment: "races", values: [AddressLike]): string;
   encodeFunctionData(
     functionFragment: "refreshAllMetadata",
     values?: undefined
@@ -171,6 +171,10 @@ export interface RenovaAvatarInterface extends Interface {
     values: [AddressLike]
   ): string;
   encodeFunctionData(
+    functionFragment: "updateMaxCharacterId",
+    values: [BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "updateMinStakePower",
     values: [BigNumberish]
   ): string;
@@ -201,8 +205,11 @@ export interface RenovaAvatarInterface extends Interface {
 
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "characterIds",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "factions", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "genders", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getApproved",
     data: BytesLike
@@ -216,7 +223,6 @@ export interface RenovaAvatarInterface extends Interface {
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "races", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "refreshAllMetadata",
     data: BytesLike
@@ -258,6 +264,10 @@ export interface RenovaAvatarInterface extends Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "transferOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "updateMaxCharacterId",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -373,21 +383,21 @@ export namespace MetadataUpdateEvent {
 export namespace MintEvent {
   export type InputTuple = [
     player: AddressLike,
+    tokenId: BigNumberish,
     faction: BigNumberish,
-    race: BigNumberish,
-    gender: BigNumberish
+    characterId: BigNumberish
   ];
   export type OutputTuple = [
     player: string,
+    tokenId: bigint,
     faction: bigint,
-    race: bigint,
-    gender: bigint
+    characterId: bigint
   ];
   export interface OutputObject {
     player: string;
+    tokenId: bigint;
     faction: bigint;
-    race: bigint;
-    gender: bigint;
+    characterId: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -431,6 +441,22 @@ export namespace UpdateCustomURIEvent {
   export type OutputTuple = [uri: string];
   export interface OutputObject {
     uri: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace UpdateMaxCharacterIdEvent {
+  export type InputTuple = [
+    faction: BigNumberish,
+    maxCharacterId: BigNumberish
+  ];
+  export type OutputTuple = [faction: bigint, maxCharacterId: bigint];
+  export interface OutputObject {
+    faction: bigint;
+    maxCharacterId: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -568,8 +594,7 @@ export namespace XChainMintOutEvent {
   export type InputTuple = [
     player: AddressLike,
     faction: BigNumberish,
-    race: BigNumberish,
-    gender: BigNumberish,
+    characterId: BigNumberish,
     dstWormholeChainId: BigNumberish,
     sequence: BigNumberish,
     relayerFee: BigNumberish
@@ -577,8 +602,7 @@ export namespace XChainMintOutEvent {
   export type OutputTuple = [
     player: string,
     faction: bigint,
-    race: bigint,
-    gender: bigint,
+    characterId: bigint,
     dstWormholeChainId: bigint,
     sequence: bigint,
     relayerFee: bigint
@@ -586,8 +610,7 @@ export namespace XChainMintOutEvent {
   export interface OutputObject {
     player: string;
     faction: bigint;
-    race: bigint;
-    gender: bigint;
+    characterId: bigint;
     dstWormholeChainId: bigint;
     sequence: bigint;
     relayerFee: bigint;
@@ -649,9 +672,9 @@ export interface RenovaAvatar extends BaseContract {
 
   balanceOf: TypedContractMethod<[owner: AddressLike], [bigint], "view">;
 
-  factions: TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
+  characterIds: TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
 
-  genders: TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
+  factions: TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
 
   getApproved: TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
 
@@ -674,7 +697,7 @@ export interface RenovaAvatar extends BaseContract {
   >;
 
   mint: TypedContractMethod<
-    [faction: BigNumberish, race: BigNumberish, gender: BigNumberish],
+    [faction: BigNumberish, characterId: BigNumberish],
     [void],
     "nonpayable"
   >;
@@ -684,8 +707,6 @@ export interface RenovaAvatar extends BaseContract {
   owner: TypedContractMethod<[], [string], "view">;
 
   ownerOf: TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
-
-  races: TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
 
   refreshAllMetadata: TypedContractMethod<[], [void], "nonpayable">;
 
@@ -745,6 +766,12 @@ export interface RenovaAvatar extends BaseContract {
     "nonpayable"
   >;
 
+  updateMaxCharacterId: TypedContractMethod<
+    [faction: BigNumberish, maxCharacterId: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
+
   updateMinStakePower: TypedContractMethod<
     [minStakePower: BigNumberish],
     [void],
@@ -798,10 +825,10 @@ export interface RenovaAvatar extends BaseContract {
     nameOrSignature: "balanceOf"
   ): TypedContractMethod<[owner: AddressLike], [bigint], "view">;
   getFunction(
-    nameOrSignature: "factions"
+    nameOrSignature: "characterIds"
   ): TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
   getFunction(
-    nameOrSignature: "genders"
+    nameOrSignature: "factions"
   ): TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
   getFunction(
     nameOrSignature: "getApproved"
@@ -829,7 +856,7 @@ export interface RenovaAvatar extends BaseContract {
   getFunction(
     nameOrSignature: "mint"
   ): TypedContractMethod<
-    [faction: BigNumberish, race: BigNumberish, gender: BigNumberish],
+    [faction: BigNumberish, characterId: BigNumberish],
     [void],
     "nonpayable"
   >;
@@ -842,9 +869,6 @@ export interface RenovaAvatar extends BaseContract {
   getFunction(
     nameOrSignature: "ownerOf"
   ): TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
-  getFunction(
-    nameOrSignature: "races"
-  ): TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
   getFunction(
     nameOrSignature: "refreshAllMetadata"
   ): TypedContractMethod<[], [void], "nonpayable">;
@@ -896,6 +920,13 @@ export interface RenovaAvatar extends BaseContract {
   getFunction(
     nameOrSignature: "transferOwnership"
   ): TypedContractMethod<[newOwner: AddressLike], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "updateMaxCharacterId"
+  ): TypedContractMethod<
+    [faction: BigNumberish, maxCharacterId: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
   getFunction(
     nameOrSignature: "updateMinStakePower"
   ): TypedContractMethod<[minStakePower: BigNumberish], [void], "nonpayable">;
@@ -992,6 +1023,13 @@ export interface RenovaAvatar extends BaseContract {
     UpdateCustomURIEvent.InputTuple,
     UpdateCustomURIEvent.OutputTuple,
     UpdateCustomURIEvent.OutputObject
+  >;
+  getEvent(
+    key: "UpdateMaxCharacterId"
+  ): TypedContractEvent<
+    UpdateMaxCharacterIdEvent.InputTuple,
+    UpdateMaxCharacterIdEvent.OutputTuple,
+    UpdateMaxCharacterIdEvent.OutputObject
   >;
   getEvent(
     key: "UpdateMinStakePower"
@@ -1113,7 +1151,7 @@ export interface RenovaAvatar extends BaseContract {
       MetadataUpdateEvent.OutputObject
     >;
 
-    "Mint(address,uint8,uint8,uint8)": TypedContractEvent<
+    "Mint(address,uint256,uint8,uint256)": TypedContractEvent<
       MintEvent.InputTuple,
       MintEvent.OutputTuple,
       MintEvent.OutputObject
@@ -1155,6 +1193,17 @@ export interface RenovaAvatar extends BaseContract {
       UpdateCustomURIEvent.InputTuple,
       UpdateCustomURIEvent.OutputTuple,
       UpdateCustomURIEvent.OutputObject
+    >;
+
+    "UpdateMaxCharacterId(uint8,uint256)": TypedContractEvent<
+      UpdateMaxCharacterIdEvent.InputTuple,
+      UpdateMaxCharacterIdEvent.OutputTuple,
+      UpdateMaxCharacterIdEvent.OutputObject
+    >;
+    UpdateMaxCharacterId: TypedContractEvent<
+      UpdateMaxCharacterIdEvent.InputTuple,
+      UpdateMaxCharacterIdEvent.OutputTuple,
+      UpdateMaxCharacterIdEvent.OutputObject
     >;
 
     "UpdateMinStakePower(uint256)": TypedContractEvent<
@@ -1245,7 +1294,7 @@ export interface RenovaAvatar extends BaseContract {
       WormholeSendEvent.OutputObject
     >;
 
-    "XChainMintOut(address,uint8,uint8,uint8,uint16,uint256,uint256)": TypedContractEvent<
+    "XChainMintOut(address,uint8,uint256,uint16,uint256,uint256)": TypedContractEvent<
       XChainMintOutEvent.InputTuple,
       XChainMintOutEvent.OutputTuple,
       XChainMintOutEvent.OutputObject

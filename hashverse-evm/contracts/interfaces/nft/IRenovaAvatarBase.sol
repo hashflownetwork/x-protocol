@@ -24,28 +24,16 @@ interface IRenovaAvatarBase is IERC4906Upgradeable {
         SOLUS
     }
 
-    enum RenovaRace {
-        GUARDIAN,
-        EX_GUARDIAN,
-        WARDEN_DROID,
-        HASHBOT
-    }
-
-    enum RenovaGender {
-        MALE,
-        FEMALE
-    }
-
     /// @notice Emitted when an Avatar is minted.
     /// @param player The owner of the Avatar.
+    /// @param tokenId The Token ID minted.
     /// @param faction The faction of the Avatar.
-    /// @param race The race of the Avatar.
-    /// @param gender The gender of the Avatar.
+    /// @param characterId The character ID minted.
     event Mint(
         address indexed player,
+        uint256 tokenId,
         RenovaFaction faction,
-        RenovaRace race,
-        RenovaGender gender
+        uint256 characterId
     );
 
     /// @notice Emitted when the Custom Metadata URI is updated.
@@ -57,15 +45,10 @@ interface IRenovaAvatarBase is IERC4906Upgradeable {
     /// @return The faction.
     function factions(address player) external returns (RenovaFaction);
 
-    /// @notice Returns the race of a player.
+    /// @notice Returns the character ID of a player.
     /// @param player The player.
-    /// @return The race.
-    function races(address player) external returns (RenovaRace);
-
-    /// @notice Returns the gender of a player.
-    /// @param player The player.
-    /// @return The gender.
-    function genders(address player) external returns (RenovaGender);
+    /// @return The character ID.
+    function characterIds(address player) external returns (uint256);
 
     /// @notice Returns the token ID of a player.
     /// @param player The player.

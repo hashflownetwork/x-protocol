@@ -14,6 +14,7 @@ contract RenovaAvatar is IRenovaAvatar, RenovaAvatarBase {
     address private _stakingVault;
     uint256 private _minStakePower;
     uint256 private _numMintedAvatars;
+    mapping(RenovaFaction => uint256) private _maxCharacterId;
 
     /// @dev Reserved for future upgrades.
     uint256[16] private __gap;
@@ -65,11 +66,24 @@ contract RenovaAvatar is IRenovaAvatar, RenovaAvatarBase {
         emit UpdateMinStakePower(_minStakePower);
     }
 
+    function updateMaxCharacterId(
+        RenovaFaction faction,
+        uint256 maxCharacterId
+    ) external override onlyOwner {
+        require(
+            _maxCharacterId[faction] < maxCharacterId,
+            'RenovaAvatar::updateMaxCharacterId Max Character ID should be increasing.'
+        );
+
+        _maxCharacterId[faction] = maxCharacterId;
+
+        emit UpdateMaxCharacterId(faction, maxCharacterId);
+    }
+
     /// @inheritdoc IRenovaAvatar
     function mint(
         RenovaFaction faction,
-        RenovaRace race,
-        RenovaGender gender
+        uint256 characterId
     ) external override {
         uint256 currentStakePower = IStakingVault(_stakingVault).getStakePower(
             _msgSender()
@@ -78,10 +92,14 @@ contract RenovaAvatar is IRenovaAvatar, RenovaAvatarBase {
             currentStakePower >= _minStakePower,
             'RenovaAvatar::mint Insufficient stake.'
         );
+        require(
+            characterId < _maxCharacterId[faction],
+            'RenovaAvatar::mint Character ID not available.'
+        );
 
         _numMintedAvatars++;
 
-        _mintAvatar(_numMintedAvatars, _msgSender(), faction, race, gender);
+        _mintAvatar(_numMintedAvatars, _msgSender(), faction, characterId);
     }
 
     /// @inheritdoc IRenovaAvatar
@@ -108,8 +126,7 @@ contract RenovaAvatar is IRenovaAvatar, RenovaAvatarBase {
             tokenIds[_msgSender()],
             _msgSender(),
             factions[_msgSender()],
-            races[_msgSender()],
-            genders[_msgSender()],
+            characterIds[_msgSender()],
             dstWormholeChainId
         );
 
@@ -118,8 +135,7 @@ contract RenovaAvatar is IRenovaAvatar, RenovaAvatarBase {
         emit XChainMintOut(
             _msgSender(),
             factions[_msgSender()],
-            races[_msgSender()],
-            genders[_msgSender()],
+            characterIds[_msgSender()],
             dstWormholeChainId,
             sequence,
             msg.value - wormholeMessageFee

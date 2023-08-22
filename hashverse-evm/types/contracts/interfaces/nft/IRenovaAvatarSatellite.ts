@@ -28,13 +28,12 @@ export interface IRenovaAvatarSatelliteInterface extends Interface {
     nameOrSignature:
       | "approve"
       | "balanceOf"
+      | "characterIds"
       | "factions"
-      | "genders"
       | "getApproved"
       | "initialize"
       | "isApprovedForAll"
       | "ownerOf"
-      | "races"
       | "refreshAllMetadata"
       | "refreshMetadata"
       | "safeTransferFrom(address,address,uint256)"
@@ -68,11 +67,11 @@ export interface IRenovaAvatarSatelliteInterface extends Interface {
     values: [AddressLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "factions",
+    functionFragment: "characterIds",
     values: [AddressLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "genders",
+    functionFragment: "factions",
     values: [AddressLike]
   ): string;
   encodeFunctionData(
@@ -91,7 +90,6 @@ export interface IRenovaAvatarSatelliteInterface extends Interface {
     functionFragment: "ownerOf",
     values: [BigNumberish]
   ): string;
-  encodeFunctionData(functionFragment: "races", values: [AddressLike]): string;
   encodeFunctionData(
     functionFragment: "refreshAllMetadata",
     values?: undefined
@@ -135,8 +133,11 @@ export interface IRenovaAvatarSatelliteInterface extends Interface {
 
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "characterIds",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "factions", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "genders", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getApproved",
     data: BytesLike
@@ -147,7 +148,6 @@ export interface IRenovaAvatarSatelliteInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "races", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "refreshAllMetadata",
     data: BytesLike
@@ -258,21 +258,21 @@ export namespace MetadataUpdateEvent {
 export namespace MintEvent {
   export type InputTuple = [
     player: AddressLike,
+    tokenId: BigNumberish,
     faction: BigNumberish,
-    race: BigNumberish,
-    gender: BigNumberish
+    characterId: BigNumberish
   ];
   export type OutputTuple = [
     player: string,
+    tokenId: bigint,
     faction: bigint,
-    race: bigint,
-    gender: bigint
+    characterId: bigint
   ];
   export interface OutputObject {
     player: string;
+    tokenId: bigint;
     faction: bigint;
-    race: bigint;
-    gender: bigint;
+    characterId: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -314,22 +314,19 @@ export namespace XChainMintInEvent {
   export type InputTuple = [
     player: AddressLike,
     faction: BigNumberish,
-    race: BigNumberish,
-    gender: BigNumberish,
+    characterId: BigNumberish,
     srcWormholeChainId: BigNumberish
   ];
   export type OutputTuple = [
     player: string,
     faction: bigint,
-    race: bigint,
-    gender: bigint,
+    characterId: bigint,
     srcWormholeChainId: bigint
   ];
   export interface OutputObject {
     player: string;
     faction: bigint;
-    race: bigint;
-    gender: bigint;
+    characterId: bigint;
     srcWormholeChainId: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
@@ -389,9 +386,13 @@ export interface IRenovaAvatarSatellite extends BaseContract {
 
   balanceOf: TypedContractMethod<[owner: AddressLike], [bigint], "view">;
 
-  factions: TypedContractMethod<[player: AddressLike], [bigint], "nonpayable">;
+  characterIds: TypedContractMethod<
+    [player: AddressLike],
+    [bigint],
+    "nonpayable"
+  >;
 
-  genders: TypedContractMethod<[player: AddressLike], [bigint], "nonpayable">;
+  factions: TypedContractMethod<[player: AddressLike], [bigint], "nonpayable">;
 
   getApproved: TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
 
@@ -412,8 +413,6 @@ export interface IRenovaAvatarSatellite extends BaseContract {
   >;
 
   ownerOf: TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
-
-  races: TypedContractMethod<[player: AddressLike], [bigint], "nonpayable">;
 
   refreshAllMetadata: TypedContractMethod<[], [void], "nonpayable">;
 
@@ -487,10 +486,10 @@ export interface IRenovaAvatarSatellite extends BaseContract {
     nameOrSignature: "balanceOf"
   ): TypedContractMethod<[owner: AddressLike], [bigint], "view">;
   getFunction(
-    nameOrSignature: "factions"
+    nameOrSignature: "characterIds"
   ): TypedContractMethod<[player: AddressLike], [bigint], "nonpayable">;
   getFunction(
-    nameOrSignature: "genders"
+    nameOrSignature: "factions"
   ): TypedContractMethod<[player: AddressLike], [bigint], "nonpayable">;
   getFunction(
     nameOrSignature: "getApproved"
@@ -516,9 +515,6 @@ export interface IRenovaAvatarSatellite extends BaseContract {
   getFunction(
     nameOrSignature: "ownerOf"
   ): TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
-  getFunction(
-    nameOrSignature: "races"
-  ): TypedContractMethod<[player: AddressLike], [bigint], "nonpayable">;
   getFunction(
     nameOrSignature: "refreshAllMetadata"
   ): TypedContractMethod<[], [void], "nonpayable">;
@@ -673,7 +669,7 @@ export interface IRenovaAvatarSatellite extends BaseContract {
       MetadataUpdateEvent.OutputObject
     >;
 
-    "Mint(address,uint8,uint8,uint8)": TypedContractEvent<
+    "Mint(address,uint256,uint8,uint256)": TypedContractEvent<
       MintEvent.InputTuple,
       MintEvent.OutputTuple,
       MintEvent.OutputObject
@@ -706,7 +702,7 @@ export interface IRenovaAvatarSatellite extends BaseContract {
       UpdateCustomURIEvent.OutputObject
     >;
 
-    "XChainMintIn(address,uint8,uint8,uint8,uint16)": TypedContractEvent<
+    "XChainMintIn(address,uint8,uint256,uint16)": TypedContractEvent<
       XChainMintInEvent.InputTuple,
       XChainMintInEvent.OutputTuple,
       XChainMintInEvent.OutputObject

@@ -126,6 +126,9 @@ describe('Renova', () => {
       await mockHashflowRouter.getAddress(),
       await questOwner.getAddress()
     );
+
+    await renovaAvatar.updateMaxCharacterId(0, 2);
+    await renovaAvatar.updateMaxCharacterId(1, 2);
   });
 
   describe('Avatar', () => {
@@ -140,15 +143,15 @@ describe('Renova', () => {
     });
 
     it('should mint avatar', async () => {
-      await expect(
-        renovaAvatar.connect(playerA).mint(0, 1, 0)
-      ).to.be.revertedWith('RenovaAvatar::mint Insufficient stake.');
+      await expect(renovaAvatar.connect(playerA).mint(0, 1)).to.be.revertedWith(
+        'RenovaAvatar::mint Insufficient stake.'
+      );
       await renovaAvatar.updateMinStakePower(0);
 
-      await renovaAvatar.connect(playerA).mint(0, 1, 0);
-      await renovaAvatar.connect(playerB).mint(0, 0, 0);
-      await renovaAvatar.connect(playerC).mint(1, 0, 0);
-      await renovaAvatar.connect(playerE).mint(1, 1, 0);
+      await renovaAvatar.connect(playerA).mint(0, 1);
+      await renovaAvatar.connect(playerB).mint(0, 0);
+      await renovaAvatar.connect(playerC).mint(1, 0);
+      await renovaAvatar.connect(playerE).mint(1, 1);
 
       expect(await renovaAvatar.balanceOf(await playerA.getAddress())).to.equal(
         1
@@ -173,9 +176,7 @@ describe('Renova', () => {
     });
 
     it('should not double-mint', async () => {
-      await expect(
-        renovaAvatar.connect(playerA).mint(0, 0, 0)
-      ).to.be.revertedWith(
+      await expect(renovaAvatar.connect(playerA).mint(0, 0)).to.be.revertedWith(
         'RenovaAvatarBase::_mintAvatar Cannot mint more than one Avatar.'
       );
     });
@@ -394,7 +395,7 @@ describe('Renova', () => {
         'RenovaQuest::_enter Player has not minted Avatar.'
       );
 
-      await renovaAvatar.connect(playerD).mint(1, 0, 1);
+      await renovaAvatar.connect(playerD).mint(1, 0);
 
       await soloQuest.connect(playerD).enter();
     });

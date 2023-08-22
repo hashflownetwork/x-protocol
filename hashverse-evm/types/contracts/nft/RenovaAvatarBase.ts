@@ -28,14 +28,13 @@ export interface RenovaAvatarBaseInterface extends Interface {
     nameOrSignature:
       | "approve"
       | "balanceOf"
+      | "characterIds"
       | "factions"
-      | "genders"
       | "getApproved"
       | "isApprovedForAll"
       | "name"
       | "owner"
       | "ownerOf"
-      | "races"
       | "refreshAllMetadata"
       | "refreshMetadata"
       | "renounceOwnership"
@@ -83,11 +82,11 @@ export interface RenovaAvatarBaseInterface extends Interface {
     values: [AddressLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "factions",
+    functionFragment: "characterIds",
     values: [AddressLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "genders",
+    functionFragment: "factions",
     values: [AddressLike]
   ): string;
   encodeFunctionData(
@@ -104,7 +103,6 @@ export interface RenovaAvatarBaseInterface extends Interface {
     functionFragment: "ownerOf",
     values: [BigNumberish]
   ): string;
-  encodeFunctionData(functionFragment: "races", values: [AddressLike]): string;
   encodeFunctionData(
     functionFragment: "refreshAllMetadata",
     values?: undefined
@@ -173,8 +171,11 @@ export interface RenovaAvatarBaseInterface extends Interface {
 
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "characterIds",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "factions", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "genders", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getApproved",
     data: BytesLike
@@ -186,7 +187,6 @@ export interface RenovaAvatarBaseInterface extends Interface {
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "races", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "refreshAllMetadata",
     data: BytesLike
@@ -331,21 +331,21 @@ export namespace MetadataUpdateEvent {
 export namespace MintEvent {
   export type InputTuple = [
     player: AddressLike,
+    tokenId: BigNumberish,
     faction: BigNumberish,
-    race: BigNumberish,
-    gender: BigNumberish
+    characterId: BigNumberish
   ];
   export type OutputTuple = [
     player: string,
+    tokenId: bigint,
     faction: bigint,
-    race: bigint,
-    gender: bigint
+    characterId: bigint
   ];
   export interface OutputObject {
     player: string;
+    tokenId: bigint;
     faction: bigint;
-    race: bigint;
-    gender: bigint;
+    characterId: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -545,9 +545,9 @@ export interface RenovaAvatarBase extends BaseContract {
 
   balanceOf: TypedContractMethod<[owner: AddressLike], [bigint], "view">;
 
-  factions: TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
+  characterIds: TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
 
-  genders: TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
+  factions: TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
 
   getApproved: TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
 
@@ -562,8 +562,6 @@ export interface RenovaAvatarBase extends BaseContract {
   owner: TypedContractMethod<[], [string], "view">;
 
   ownerOf: TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
-
-  races: TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
 
   refreshAllMetadata: TypedContractMethod<[], [void], "nonpayable">;
 
@@ -658,10 +656,10 @@ export interface RenovaAvatarBase extends BaseContract {
     nameOrSignature: "balanceOf"
   ): TypedContractMethod<[owner: AddressLike], [bigint], "view">;
   getFunction(
-    nameOrSignature: "factions"
+    nameOrSignature: "characterIds"
   ): TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
   getFunction(
-    nameOrSignature: "genders"
+    nameOrSignature: "factions"
   ): TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
   getFunction(
     nameOrSignature: "getApproved"
@@ -682,9 +680,6 @@ export interface RenovaAvatarBase extends BaseContract {
   getFunction(
     nameOrSignature: "ownerOf"
   ): TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
-  getFunction(
-    nameOrSignature: "races"
-  ): TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
   getFunction(
     nameOrSignature: "refreshAllMetadata"
   ): TypedContractMethod<[], [void], "nonpayable">;
@@ -919,7 +914,7 @@ export interface RenovaAvatarBase extends BaseContract {
       MetadataUpdateEvent.OutputObject
     >;
 
-    "Mint(address,uint8,uint8,uint8)": TypedContractEvent<
+    "Mint(address,uint256,uint8,uint256)": TypedContractEvent<
       MintEvent.InputTuple,
       MintEvent.OutputTuple,
       MintEvent.OutputObject
