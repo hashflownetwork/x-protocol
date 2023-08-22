@@ -35,17 +35,15 @@ interface IRenovaCommandDeck is IRenovaCommandDeckBase {
     /// @param root The Merkle root.
     function uploadItemMerkleRoot(bytes32 rootId, bytes32 root) external;
 
-    /// @notice Mints an item via Merkle root.
+    /// @notice Mints a set of items via Merkle root.
     /// @param tokenOwner The wallet receiving the item.
-    /// @param hashverseItemId The Hashverse Item ID of the minted item.
+    /// @param hashverseItemIds The Hashverse Item IDs of the minted items.
     /// @param rootId The ID of the Merkle root to use.
-    /// @param mintIdx The mint "index" for cases where multiple items are awarded.
     /// @param proof The Merkle proof.
-    function mintItem(
+    function mintItems(
         address tokenOwner,
-        uint256 hashverseItemId,
+        uint256[] calldata hashverseItemIds,
         bytes32 rootId,
-        uint256 mintIdx,
         bytes32[] calldata proof
     ) external;
 

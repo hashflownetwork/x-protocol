@@ -14,8 +14,7 @@ contract RenovaCommandDeck is IRenovaCommandDeck, RenovaCommandDeckBase {
     /// @inheritdoc IRenovaCommandDeck
     mapping(bytes32 => bytes32) public itemMerkleRoots;
 
-    mapping(bytes32 => mapping(address => mapping(uint256 => bool)))
-        internal _mintedItems;
+    mapping(bytes32 => mapping(address => bool)) internal _mintedItems;
 
     /// @dev Reserved for future upgrades.
     uint256[16] private __gap;
@@ -36,36 +35,37 @@ contract RenovaCommandDeck is IRenovaCommandDeck, RenovaCommandDeckBase {
     }
 
     /// @inheritdoc IRenovaCommandDeck
-    function mintItem(
+    function mintItems(
         address tokenOwner,
-        uint256 hashverseItemId,
+        uint256[] calldata hashverseItemIds,
         bytes32 rootId,
-        uint256 mintIdx,
         bytes32[] calldata proof
     ) external override {
         require(
-            !_mintedItems[rootId][tokenOwner][mintIdx],
-            'RenovaCommandDeck::mintItem Item already minted.'
+            !_mintedItems[rootId][tokenOwner],
+            'RenovaCommandDeck::mintItems Already minted.'
         );
 
         bytes32 root = itemMerkleRoots[rootId];
         require(
             root != bytes32(0),
-            'RenovaCommandDeck::mintItem Root not found.'
+            'RenovaCommandDeck::mintItems Root not found.'
         );
 
         bytes32 leaf = keccak256(
-            abi.encodePacked(tokenOwner, mintIdx, hashverseItemId)
+            abi.encodePacked(tokenOwner, hashverseItemIds)
         );
 
         require(
             MerkleProofUpgradeable.verifyCalldata(proof, root, leaf),
-            'RenovaCommandDeck::mintItem Proof invalid.'
+            'RenovaCommandDeck::mintItems Proof invalid.'
         );
 
-        _mintedItems[rootId][tokenOwner][mintIdx] = true;
+        _mintedItems[rootId][tokenOwner] = true;
 
-        _mintItem(tokenOwner, hashverseItemId);
+        for (uint256 i = 0; i < hashverseItemIds.length; i++) {
+            _mintItem(tokenOwner, hashverseItemIds[i]);
+        }
     }
 
     /// @inheritdoc IRenovaCommandDeck

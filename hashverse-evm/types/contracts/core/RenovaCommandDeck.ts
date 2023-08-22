@@ -41,8 +41,8 @@ export interface RenovaCommandDeckInterface extends Interface {
       | "initialize"
       | "itemMerkleRoots"
       | "loadItemsForQuest"
-      | "mintItem"
       | "mintItemAdmin"
+      | "mintItems"
       | "owner"
       | "questDeploymentAddresses"
       | "questIdsByDeploymentAddress"
@@ -98,12 +98,12 @@ export interface RenovaCommandDeckInterface extends Interface {
     values: [AddressLike, BigNumberish[]]
   ): string;
   encodeFunctionData(
-    functionFragment: "mintItem",
-    values: [AddressLike, BigNumberish, BytesLike, BigNumberish, BytesLike[]]
-  ): string;
-  encodeFunctionData(
     functionFragment: "mintItemAdmin",
     values: [AddressLike, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "mintItems",
+    values: [AddressLike, BigNumberish[], BytesLike, BytesLike[]]
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
@@ -168,11 +168,11 @@ export interface RenovaCommandDeckInterface extends Interface {
     functionFragment: "loadItemsForQuest",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "mintItem", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "mintItemAdmin",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "mintItems", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "questDeploymentAddresses",
@@ -394,20 +394,19 @@ export interface RenovaCommandDeck extends BaseContract {
     "nonpayable"
   >;
 
-  mintItem: TypedContractMethod<
-    [
-      tokenOwner: AddressLike,
-      hashverseItemId: BigNumberish,
-      rootId: BytesLike,
-      mintIdx: BigNumberish,
-      proof: BytesLike[]
-    ],
+  mintItemAdmin: TypedContractMethod<
+    [tokenOwner: AddressLike, hashverseItemId: BigNumberish],
     [void],
     "nonpayable"
   >;
 
-  mintItemAdmin: TypedContractMethod<
-    [tokenOwner: AddressLike, hashverseItemId: BigNumberish],
+  mintItems: TypedContractMethod<
+    [
+      tokenOwner: AddressLike,
+      hashverseItemIds: BigNumberish[],
+      rootId: BytesLike,
+      proof: BytesLike[]
+    ],
     [void],
     "nonpayable"
   >;
@@ -509,22 +508,21 @@ export interface RenovaCommandDeck extends BaseContract {
     "nonpayable"
   >;
   getFunction(
-    nameOrSignature: "mintItem"
+    nameOrSignature: "mintItemAdmin"
   ): TypedContractMethod<
-    [
-      tokenOwner: AddressLike,
-      hashverseItemId: BigNumberish,
-      rootId: BytesLike,
-      mintIdx: BigNumberish,
-      proof: BytesLike[]
-    ],
+    [tokenOwner: AddressLike, hashverseItemId: BigNumberish],
     [void],
     "nonpayable"
   >;
   getFunction(
-    nameOrSignature: "mintItemAdmin"
+    nameOrSignature: "mintItems"
   ): TypedContractMethod<
-    [tokenOwner: AddressLike, hashverseItemId: BigNumberish],
+    [
+      tokenOwner: AddressLike,
+      hashverseItemIds: BigNumberish[],
+      rootId: BytesLike,
+      proof: BytesLike[]
+    ],
     [void],
     "nonpayable"
   >;

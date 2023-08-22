@@ -216,20 +216,12 @@ describe('Renova', () => {
 
       const leaves = [
         solidityPackedKeccak256(
-          ['address', 'uint256', 'uint256'],
-          [await playerA.getAddress(), 0, 20]
+          ['address', 'uint256[]'],
+          [await playerA.getAddress(), [20, 50]]
         ),
         solidityPackedKeccak256(
-          ['address', 'uint256', 'uint256'],
-          [await playerB.getAddress(), 0, 23]
-        ),
-        solidityPackedKeccak256(
-          ['address', 'uint256', 'uint256'],
-          [await playerA.getAddress(), 1, 50]
-        ),
-        solidityPackedKeccak256(
-          ['address', 'uint256', 'uint256'],
-          [await playerA.getAddress(), 2, 60]
+          ['address', 'uint256[]'],
+          [await playerB.getAddress(), [23]]
         ),
       ];
 
@@ -244,30 +236,21 @@ describe('Renova', () => {
         .connect(questOwner)
         .uploadItemMerkleRoot(rootId, root);
 
-      await renovaCommandDeck.mintItem(
+      await renovaCommandDeck.mintItems(
         await playerA.getAddress(),
-        20,
+        [20, 50],
         rootId,
-        0,
         tree.getHexProof(leaves[0])
-      );
-      await renovaCommandDeck.mintItem(
-        await playerA.getAddress(),
-        50,
-        rootId,
-        1,
-        tree.getHexProof(leaves[2])
       );
 
       await expect(
-        renovaCommandDeck.mintItem(
+        renovaCommandDeck.mintItems(
           await playerA.getAddress(),
-          50,
+          [20, 50],
           rootId,
-          1,
-          tree.getHexProof(leaves[2])
+          tree.getHexProof(leaves[0])
         )
-      ).to.be.revertedWith('RenovaCommandDeck::mintItem Item already minted.');
+      ).to.be.revertedWith('RenovaCommandDeck::mintItems Already minted.');
     });
 
     it('should create quest', async () => {
