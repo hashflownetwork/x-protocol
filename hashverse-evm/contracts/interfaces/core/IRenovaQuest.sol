@@ -3,7 +3,7 @@
 pragma solidity 0.8.19;
 
 import '../external/IHashflowRouter.sol';
-import '../nft/IRenovaAvatar.sol';
+import '../nft/IRenovaAvatarBase.sol';
 
 /// @title IRenovaQuest
 /// @author Victor Ionescu
@@ -111,7 +111,7 @@ interface IRenovaQuest {
     /// @param faction The faction.
     /// @return The number of registered players in the faction.
     function numRegisteredPlayersPerFaction(
-        IRenovaAvatar.RenovaFaction faction
+        IRenovaAvatarBase.RenovaFaction faction
     ) external returns (uint256);
 
     /// @notice Returns the number of loaded items for a player.
