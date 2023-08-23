@@ -1,0 +1,10 @@
+{
+  "ethereum": {
+    "address": "0x3e3cfF05Ce7d7f1Be0e6d80Fbc0d9c64Bc0B3262",
+    "deploymentTransactionHash": "0x6e23de1942ad38263f4e8039a82adc9205178208c95645369f873472b8f784b6"
+  },
+  "goerli": {
+    "address": "0xb12019E9E3D182fDBfAe2c0f700871D170ffF7ff",
+    "deploymentTransactionHash": "0xdec72a4e03311bba601b95524ee7db5fbf4199bf718b2c08f673edaa9aef282f"
+  }
+}

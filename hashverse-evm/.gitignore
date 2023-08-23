@@ -11,3 +11,11 @@ artifacts
 
 # Integration tests
 wormhole_test_metadata.json
+
+# OpenZeppelin
+.openzeppelin/unknown*
+
+
+# Wormhole integration tests
+wormhole_vaas.json
+wormhole_test_contract_deployment.json

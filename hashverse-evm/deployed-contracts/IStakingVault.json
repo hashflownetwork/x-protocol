@@ -1,0 +1,14 @@
+{
+  "ethereum": {
+    "address": "0x15725391A37A5fFeB04F79cf25DA8460A3f068F6",
+    "deploymentTransactionHash": "0x0c5ed8693a6736d516c7009914edf3632d30e4da5a3fea15929975fa2d15965c"
+  },
+  "goerli": {
+    "address": "0x15725391A37A5fFeB04F79cf25DA8460A3f068F6",
+    "deploymentTransactionHash": "0x2440050ca16091165131ed9d1dd080f2fb5444bcffc50ca3dd20e71c9e8b3f29"
+  },
+  "sepolia": {
+    "address": "0x835bFe0Ac8ea77f22E13795a49054aB2D6699982",
+    "deploymentTransactionHash": "0x5c580ae35b7e181bedddbb1c222cb02d71150f41d637add7c6045b065ca29e13"
+  }
+}
