@@ -5,7 +5,6 @@ pragma solidity 0.8.19;
 import '@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol';
 import '@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol';
 
-import '../interfaces/core/IRenovaCommandDeck.sol';
 import '../interfaces/nft/IRenovaAvatarBase.sol';
 
 import '../wormhole/WormholeBaseUpgradeable.sol';
@@ -28,10 +27,7 @@ abstract contract RenovaAvatarBase is
     mapping(address => RenovaFaction) public factions;
 
     /// @inheritdoc IRenovaAvatarBase
-    mapping(address => RenovaRace) public races;
-
-    /// @inheritdoc IRenovaAvatarBase
-    mapping(address => RenovaGender) public genders;
+    mapping(address => uint256) public characterIds;
 
     /// @inheritdoc IRenovaAvatarBase
     mapping(address => uint256) public tokenIds;
@@ -161,14 +157,12 @@ abstract contract RenovaAvatarBase is
     /// @param tokenId The Token ID.
     /// @param tokenOwner The owner of the Avatar.
     /// @param faction The faction of the Avatar.
-    /// @param race The race of the Avatar.
-    /// @param gender The gender of the Avatar.
+    /// @param characterId The Character ID of the Avatar.
     function _mintAvatar(
         uint256 tokenId,
         address tokenOwner,
         RenovaFaction faction,
-        RenovaRace race,
-        RenovaGender gender
+        uint256 characterId
     ) internal {
         require(
             balanceOf(tokenOwner) == 0,
@@ -180,13 +174,12 @@ abstract contract RenovaAvatarBase is
         );
 
         factions[tokenOwner] = faction;
-        races[tokenOwner] = race;
-        genders[tokenOwner] = gender;
+        characterIds[tokenOwner] = characterId;
         tokenIds[tokenOwner] = tokenId;
 
         _safeMint(tokenOwner, tokenId);
 
-        emit Mint(tokenOwner, faction, race, gender);
+        emit Mint(tokenOwner, tokenId, faction, characterId);
     }
 
     /// @notice Returns the custom base URI.

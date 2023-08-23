@@ -37,19 +37,11 @@ contract RenovaAvatarSatellite is IRenovaAvatarSatellite, RenovaAvatarBase {
             uint256 tokenId,
             address tokenOwner,
             RenovaFaction faction,
-            RenovaRace race,
-            RenovaGender gender,
+            uint256 characterId,
             uint16 dstWormholeChainId
         ) = abi.decode(
                 payload,
-                (
-                    uint256,
-                    address,
-                    RenovaFaction,
-                    RenovaRace,
-                    RenovaGender,
-                    uint16
-                )
+                (uint256, address, RenovaFaction, uint256, uint16)
             );
 
         require(
@@ -57,13 +49,12 @@ contract RenovaAvatarSatellite is IRenovaAvatarSatellite, RenovaAvatarBase {
             'RenovaAvatarSatellite::wormholeMintReceive Avatar should be minted on a different chain.'
         );
 
-        _mintAvatar(tokenId, tokenOwner, faction, race, gender);
+        _mintAvatar(tokenId, tokenOwner, faction, characterId);
 
         emit XChainMintIn(
             tokenOwner,
             faction,
-            race,
-            gender,
+            characterId,
             emitterWormholeChainId
         );
     }

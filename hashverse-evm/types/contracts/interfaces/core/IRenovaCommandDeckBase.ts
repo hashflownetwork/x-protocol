@@ -272,7 +272,7 @@ export interface IRenovaCommandDeckBase extends BaseContract {
     "nonpayable"
   >;
 
-  hashflowRouter: TypedContractMethod<[], [string], "nonpayable">;
+  hashflowRouter: TypedContractMethod<[], [string], "view">;
 
   loadItemsForQuest: TypedContractMethod<
     [player: AddressLike, tokenIds: BigNumberish[]],
@@ -283,20 +283,20 @@ export interface IRenovaCommandDeckBase extends BaseContract {
   questDeploymentAddresses: TypedContractMethod<
     [questId: BytesLike],
     [string],
-    "nonpayable"
+    "view"
   >;
 
   questIdsByDeploymentAddress: TypedContractMethod<
     [questAddress: AddressLike],
     [string],
-    "nonpayable"
+    "view"
   >;
 
-  questOwner: TypedContractMethod<[], [string], "nonpayable">;
+  questOwner: TypedContractMethod<[], [string], "view">;
 
-  renovaAvatar: TypedContractMethod<[], [string], "nonpayable">;
+  renovaAvatar: TypedContractMethod<[], [string], "view">;
 
-  renovaItem: TypedContractMethod<[], [string], "nonpayable">;
+  renovaItem: TypedContractMethod<[], [string], "view">;
 
   updateHashflowRouter: TypedContractMethod<
     [hashflowRouter: AddressLike],
@@ -337,7 +337,7 @@ export interface IRenovaCommandDeckBase extends BaseContract {
   >;
   getFunction(
     nameOrSignature: "hashflowRouter"
-  ): TypedContractMethod<[], [string], "nonpayable">;
+  ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "loadItemsForQuest"
   ): TypedContractMethod<
@@ -347,19 +347,19 @@ export interface IRenovaCommandDeckBase extends BaseContract {
   >;
   getFunction(
     nameOrSignature: "questDeploymentAddresses"
-  ): TypedContractMethod<[questId: BytesLike], [string], "nonpayable">;
+  ): TypedContractMethod<[questId: BytesLike], [string], "view">;
   getFunction(
     nameOrSignature: "questIdsByDeploymentAddress"
-  ): TypedContractMethod<[questAddress: AddressLike], [string], "nonpayable">;
+  ): TypedContractMethod<[questAddress: AddressLike], [string], "view">;
   getFunction(
     nameOrSignature: "questOwner"
-  ): TypedContractMethod<[], [string], "nonpayable">;
+  ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "renovaAvatar"
-  ): TypedContractMethod<[], [string], "nonpayable">;
+  ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "renovaItem"
-  ): TypedContractMethod<[], [string], "nonpayable">;
+  ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "updateHashflowRouter"
   ): TypedContractMethod<[hashflowRouter: AddressLike], [void], "nonpayable">;

@@ -28,14 +28,13 @@ export interface IRenovaAvatarInterface extends Interface {
     nameOrSignature:
       | "approve"
       | "balanceOf"
+      | "characterIds"
       | "factions"
-      | "genders"
       | "getApproved"
       | "initialize"
       | "isApprovedForAll"
       | "mint"
       | "ownerOf"
-      | "races"
       | "refreshAllMetadata"
       | "refreshMetadata"
       | "safeTransferFrom(address,address,uint256)"
@@ -45,6 +44,7 @@ export interface IRenovaAvatarInterface extends Interface {
       | "supportsInterface"
       | "tokenIds"
       | "transferFrom"
+      | "updateMaxCharacterId"
       | "updateMinStakePower"
       | "updateStakingVault"
       | "wormholeMintSend"
@@ -59,6 +59,7 @@ export interface IRenovaAvatarInterface extends Interface {
       | "Mint"
       | "Transfer"
       | "UpdateCustomURI"
+      | "UpdateMaxCharacterId"
       | "UpdateMinStakePower"
       | "UpdateStakingVault"
       | "XChainMintOut"
@@ -73,11 +74,11 @@ export interface IRenovaAvatarInterface extends Interface {
     values: [AddressLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "factions",
+    functionFragment: "characterIds",
     values: [AddressLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "genders",
+    functionFragment: "factions",
     values: [AddressLike]
   ): string;
   encodeFunctionData(
@@ -94,13 +95,12 @@ export interface IRenovaAvatarInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "mint",
-    values: [BigNumberish, BigNumberish, BigNumberish]
+    values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "ownerOf",
     values: [BigNumberish]
   ): string;
-  encodeFunctionData(functionFragment: "races", values: [AddressLike]): string;
   encodeFunctionData(
     functionFragment: "refreshAllMetadata",
     values?: undefined
@@ -138,6 +138,10 @@ export interface IRenovaAvatarInterface extends Interface {
     values: [AddressLike, AddressLike, BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "updateMaxCharacterId",
+    values: [BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "updateMinStakePower",
     values: [BigNumberish]
   ): string;
@@ -152,8 +156,11 @@ export interface IRenovaAvatarInterface extends Interface {
 
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "characterIds",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "factions", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "genders", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getApproved",
     data: BytesLike
@@ -165,7 +172,6 @@ export interface IRenovaAvatarInterface extends Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "races", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "refreshAllMetadata",
     data: BytesLike
@@ -197,6 +203,10 @@ export interface IRenovaAvatarInterface extends Interface {
   decodeFunctionResult(functionFragment: "tokenIds", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "transferFrom",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "updateMaxCharacterId",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -284,21 +294,21 @@ export namespace MetadataUpdateEvent {
 export namespace MintEvent {
   export type InputTuple = [
     player: AddressLike,
+    tokenId: BigNumberish,
     faction: BigNumberish,
-    race: BigNumberish,
-    gender: BigNumberish
+    characterId: BigNumberish
   ];
   export type OutputTuple = [
     player: string,
+    tokenId: bigint,
     faction: bigint,
-    race: bigint,
-    gender: bigint
+    characterId: bigint
   ];
   export interface OutputObject {
     player: string;
+    tokenId: bigint;
     faction: bigint;
-    race: bigint;
-    gender: bigint;
+    characterId: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -329,6 +339,22 @@ export namespace UpdateCustomURIEvent {
   export type OutputTuple = [uri: string];
   export interface OutputObject {
     uri: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace UpdateMaxCharacterIdEvent {
+  export type InputTuple = [
+    faction: BigNumberish,
+    maxCharacterId: BigNumberish
+  ];
+  export type OutputTuple = [faction: bigint, maxCharacterId: bigint];
+  export interface OutputObject {
+    faction: bigint;
+    maxCharacterId: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -368,8 +394,7 @@ export namespace XChainMintOutEvent {
   export type InputTuple = [
     player: AddressLike,
     faction: BigNumberish,
-    race: BigNumberish,
-    gender: BigNumberish,
+    characterId: BigNumberish,
     dstWormholeChainId: BigNumberish,
     sequence: BigNumberish,
     relayerFee: BigNumberish
@@ -377,8 +402,7 @@ export namespace XChainMintOutEvent {
   export type OutputTuple = [
     player: string,
     faction: bigint,
-    race: bigint,
-    gender: bigint,
+    characterId: bigint,
     dstWormholeChainId: bigint,
     sequence: bigint,
     relayerFee: bigint
@@ -386,8 +410,7 @@ export namespace XChainMintOutEvent {
   export interface OutputObject {
     player: string;
     faction: bigint;
-    race: bigint;
-    gender: bigint;
+    characterId: bigint;
     dstWormholeChainId: bigint;
     sequence: bigint;
     relayerFee: bigint;
@@ -449,9 +472,9 @@ export interface IRenovaAvatar extends BaseContract {
 
   balanceOf: TypedContractMethod<[owner: AddressLike], [bigint], "view">;
 
-  factions: TypedContractMethod<[player: AddressLike], [bigint], "nonpayable">;
+  characterIds: TypedContractMethod<[player: AddressLike], [bigint], "view">;
 
-  genders: TypedContractMethod<[player: AddressLike], [bigint], "nonpayable">;
+  factions: TypedContractMethod<[player: AddressLike], [bigint], "view">;
 
   getApproved: TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
 
@@ -474,14 +497,12 @@ export interface IRenovaAvatar extends BaseContract {
   >;
 
   mint: TypedContractMethod<
-    [faction: BigNumberish, race: BigNumberish, gender: BigNumberish],
+    [faction: BigNumberish, characterId: BigNumberish],
     [void],
     "nonpayable"
   >;
 
   ownerOf: TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
-
-  races: TypedContractMethod<[player: AddressLike], [bigint], "nonpayable">;
 
   refreshAllMetadata: TypedContractMethod<[], [void], "nonpayable">;
 
@@ -526,10 +547,16 @@ export interface IRenovaAvatar extends BaseContract {
     "view"
   >;
 
-  tokenIds: TypedContractMethod<[player: AddressLike], [bigint], "nonpayable">;
+  tokenIds: TypedContractMethod<[player: AddressLike], [bigint], "view">;
 
   transferFrom: TypedContractMethod<
     [from: AddressLike, to: AddressLike, tokenId: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
+
+  updateMaxCharacterId: TypedContractMethod<
+    [faction: BigNumberish, maxCharacterId: BigNumberish],
     [void],
     "nonpayable"
   >;
@@ -567,11 +594,11 @@ export interface IRenovaAvatar extends BaseContract {
     nameOrSignature: "balanceOf"
   ): TypedContractMethod<[owner: AddressLike], [bigint], "view">;
   getFunction(
-    nameOrSignature: "factions"
-  ): TypedContractMethod<[player: AddressLike], [bigint], "nonpayable">;
+    nameOrSignature: "characterIds"
+  ): TypedContractMethod<[player: AddressLike], [bigint], "view">;
   getFunction(
-    nameOrSignature: "genders"
-  ): TypedContractMethod<[player: AddressLike], [bigint], "nonpayable">;
+    nameOrSignature: "factions"
+  ): TypedContractMethod<[player: AddressLike], [bigint], "view">;
   getFunction(
     nameOrSignature: "getApproved"
   ): TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
@@ -598,16 +625,13 @@ export interface IRenovaAvatar extends BaseContract {
   getFunction(
     nameOrSignature: "mint"
   ): TypedContractMethod<
-    [faction: BigNumberish, race: BigNumberish, gender: BigNumberish],
+    [faction: BigNumberish, characterId: BigNumberish],
     [void],
     "nonpayable"
   >;
   getFunction(
     nameOrSignature: "ownerOf"
   ): TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
-  getFunction(
-    nameOrSignature: "races"
-  ): TypedContractMethod<[player: AddressLike], [bigint], "nonpayable">;
   getFunction(
     nameOrSignature: "refreshAllMetadata"
   ): TypedContractMethod<[], [void], "nonpayable">;
@@ -648,11 +672,18 @@ export interface IRenovaAvatar extends BaseContract {
   ): TypedContractMethod<[interfaceId: BytesLike], [boolean], "view">;
   getFunction(
     nameOrSignature: "tokenIds"
-  ): TypedContractMethod<[player: AddressLike], [bigint], "nonpayable">;
+  ): TypedContractMethod<[player: AddressLike], [bigint], "view">;
   getFunction(
     nameOrSignature: "transferFrom"
   ): TypedContractMethod<
     [from: AddressLike, to: AddressLike, tokenId: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "updateMaxCharacterId"
+  ): TypedContractMethod<
+    [faction: BigNumberish, maxCharacterId: BigNumberish],
     [void],
     "nonpayable"
   >;
@@ -718,6 +749,13 @@ export interface IRenovaAvatar extends BaseContract {
     UpdateCustomURIEvent.InputTuple,
     UpdateCustomURIEvent.OutputTuple,
     UpdateCustomURIEvent.OutputObject
+  >;
+  getEvent(
+    key: "UpdateMaxCharacterId"
+  ): TypedContractEvent<
+    UpdateMaxCharacterIdEvent.InputTuple,
+    UpdateMaxCharacterIdEvent.OutputTuple,
+    UpdateMaxCharacterIdEvent.OutputObject
   >;
   getEvent(
     key: "UpdateMinStakePower"
@@ -786,7 +824,7 @@ export interface IRenovaAvatar extends BaseContract {
       MetadataUpdateEvent.OutputObject
     >;
 
-    "Mint(address,uint8,uint8,uint8)": TypedContractEvent<
+    "Mint(address,uint256,uint8,uint256)": TypedContractEvent<
       MintEvent.InputTuple,
       MintEvent.OutputTuple,
       MintEvent.OutputObject
@@ -819,6 +857,17 @@ export interface IRenovaAvatar extends BaseContract {
       UpdateCustomURIEvent.OutputObject
     >;
 
+    "UpdateMaxCharacterId(uint8,uint256)": TypedContractEvent<
+      UpdateMaxCharacterIdEvent.InputTuple,
+      UpdateMaxCharacterIdEvent.OutputTuple,
+      UpdateMaxCharacterIdEvent.OutputObject
+    >;
+    UpdateMaxCharacterId: TypedContractEvent<
+      UpdateMaxCharacterIdEvent.InputTuple,
+      UpdateMaxCharacterIdEvent.OutputTuple,
+      UpdateMaxCharacterIdEvent.OutputObject
+    >;
+
     "UpdateMinStakePower(uint256)": TypedContractEvent<
       UpdateMinStakePowerEvent.InputTuple,
       UpdateMinStakePowerEvent.OutputTuple,
@@ -841,7 +890,7 @@ export interface IRenovaAvatar extends BaseContract {
       UpdateStakingVaultEvent.OutputObject
     >;
 
-    "XChainMintOut(address,uint8,uint8,uint8,uint16,uint256,uint256)": TypedContractEvent<
+    "XChainMintOut(address,uint8,uint256,uint16,uint256,uint256)": TypedContractEvent<
       XChainMintOutEvent.InputTuple,
       XChainMintOutEvent.OutputTuple,
       XChainMintOutEvent.OutputObject

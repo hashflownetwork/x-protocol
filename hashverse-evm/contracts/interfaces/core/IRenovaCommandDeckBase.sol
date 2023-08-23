@@ -48,33 +48,33 @@ interface IRenovaCommandDeckBase {
 
     /// @notice Returns the Avatar contract address.
     /// @return The address of the Avatar contract.
-    function renovaAvatar() external returns (address);
+    function renovaAvatar() external view returns (address);
 
     /// @notice Returns the Item contract address.
     /// @return The address of the Item contract.
-    function renovaItem() external returns (address);
+    function renovaItem() external view returns (address);
 
     /// @notice Returns the Router contract address.
     /// @return The address of the Router contract.
-    function hashflowRouter() external returns (address);
+    function hashflowRouter() external view returns (address);
 
     /// @notice Returns the Quest Owner address.
     /// @return The address of the Quest Owner.
-    function questOwner() external returns (address);
+    function questOwner() external view returns (address);
 
     /// @notice Returns the deployment contract address for a quest ID.
     /// @param questId The Quest ID.
     /// @return The deployed contract address if the quest ID is valid.
     function questDeploymentAddresses(
         bytes32 questId
-    ) external returns (address);
+    ) external view returns (address);
 
     /// @notice Returns the ID of a quest deployed at a particular address.
     /// @param questAddress The address of the Quest contract.
     /// @return The quest ID.
     function questIdsByDeploymentAddress(
         address questAddress
-    ) external returns (bytes32);
+    ) external view returns (bytes32);
 
     /// @notice Loads items into a Quest.
     /// @param player The address of the player loading the items.

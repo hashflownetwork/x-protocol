@@ -126,6 +126,9 @@ describe('Renova', () => {
       await mockHashflowRouter.getAddress(),
       await questOwner.getAddress()
     );
+
+    await renovaAvatar.updateMaxCharacterId(0, 2);
+    await renovaAvatar.updateMaxCharacterId(1, 2);
   });
 
   describe('Avatar', () => {
@@ -140,15 +143,15 @@ describe('Renova', () => {
     });
 
     it('should mint avatar', async () => {
-      await expect(
-        renovaAvatar.connect(playerA).mint(0, 1, 0)
-      ).to.be.revertedWith('RenovaAvatar::mint Insufficient stake.');
+      await expect(renovaAvatar.connect(playerA).mint(0, 1)).to.be.revertedWith(
+        'RenovaAvatar::mint Insufficient stake.'
+      );
       await renovaAvatar.updateMinStakePower(0);
 
-      await renovaAvatar.connect(playerA).mint(0, 1, 0);
-      await renovaAvatar.connect(playerB).mint(0, 0, 0);
-      await renovaAvatar.connect(playerC).mint(1, 0, 0);
-      await renovaAvatar.connect(playerE).mint(1, 1, 0);
+      await renovaAvatar.connect(playerA).mint(0, 1);
+      await renovaAvatar.connect(playerB).mint(0, 0);
+      await renovaAvatar.connect(playerC).mint(1, 0);
+      await renovaAvatar.connect(playerE).mint(1, 1);
 
       expect(await renovaAvatar.balanceOf(await playerA.getAddress())).to.equal(
         1
@@ -173,9 +176,7 @@ describe('Renova', () => {
     });
 
     it('should not double-mint', async () => {
-      await expect(
-        renovaAvatar.connect(playerA).mint(0, 0, 0)
-      ).to.be.revertedWith(
+      await expect(renovaAvatar.connect(playerA).mint(0, 0)).to.be.revertedWith(
         'RenovaAvatarBase::_mintAvatar Cannot mint more than one Avatar.'
       );
     });
@@ -215,20 +216,12 @@ describe('Renova', () => {
 
       const leaves = [
         solidityPackedKeccak256(
-          ['address', 'uint256', 'uint256'],
-          [await playerA.getAddress(), 0, 20]
+          ['address', 'uint256[]'],
+          [await playerA.getAddress(), [20, 50]]
         ),
         solidityPackedKeccak256(
-          ['address', 'uint256', 'uint256'],
-          [await playerB.getAddress(), 0, 23]
-        ),
-        solidityPackedKeccak256(
-          ['address', 'uint256', 'uint256'],
-          [await playerA.getAddress(), 1, 50]
-        ),
-        solidityPackedKeccak256(
-          ['address', 'uint256', 'uint256'],
-          [await playerA.getAddress(), 2, 60]
+          ['address', 'uint256[]'],
+          [await playerB.getAddress(), [23]]
         ),
       ];
 
@@ -243,30 +236,21 @@ describe('Renova', () => {
         .connect(questOwner)
         .uploadItemMerkleRoot(rootId, root);
 
-      await renovaCommandDeck.mintItem(
+      await renovaCommandDeck.mintItems(
         await playerA.getAddress(),
-        20,
+        [20, 50],
         rootId,
-        0,
         tree.getHexProof(leaves[0])
-      );
-      await renovaCommandDeck.mintItem(
-        await playerA.getAddress(),
-        50,
-        rootId,
-        1,
-        tree.getHexProof(leaves[2])
       );
 
       await expect(
-        renovaCommandDeck.mintItem(
+        renovaCommandDeck.mintItems(
           await playerA.getAddress(),
-          50,
+          [20, 50],
           rootId,
-          1,
-          tree.getHexProof(leaves[2])
+          tree.getHexProof(leaves[0])
         )
-      ).to.be.revertedWith('RenovaCommandDeck::mintItem Item already minted.');
+      ).to.be.revertedWith('RenovaCommandDeck::mintItems Already minted.');
     });
 
     it('should create quest', async () => {
@@ -394,7 +378,7 @@ describe('Renova', () => {
         'RenovaQuest::_enter Player has not minted Avatar.'
       );
 
-      await renovaAvatar.connect(playerD).mint(1, 0, 1);
+      await renovaAvatar.connect(playerD).mint(1, 0);
 
       await soloQuest.connect(playerD).enter();
     });

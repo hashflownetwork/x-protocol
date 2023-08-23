@@ -41,8 +41,8 @@ export interface RenovaCommandDeckInterface extends Interface {
       | "initialize"
       | "itemMerkleRoots"
       | "loadItemsForQuest"
-      | "mintItem"
       | "mintItemAdmin"
+      | "mintItems"
       | "owner"
       | "questDeploymentAddresses"
       | "questIdsByDeploymentAddress"
@@ -60,6 +60,7 @@ export interface RenovaCommandDeckInterface extends Interface {
     nameOrSignatureOrTopic:
       | "CreateQuest"
       | "Initialized"
+      | "MintItems"
       | "OwnershipTransferred"
       | "UpdateHashflowRouter"
       | "UpdateQuestOwner"
@@ -98,12 +99,12 @@ export interface RenovaCommandDeckInterface extends Interface {
     values: [AddressLike, BigNumberish[]]
   ): string;
   encodeFunctionData(
-    functionFragment: "mintItem",
-    values: [AddressLike, BigNumberish, BytesLike, BigNumberish, BytesLike[]]
-  ): string;
-  encodeFunctionData(
     functionFragment: "mintItemAdmin",
     values: [AddressLike, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "mintItems",
+    values: [AddressLike, BigNumberish[], BytesLike, BytesLike[]]
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
@@ -168,11 +169,11 @@ export interface RenovaCommandDeckInterface extends Interface {
     functionFragment: "loadItemsForQuest",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "mintItem", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "mintItemAdmin",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "mintItems", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "questDeploymentAddresses",
@@ -249,6 +250,19 @@ export namespace InitializedEvent {
   export type OutputTuple = [version: bigint];
   export interface OutputObject {
     version: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace MintItemsEvent {
+  export type InputTuple = [rootId: BytesLike, player: AddressLike];
+  export type OutputTuple = [rootId: string, player: string];
+  export interface OutputObject {
+    rootId: string;
+    player: string;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -394,20 +408,19 @@ export interface RenovaCommandDeck extends BaseContract {
     "nonpayable"
   >;
 
-  mintItem: TypedContractMethod<
-    [
-      tokenOwner: AddressLike,
-      hashverseItemId: BigNumberish,
-      rootId: BytesLike,
-      mintIdx: BigNumberish,
-      proof: BytesLike[]
-    ],
+  mintItemAdmin: TypedContractMethod<
+    [tokenOwner: AddressLike, hashverseItemId: BigNumberish],
     [void],
     "nonpayable"
   >;
 
-  mintItemAdmin: TypedContractMethod<
-    [tokenOwner: AddressLike, hashverseItemId: BigNumberish],
+  mintItems: TypedContractMethod<
+    [
+      tokenOwner: AddressLike,
+      hashverseItemIds: BigNumberish[],
+      rootId: BytesLike,
+      proof: BytesLike[]
+    ],
     [void],
     "nonpayable"
   >;
@@ -509,22 +522,21 @@ export interface RenovaCommandDeck extends BaseContract {
     "nonpayable"
   >;
   getFunction(
-    nameOrSignature: "mintItem"
+    nameOrSignature: "mintItemAdmin"
   ): TypedContractMethod<
-    [
-      tokenOwner: AddressLike,
-      hashverseItemId: BigNumberish,
-      rootId: BytesLike,
-      mintIdx: BigNumberish,
-      proof: BytesLike[]
-    ],
+    [tokenOwner: AddressLike, hashverseItemId: BigNumberish],
     [void],
     "nonpayable"
   >;
   getFunction(
-    nameOrSignature: "mintItemAdmin"
+    nameOrSignature: "mintItems"
   ): TypedContractMethod<
-    [tokenOwner: AddressLike, hashverseItemId: BigNumberish],
+    [
+      tokenOwner: AddressLike,
+      hashverseItemIds: BigNumberish[],
+      rootId: BytesLike,
+      proof: BytesLike[]
+    ],
     [void],
     "nonpayable"
   >;
@@ -581,6 +593,13 @@ export interface RenovaCommandDeck extends BaseContract {
     InitializedEvent.OutputObject
   >;
   getEvent(
+    key: "MintItems"
+  ): TypedContractEvent<
+    MintItemsEvent.InputTuple,
+    MintItemsEvent.OutputTuple,
+    MintItemsEvent.OutputObject
+  >;
+  getEvent(
     key: "OwnershipTransferred"
   ): TypedContractEvent<
     OwnershipTransferredEvent.InputTuple,
@@ -630,6 +649,17 @@ export interface RenovaCommandDeck extends BaseContract {
       InitializedEvent.InputTuple,
       InitializedEvent.OutputTuple,
       InitializedEvent.OutputObject
+    >;
+
+    "MintItems(bytes32,address)": TypedContractEvent<
+      MintItemsEvent.InputTuple,
+      MintItemsEvent.OutputTuple,
+      MintItemsEvent.OutputObject
+    >;
+    MintItems: TypedContractEvent<
+      MintItemsEvent.InputTuple,
+      MintItemsEvent.OutputTuple,
+      MintItemsEvent.OutputObject
     >;
 
     "OwnershipTransferred(address,address)": TypedContractEvent<

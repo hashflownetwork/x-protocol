@@ -12,14 +12,12 @@ interface IRenovaAvatarSatellite is IRenovaAvatarBase {
     /// @notice Emitted when an Avatar is minted from a cross-chain call.
     /// @param player The owner of the Avatar.
     /// @param faction The faction of the Avatar.
-    /// @param race The race of the Avatar.
-    /// @param gender The gender of the Avatar.
+    /// @param characterId The Character ID of the Avatar.
     /// @param srcWormholeChainId The source chain that minted the Avatar.
     event XChainMintIn(
         address indexed player,
         RenovaFaction faction,
-        RenovaRace race,
-        RenovaGender gender,
+        uint256 characterId,
         uint16 srcWormholeChainId
     );
 

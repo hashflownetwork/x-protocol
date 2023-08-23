@@ -10,10 +10,10 @@ import '@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol';
 import '@openzeppelin/contracts/utils/Address.sol';
 import '@openzeppelin/contracts/utils/Context.sol';
 
-import '../interfaces/core/IRenovaCommandDeck.sol';
+import '../interfaces/core/IRenovaCommandDeckBase.sol';
 import '../interfaces/core/IRenovaQuest.sol';
 import '../interfaces/external/IHashflowRouter.sol';
-import '../interfaces/nft/IRenovaAvatar.sol';
+import '../interfaces/nft/IRenovaAvatarBase.sol';
 
 /// @title RenovaQuest
 /// @author Victor Ionescu
@@ -52,7 +52,7 @@ contract RenovaQuest is
     uint256 public numRegisteredPlayers;
 
     /// @inheritdoc IRenovaQuest
-    mapping(IRenovaAvatar.RenovaFaction => uint256)
+    mapping(IRenovaAvatarBase.RenovaFaction => uint256)
         public numRegisteredPlayersPerFaction;
 
     /// @inheritdoc IRenovaQuest
@@ -339,14 +339,17 @@ contract RenovaQuest is
             'RenovaQuest::_enter Player already registered.'
         );
 
-        uint256 avatarTokenId = IRenovaAvatar(_renovaAvatar).tokenIds(player);
+        uint256 avatarTokenId = IRenovaAvatarBase(_renovaAvatar).tokenIds(
+            player
+        );
         require(
             avatarTokenId != 0,
             'RenovaQuest::_enter Player has not minted Avatar.'
         );
 
-        IRenovaAvatar.RenovaFaction faction = IRenovaAvatar(_renovaAvatar)
-            .factions(_msgSender());
+        IRenovaAvatarBase.RenovaFaction faction = IRenovaAvatarBase(
+            _renovaAvatar
+        ).factions(_msgSender());
 
         if (_questMode == QuestMode.SOLO) {
             require(
@@ -390,7 +393,7 @@ contract RenovaQuest is
             'RenovaQuest::loadItems Too many items.'
         );
 
-        IRenovaCommandDeck(_renovaCommandDeck).loadItemsForQuest(
+        IRenovaCommandDeckBase(_renovaCommandDeck).loadItemsForQuest(
             player,
             tokenIds
         );
@@ -449,7 +452,7 @@ contract RenovaQuest is
             'RenovaQuest::depositToken msg.value should equal amount.'
         );
 
-        IRenovaCommandDeck(_renovaCommandDeck).depositTokensForQuest(
+        IRenovaCommandDeckBase(_renovaCommandDeck).depositTokensForQuest(
             player,
             tokenDeposits
         );

@@ -102,21 +102,21 @@ const _abi = [
       },
       {
         indexed: false,
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
         internalType: "enum IRenovaAvatarBase.RenovaFaction",
         name: "faction",
         type: "uint8",
       },
       {
         indexed: false,
-        internalType: "enum IRenovaAvatarBase.RenovaRace",
-        name: "race",
-        type: "uint8",
-      },
-      {
-        indexed: false,
-        internalType: "enum IRenovaAvatarBase.RenovaGender",
-        name: "gender",
-        type: "uint8",
+        internalType: "uint256",
+        name: "characterId",
+        type: "uint256",
       },
     ],
     name: "Mint",
@@ -177,15 +177,9 @@ const _abi = [
       },
       {
         indexed: false,
-        internalType: "enum IRenovaAvatarBase.RenovaRace",
-        name: "race",
-        type: "uint8",
-      },
-      {
-        indexed: false,
-        internalType: "enum IRenovaAvatarBase.RenovaGender",
-        name: "gender",
-        type: "uint8",
+        internalType: "uint256",
+        name: "characterId",
+        type: "uint256",
       },
       {
         indexed: false,
@@ -242,15 +236,15 @@ const _abi = [
         type: "address",
       },
     ],
-    name: "factions",
+    name: "characterIds",
     outputs: [
       {
-        internalType: "enum IRenovaAvatarBase.RenovaFaction",
+        internalType: "uint256",
         name: "",
-        type: "uint8",
+        type: "uint256",
       },
     ],
-    stateMutability: "nonpayable",
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -261,15 +255,15 @@ const _abi = [
         type: "address",
       },
     ],
-    name: "genders",
+    name: "factions",
     outputs: [
       {
-        internalType: "enum IRenovaAvatarBase.RenovaGender",
+        internalType: "enum IRenovaAvatarBase.RenovaFaction",
         name: "",
         type: "uint8",
       },
     ],
-    stateMutability: "nonpayable",
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -355,25 +349,6 @@ const _abi = [
       },
     ],
     stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "player",
-        type: "address",
-      },
-    ],
-    name: "races",
-    outputs: [
-      {
-        internalType: "enum IRenovaAvatarBase.RenovaRace",
-        name: "",
-        type: "uint8",
-      },
-    ],
-    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -513,7 +488,7 @@ const _abi = [
         type: "uint256",
       },
     ],
-    stateMutability: "nonpayable",
+    stateMutability: "view",
     type: "function",
   },
   {

@@ -1,6 +1,6 @@
 {
   "name": "@hashflow/hashverse-contracts-evm",
-  "version": "2.0.8",
+  "version": "1.0.0",
   "description": "Hashverse Smart Contracts for EVM chains.",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
