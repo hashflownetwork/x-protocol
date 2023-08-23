@@ -26,24 +26,6 @@ const _abi = [
       },
       {
         indexed: false,
-        internalType: "enum IRenovaQuest.QuestMode",
-        name: "questMode",
-        type: "uint8",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "maxPlayers",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "maxItemsPerPlayer",
-        type: "uint256",
-      },
-      {
-        indexed: false,
         internalType: "uint256",
         name: "startTime",
         type: "uint256",
@@ -52,6 +34,18 @@ const _abi = [
         indexed: false,
         internalType: "uint256",
         name: "endTime",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "depositToken",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "minDepositAmount",
         type: "uint256",
       },
     ],
@@ -142,21 +136,6 @@ const _abi = [
         type: "bytes32",
       },
       {
-        internalType: "enum IRenovaQuest.QuestMode",
-        name: "questMode",
-        type: "uint8",
-      },
-      {
-        internalType: "uint256",
-        name: "maxPlayers",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "maxItemsPerPlayer",
-        type: "uint256",
-      },
-      {
         internalType: "uint256",
         name: "startTime",
         type: "uint256",
@@ -164,6 +143,16 @@ const _abi = [
       {
         internalType: "uint256",
         name: "endTime",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "depositToken",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "minDepositAmount",
         type: "uint256",
       },
     ],
@@ -180,24 +169,17 @@ const _abi = [
         type: "address",
       },
       {
-        components: [
-          {
-            internalType: "address",
-            name: "token",
-            type: "address",
-          },
-          {
-            internalType: "uint256",
-            name: "amount",
-            type: "uint256",
-          },
-        ],
-        internalType: "struct IRenovaQuest.TokenDeposit[]",
-        name: "tokenDeposits",
-        type: "tuple[]",
+        internalType: "address",
+        name: "depositToken",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "depositAmount",
+        type: "uint256",
       },
     ],
-    name: "depositTokensForQuest",
+    name: "depositTokenForQuest",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -260,24 +242,6 @@ const _abi = [
       },
     ],
     stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "player",
-        type: "address",
-      },
-      {
-        internalType: "uint256[]",
-        name: "tokenIds",
-        type: "uint256[]",
-      },
-    ],
-    name: "loadItemsForQuest",
-    outputs: [],
-    stateMutability: "nonpayable",
     type: "function",
   },
   {

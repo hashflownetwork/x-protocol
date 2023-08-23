@@ -162,10 +162,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IERC4906Upgradeable__factory>;
     getContractFactory(
-      name: "IHashflowRouter",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IHashflowRouter__factory>;
-    getContractFactory(
       name: "IWormhole",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IWormhole__factory>;
@@ -444,11 +440,6 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.IERC4906Upgradeable>;
     getContractAt(
-      name: "IHashflowRouter",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.IHashflowRouter>;
-    getContractAt(
       name: "IWormhole",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -712,10 +703,6 @@ declare module "hardhat/types/runtime" {
       name: "IERC4906Upgradeable",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IERC4906Upgradeable>;
-    deployContract(
-      name: "IHashflowRouter",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.IHashflowRouter>;
     deployContract(
       name: "IWormhole",
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -994,11 +981,6 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IERC4906Upgradeable>;
-    deployContract(
-      name: "IHashflowRouter",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.IHashflowRouter>;
     deployContract(
       name: "IWormhole",
       args: any[],

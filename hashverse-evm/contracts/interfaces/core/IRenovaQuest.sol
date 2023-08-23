@@ -21,11 +21,6 @@ There can be a cap on how many players can enter a quest. There can also be a ca
 items a player can load for a quest.
 */
 interface IRenovaQuest {
-    enum QuestMode {
-        SOLO,
-        TEAM
-    }
-
     struct TokenDeposit {
         address token;
         uint256 amount;
@@ -39,16 +34,6 @@ interface IRenovaQuest {
     /// @notice Emitted when a player registers for a quest.
     /// @param player The player registering for the quest.
     event RegisterPlayer(address indexed player);
-
-    /// @notice Emitted when a player loads an item.
-    /// @param player The player who loads the item.
-    /// @param tokenId The Token ID of the loaded item.
-    event LoadItem(address indexed player, uint256 tokenId);
-
-    /// @notice Emitted when a player unloads an item.
-    /// @param player The player who unloads the item.
-    /// @param tokenId The Token ID of the unloaded item.
-    event UnloadItem(address indexed player, uint256 tokenId);
 
     /// @notice Emitted when a player deposits a token for a Quest.
     /// @param player The player who deposits the token.
@@ -84,6 +69,14 @@ interface IRenovaQuest {
     /// @return The Quest end time.
     function endTime() external view returns (uint256);
 
+    /// @notice Returns the token to deposit to enter.
+    /// @return The address of the deposit token.
+    function depositToken() external view returns (address);
+
+    /// @notice Return the minimum deposit amount to enter.
+    /// @return The minimum deposit amount.
+    function minDepositAmount() external view returns (uint256);
+
     /// @notice Returns the address that has authority over the quest.
     /// @return The address that has authority over the quest.
     function questOwner() external view returns (address);
@@ -114,20 +107,6 @@ interface IRenovaQuest {
         IRenovaAvatarBase.RenovaFaction faction
     ) external view returns (uint256);
 
-    /// @notice Returns the number of loaded items for a player.
-    /// @param player The address of the player.
-    /// @return The number of currently loaded items.
-    function numLoadedItems(address player) external view returns (uint256);
-
-    /// @notice Returns the Token IDs for the loaded items for a player.
-    /// @param player The address of the player.
-    /// @param idx The index of the item in the array of loaded items.
-    /// @return The Token ID of the item.
-    function loadedItems(
-        address player,
-        uint256 idx
-    ) external view returns (uint256);
-
     /// @notice Returns the token balance for each token the player has in the Quest.
     /// @param player The address of the player.
     /// @param token The address of the token.
@@ -137,33 +116,9 @@ interface IRenovaQuest {
         address token
     ) external view returns (uint256);
 
-    /// @notice Registers a player for the quests, loads items, and deposits tokens.
-    /// @param tokenIds The token IDs for the items to load.
-    /// @param tokenDeposits The tokens and amounts to deposit.
-    function enterLoadDeposit(
-        uint256[] memory tokenIds,
-        TokenDeposit[] memory tokenDeposits
-    ) external payable;
-
-    /// @notice Registers a player for the quest.
-    function enter() external;
-
-    /// @notice Loads items into the Quest.
-    /// @param tokenIds The Token IDs of the loaded items.
-    function loadItems(uint256[] memory tokenIds) external;
-
-    /// @notice Unloads an item.
-    /// @param tokenId the Token ID of the item to unload.
-    function unloadItem(uint256 tokenId) external;
-
-    /// @notice Unloads all loaded items for the player.
-    function unloadAllItems() external;
-
     /// @notice Deposits tokens prior to the beginning of the Quest.
-    /// @param tokenDeposits The addresses and amounts of tokens to deposit.
-    function depositTokens(
-        TokenDeposit[] memory tokenDeposits
-    ) external payable;
+    /// @param depositAmount The amount of depositToken to deposit.
+    function depositAndEnter(uint256 depositAmount) external payable;
 
     /// @notice Withdraws the full balance of the selected tokens from the Quest.
     /// @param tokens The addresses of the tokens to withdraw.

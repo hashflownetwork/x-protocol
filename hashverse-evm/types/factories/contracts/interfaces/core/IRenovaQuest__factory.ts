@@ -43,25 +43,6 @@ const _abi = [
         name: "player",
         type: "address",
       },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "tokenId",
-        type: "uint256",
-      },
-    ],
-    name: "LoadItem",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "player",
-        type: "address",
-      },
     ],
     name: "RegisterPlayer",
     type: "event",
@@ -101,25 +82,6 @@ const _abi = [
       },
     ],
     name: "Trade",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "player",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "tokenId",
-        type: "uint256",
-      },
-    ],
-    name: "UnloadItem",
     type: "event",
   },
   {
@@ -188,26 +150,27 @@ const _abi = [
   {
     inputs: [
       {
-        components: [
-          {
-            internalType: "address",
-            name: "token",
-            type: "address",
-          },
-          {
-            internalType: "uint256",
-            name: "amount",
-            type: "uint256",
-          },
-        ],
-        internalType: "struct IRenovaQuest.TokenDeposit[]",
-        name: "tokenDeposits",
-        type: "tuple[]",
+        internalType: "uint256",
+        name: "depositAmount",
+        type: "uint256",
       },
     ],
-    name: "depositTokens",
+    name: "depositAndEnter",
     outputs: [],
     stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "depositToken",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -225,87 +188,7 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "enter",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256[]",
-        name: "tokenIds",
-        type: "uint256[]",
-      },
-      {
-        components: [
-          {
-            internalType: "address",
-            name: "token",
-            type: "address",
-          },
-          {
-            internalType: "uint256",
-            name: "amount",
-            type: "uint256",
-          },
-        ],
-        internalType: "struct IRenovaQuest.TokenDeposit[]",
-        name: "tokenDeposits",
-        type: "tuple[]",
-      },
-    ],
-    name: "enterLoadDeposit",
-    outputs: [],
-    stateMutability: "payable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256[]",
-        name: "tokenIds",
-        type: "uint256[]",
-      },
-    ],
-    name: "loadItems",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "player",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "idx",
-        type: "uint256",
-      },
-    ],
-    name: "loadedItems",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "player",
-        type: "address",
-      },
-    ],
-    name: "numLoadedItems",
+    name: "minDepositAmount",
     outputs: [
       {
         internalType: "uint256",
@@ -495,26 +378,6 @@ const _abi = [
     name: "trade",
     outputs: [],
     stateMutability: "payable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "unloadAllItems",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "tokenId",
-        type: "uint256",
-      },
-    ],
-    name: "unloadItem",
-    outputs: [],
-    stateMutability: "nonpayable",
     type: "function",
   },
   {

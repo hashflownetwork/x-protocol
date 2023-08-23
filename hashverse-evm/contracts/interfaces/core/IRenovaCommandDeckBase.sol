@@ -31,19 +31,17 @@ interface IRenovaCommandDeckBase {
     /// @notice Emitted every time a Quest is created.
     /// @param questId The Quest ID.
     /// @param questAddress The address of the contract handling the Quest logic.
-    /// @param questMode The Mode of the Quest (e.g. Multiplayer).
-    /// @param maxPlayers The max number of players (0 for infinite).
-    /// @param maxItemsPerPlayer The max number of items (0 for infinite) each player can equip.
     /// @param startTime The quest start time, in unix seconds.
     /// @param endTime The quest end time, in unix seconds.
+    /// @param depositToken The token to be deposited to enter.
+    /// @param minDepositAmount The minimum ampount to be deposited to enter.
     event CreateQuest(
         bytes32 questId,
         address questAddress,
-        IRenovaQuest.QuestMode questMode,
-        uint256 maxPlayers,
-        uint256 maxItemsPerPlayer,
         uint256 startTime,
-        uint256 endTime
+        uint256 endTime,
+        address depositToken,
+        uint256 minDepositAmount
     );
 
     /// @notice Returns the Avatar contract address.
@@ -76,41 +74,29 @@ interface IRenovaCommandDeckBase {
         address questAddress
     ) external view returns (bytes32);
 
-    /// @notice Loads items into a Quest.
-    /// @param player The address of the player loading the items.
-    /// @param tokenIds The Token IDs of the items to load.
-    /// @dev This function helps save gas by only setting allowance to this contract.
-    function loadItemsForQuest(
-        address player,
-        uint256[] memory tokenIds
-    ) external;
-
     /// @notice Deposits tokens into a Quest.
     /// @param player The address of the player depositing the tokens.
-    /// @param tokenDeposits The tokens and their amounts.
+    /// @param depositToken The token to deposit.
+    /// @param depositAmount The deposit amount.
     /// @dev This function helps save gas by only setting allowance to this contract.
-    function depositTokensForQuest(
+    function depositTokenForQuest(
         address player,
-        IRenovaQuest.TokenDeposit[] memory tokenDeposits
+        address depositToken,
+        uint256 depositAmount
     ) external;
 
     /// @notice Creates a Quest in the Hashverse.
     /// @param questId The Quest ID.
-    /// @param questMode The mode of the Quest (e.g. SOLO).
-    /**
-     * @param maxPlayers The max number of players or 0 if uncapped. If the quest is
-     * a multiplayer quest, this will be the max number of players for each Faction.
-     */
-    /// @param maxItemsPerPlayer The max number of items per player or 0 if uncapped.
     /// @param startTime The quest start time, in Unix seconds.
     /// @param endTime The quest end time, in Unix seconds.
+    /// @param depositToken The token that needs to be deposited in order for a player to enter.
+    /// @param minDepositAmount The min amount deposited.
     function createQuest(
         bytes32 questId,
-        IRenovaQuest.QuestMode questMode,
-        uint256 maxPlayers,
-        uint256 maxItemsPerPlayer,
         uint256 startTime,
-        uint256 endTime
+        uint256 endTime,
+        address depositToken,
+        uint256 minDepositAmount
     ) external;
 
     /// @notice Updates the Hashflow Router contract address.
