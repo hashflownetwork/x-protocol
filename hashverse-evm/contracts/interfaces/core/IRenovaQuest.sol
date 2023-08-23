@@ -78,20 +78,20 @@ interface IRenovaQuest {
 
     /// @notice Returns the Quest start time.
     /// @return The Quest start time.
-    function startTime() external returns (uint256);
+    function startTime() external view returns (uint256);
 
     /// @notice Returns the Quest end time.
     /// @return The Quest end time.
-    function endTime() external returns (uint256);
+    function endTime() external view returns (uint256);
 
     /// @notice Returns the address that has authority over the quest.
     /// @return The address that has authority over the quest.
-    function questOwner() external returns (address);
+    function questOwner() external view returns (address);
 
     /// @notice Returns whether a player has registered for the Quest.
     /// @param player The address of the player.
     /// @return Whether the player has registered.
-    function registered(address player) external returns (bool);
+    function registered(address player) external view returns (bool);
 
     /// @notice Used by the owner to allow / disallow a token for trading.
     /// @param token The address of the token.
@@ -101,23 +101,23 @@ interface IRenovaQuest {
     /// @notice Returns whether a token is allowed for deposits / trading.
     /// @param token The address of the token.
     /// @return Whether the token is allowed for trading.
-    function allowedTokens(address token) external returns (bool);
+    function allowedTokens(address token) external view returns (bool);
 
     /// @notice Returns the number of registered players.
     /// @return The number of registered players.
-    function numRegisteredPlayers() external returns (uint256);
+    function numRegisteredPlayers() external view returns (uint256);
 
     /// @notice Returns the number of registered players by faction.
     /// @param faction The faction.
     /// @return The number of registered players in the faction.
     function numRegisteredPlayersPerFaction(
         IRenovaAvatarBase.RenovaFaction faction
-    ) external returns (uint256);
+    ) external view returns (uint256);
 
     /// @notice Returns the number of loaded items for a player.
     /// @param player The address of the player.
     /// @return The number of currently loaded items.
-    function numLoadedItems(address player) external returns (uint256);
+    function numLoadedItems(address player) external view returns (uint256);
 
     /// @notice Returns the Token IDs for the loaded items for a player.
     /// @param player The address of the player.
@@ -126,7 +126,7 @@ interface IRenovaQuest {
     function loadedItems(
         address player,
         uint256 idx
-    ) external returns (uint256);
+    ) external view returns (uint256);
 
     /// @notice Returns the token balance for each token the player has in the Quest.
     /// @param player The address of the player.
@@ -135,7 +135,7 @@ interface IRenovaQuest {
     function portfolioTokenBalances(
         address player,
         address token
-    ) external returns (uint256);
+    ) external view returns (uint256);
 
     /// @notice Registers a player for the quests, loads items, and deposits tokens.
     /// @param tokenIds The token IDs for the items to load.

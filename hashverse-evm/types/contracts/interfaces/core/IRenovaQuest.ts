@@ -395,11 +395,7 @@ export interface IRenovaQuest extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
-  allowedTokens: TypedContractMethod<
-    [token: AddressLike],
-    [boolean],
-    "nonpayable"
-  >;
+  allowedTokens: TypedContractMethod<[token: AddressLike], [boolean], "view">;
 
   depositTokens: TypedContractMethod<
     [tokenDeposits: IRenovaQuest.TokenDepositStruct[]],
@@ -407,7 +403,7 @@ export interface IRenovaQuest extends BaseContract {
     "payable"
   >;
 
-  endTime: TypedContractMethod<[], [bigint], "nonpayable">;
+  endTime: TypedContractMethod<[], [bigint], "view">;
 
   enter: TypedContractMethod<[], [void], "nonpayable">;
 
@@ -429,38 +425,30 @@ export interface IRenovaQuest extends BaseContract {
   loadedItems: TypedContractMethod<
     [player: AddressLike, idx: BigNumberish],
     [bigint],
-    "nonpayable"
+    "view"
   >;
 
-  numLoadedItems: TypedContractMethod<
-    [player: AddressLike],
-    [bigint],
-    "nonpayable"
-  >;
+  numLoadedItems: TypedContractMethod<[player: AddressLike], [bigint], "view">;
 
-  numRegisteredPlayers: TypedContractMethod<[], [bigint], "nonpayable">;
+  numRegisteredPlayers: TypedContractMethod<[], [bigint], "view">;
 
   numRegisteredPlayersPerFaction: TypedContractMethod<
     [faction: BigNumberish],
     [bigint],
-    "nonpayable"
+    "view"
   >;
 
   portfolioTokenBalances: TypedContractMethod<
     [player: AddressLike, token: AddressLike],
     [bigint],
-    "nonpayable"
+    "view"
   >;
 
-  questOwner: TypedContractMethod<[], [string], "nonpayable">;
+  questOwner: TypedContractMethod<[], [string], "view">;
 
-  registered: TypedContractMethod<
-    [player: AddressLike],
-    [boolean],
-    "nonpayable"
-  >;
+  registered: TypedContractMethod<[player: AddressLike], [boolean], "view">;
 
-  startTime: TypedContractMethod<[], [bigint], "nonpayable">;
+  startTime: TypedContractMethod<[], [bigint], "view">;
 
   trade: TypedContractMethod<
     [quote: IHashflowRouter.RFQTQuoteStruct],
@@ -494,7 +482,7 @@ export interface IRenovaQuest extends BaseContract {
 
   getFunction(
     nameOrSignature: "allowedTokens"
-  ): TypedContractMethod<[token: AddressLike], [boolean], "nonpayable">;
+  ): TypedContractMethod<[token: AddressLike], [boolean], "view">;
   getFunction(
     nameOrSignature: "depositTokens"
   ): TypedContractMethod<
@@ -504,7 +492,7 @@ export interface IRenovaQuest extends BaseContract {
   >;
   getFunction(
     nameOrSignature: "endTime"
-  ): TypedContractMethod<[], [bigint], "nonpayable">;
+  ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "enter"
   ): TypedContractMethod<[], [void], "nonpayable">;
@@ -526,33 +514,33 @@ export interface IRenovaQuest extends BaseContract {
   ): TypedContractMethod<
     [player: AddressLike, idx: BigNumberish],
     [bigint],
-    "nonpayable"
+    "view"
   >;
   getFunction(
     nameOrSignature: "numLoadedItems"
-  ): TypedContractMethod<[player: AddressLike], [bigint], "nonpayable">;
+  ): TypedContractMethod<[player: AddressLike], [bigint], "view">;
   getFunction(
     nameOrSignature: "numRegisteredPlayers"
-  ): TypedContractMethod<[], [bigint], "nonpayable">;
+  ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "numRegisteredPlayersPerFaction"
-  ): TypedContractMethod<[faction: BigNumberish], [bigint], "nonpayable">;
+  ): TypedContractMethod<[faction: BigNumberish], [bigint], "view">;
   getFunction(
     nameOrSignature: "portfolioTokenBalances"
   ): TypedContractMethod<
     [player: AddressLike, token: AddressLike],
     [bigint],
-    "nonpayable"
+    "view"
   >;
   getFunction(
     nameOrSignature: "questOwner"
-  ): TypedContractMethod<[], [string], "nonpayable">;
+  ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "registered"
-  ): TypedContractMethod<[player: AddressLike], [boolean], "nonpayable">;
+  ): TypedContractMethod<[player: AddressLike], [boolean], "view">;
   getFunction(
     nameOrSignature: "startTime"
-  ): TypedContractMethod<[], [bigint], "nonpayable">;
+  ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "trade"
   ): TypedContractMethod<

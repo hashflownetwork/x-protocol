@@ -43,17 +43,17 @@ interface IRenovaAvatarBase is IERC4906Upgradeable {
     /// @notice Returns the faction of a player.
     /// @param player The player.
     /// @return The faction.
-    function factions(address player) external returns (RenovaFaction);
+    function factions(address player) external view returns (RenovaFaction);
 
     /// @notice Returns the character ID of a player.
     /// @param player The player.
     /// @return The character ID.
-    function characterIds(address player) external returns (uint256);
+    function characterIds(address player) external view returns (uint256);
 
     /// @notice Returns the token ID of a player.
     /// @param player The player.
     /// @return The token ID.
-    function tokenIds(address player) external returns (uint256);
+    function tokenIds(address player) external view returns (uint256);
 
     /// @notice Sets a custom base URI for the token metadata.
     /// @param customBaseURI The new Custom URI.

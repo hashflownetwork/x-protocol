@@ -14,6 +14,11 @@ interface IRenovaCommandDeck is IRenovaCommandDeckBase {
     /// @param root The Root.
     event UploadItemMerkleRoot(bytes32 rootId, bytes32 root);
 
+    /// @notice Emitted when a player has minted through a Merkle Root.
+    /// @param rootId The ID of the Root.
+    /// @param player The address of the Player that minted.
+    event MintItems(bytes32 rootId, address player);
+
     /// @notice Initializer function.
     /// @param renovaAvatar The address of the Avatar contract.
     /// @param renovaItem The address of the Item contract.
@@ -28,7 +33,7 @@ interface IRenovaCommandDeck is IRenovaCommandDeckBase {
 
     /// @notice Returns the Merkle root associated with a root ID.
     /// @param rootId The root ID.
-    function itemMerkleRoots(bytes32 rootId) external returns (bytes32);
+    function itemMerkleRoots(bytes32 rootId) external view returns (bytes32);
 
     /// @notice Uploads a Merkle root for minting items.
     /// @param rootId The root ID.

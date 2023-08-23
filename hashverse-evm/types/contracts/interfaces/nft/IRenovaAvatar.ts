@@ -472,13 +472,9 @@ export interface IRenovaAvatar extends BaseContract {
 
   balanceOf: TypedContractMethod<[owner: AddressLike], [bigint], "view">;
 
-  characterIds: TypedContractMethod<
-    [player: AddressLike],
-    [bigint],
-    "nonpayable"
-  >;
+  characterIds: TypedContractMethod<[player: AddressLike], [bigint], "view">;
 
-  factions: TypedContractMethod<[player: AddressLike], [bigint], "nonpayable">;
+  factions: TypedContractMethod<[player: AddressLike], [bigint], "view">;
 
   getApproved: TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
 
@@ -551,7 +547,7 @@ export interface IRenovaAvatar extends BaseContract {
     "view"
   >;
 
-  tokenIds: TypedContractMethod<[player: AddressLike], [bigint], "nonpayable">;
+  tokenIds: TypedContractMethod<[player: AddressLike], [bigint], "view">;
 
   transferFrom: TypedContractMethod<
     [from: AddressLike, to: AddressLike, tokenId: BigNumberish],
@@ -599,10 +595,10 @@ export interface IRenovaAvatar extends BaseContract {
   ): TypedContractMethod<[owner: AddressLike], [bigint], "view">;
   getFunction(
     nameOrSignature: "characterIds"
-  ): TypedContractMethod<[player: AddressLike], [bigint], "nonpayable">;
+  ): TypedContractMethod<[player: AddressLike], [bigint], "view">;
   getFunction(
     nameOrSignature: "factions"
-  ): TypedContractMethod<[player: AddressLike], [bigint], "nonpayable">;
+  ): TypedContractMethod<[player: AddressLike], [bigint], "view">;
   getFunction(
     nameOrSignature: "getApproved"
   ): TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
@@ -676,7 +672,7 @@ export interface IRenovaAvatar extends BaseContract {
   ): TypedContractMethod<[interfaceId: BytesLike], [boolean], "view">;
   getFunction(
     nameOrSignature: "tokenIds"
-  ): TypedContractMethod<[player: AddressLike], [bigint], "nonpayable">;
+  ): TypedContractMethod<[player: AddressLike], [bigint], "view">;
   getFunction(
     nameOrSignature: "transferFrom"
   ): TypedContractMethod<

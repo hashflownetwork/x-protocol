@@ -56,6 +56,7 @@ export interface IRenovaCommandDeckInterface extends Interface {
   getEvent(
     nameOrSignatureOrTopic:
       | "CreateQuest"
+      | "MintItems"
       | "UpdateHashflowRouter"
       | "UpdateQuestOwner"
       | "UploadItemMerkleRoot"
@@ -221,6 +222,19 @@ export namespace CreateQuestEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
+export namespace MintItemsEvent {
+  export type InputTuple = [rootId: BytesLike, player: AddressLike];
+  export type OutputTuple = [rootId: string, player: string];
+  export interface OutputObject {
+    rootId: string;
+    player: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
 export namespace UpdateHashflowRouterEvent {
   export type InputTuple = [newRouter: AddressLike, oldRouter: AddressLike];
   export type OutputTuple = [newRouter: string, oldRouter: string];
@@ -325,7 +339,7 @@ export interface IRenovaCommandDeck extends BaseContract {
     "nonpayable"
   >;
 
-  hashflowRouter: TypedContractMethod<[], [string], "nonpayable">;
+  hashflowRouter: TypedContractMethod<[], [string], "view">;
 
   initialize: TypedContractMethod<
     [
@@ -338,11 +352,7 @@ export interface IRenovaCommandDeck extends BaseContract {
     "nonpayable"
   >;
 
-  itemMerkleRoots: TypedContractMethod<
-    [rootId: BytesLike],
-    [string],
-    "nonpayable"
-  >;
+  itemMerkleRoots: TypedContractMethod<[rootId: BytesLike], [string], "view">;
 
   loadItemsForQuest: TypedContractMethod<
     [player: AddressLike, tokenIds: BigNumberish[]],
@@ -370,20 +380,20 @@ export interface IRenovaCommandDeck extends BaseContract {
   questDeploymentAddresses: TypedContractMethod<
     [questId: BytesLike],
     [string],
-    "nonpayable"
+    "view"
   >;
 
   questIdsByDeploymentAddress: TypedContractMethod<
     [questAddress: AddressLike],
     [string],
-    "nonpayable"
+    "view"
   >;
 
-  questOwner: TypedContractMethod<[], [string], "nonpayable">;
+  questOwner: TypedContractMethod<[], [string], "view">;
 
-  renovaAvatar: TypedContractMethod<[], [string], "nonpayable">;
+  renovaAvatar: TypedContractMethod<[], [string], "view">;
 
-  renovaItem: TypedContractMethod<[], [string], "nonpayable">;
+  renovaItem: TypedContractMethod<[], [string], "view">;
 
   updateHashflowRouter: TypedContractMethod<
     [hashflowRouter: AddressLike],
@@ -430,7 +440,7 @@ export interface IRenovaCommandDeck extends BaseContract {
   >;
   getFunction(
     nameOrSignature: "hashflowRouter"
-  ): TypedContractMethod<[], [string], "nonpayable">;
+  ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "initialize"
   ): TypedContractMethod<
@@ -445,7 +455,7 @@ export interface IRenovaCommandDeck extends BaseContract {
   >;
   getFunction(
     nameOrSignature: "itemMerkleRoots"
-  ): TypedContractMethod<[rootId: BytesLike], [string], "nonpayable">;
+  ): TypedContractMethod<[rootId: BytesLike], [string], "view">;
   getFunction(
     nameOrSignature: "loadItemsForQuest"
   ): TypedContractMethod<
@@ -474,19 +484,19 @@ export interface IRenovaCommandDeck extends BaseContract {
   >;
   getFunction(
     nameOrSignature: "questDeploymentAddresses"
-  ): TypedContractMethod<[questId: BytesLike], [string], "nonpayable">;
+  ): TypedContractMethod<[questId: BytesLike], [string], "view">;
   getFunction(
     nameOrSignature: "questIdsByDeploymentAddress"
-  ): TypedContractMethod<[questAddress: AddressLike], [string], "nonpayable">;
+  ): TypedContractMethod<[questAddress: AddressLike], [string], "view">;
   getFunction(
     nameOrSignature: "questOwner"
-  ): TypedContractMethod<[], [string], "nonpayable">;
+  ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "renovaAvatar"
-  ): TypedContractMethod<[], [string], "nonpayable">;
+  ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "renovaItem"
-  ): TypedContractMethod<[], [string], "nonpayable">;
+  ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "updateHashflowRouter"
   ): TypedContractMethod<[hashflowRouter: AddressLike], [void], "nonpayable">;
@@ -507,6 +517,13 @@ export interface IRenovaCommandDeck extends BaseContract {
     CreateQuestEvent.InputTuple,
     CreateQuestEvent.OutputTuple,
     CreateQuestEvent.OutputObject
+  >;
+  getEvent(
+    key: "MintItems"
+  ): TypedContractEvent<
+    MintItemsEvent.InputTuple,
+    MintItemsEvent.OutputTuple,
+    MintItemsEvent.OutputObject
   >;
   getEvent(
     key: "UpdateHashflowRouter"
@@ -540,6 +557,17 @@ export interface IRenovaCommandDeck extends BaseContract {
       CreateQuestEvent.InputTuple,
       CreateQuestEvent.OutputTuple,
       CreateQuestEvent.OutputObject
+    >;
+
+    "MintItems(bytes32,address)": TypedContractEvent<
+      MintItemsEvent.InputTuple,
+      MintItemsEvent.OutputTuple,
+      MintItemsEvent.OutputObject
+    >;
+    MintItems: TypedContractEvent<
+      MintItemsEvent.InputTuple,
+      MintItemsEvent.OutputTuple,
+      MintItemsEvent.OutputObject
     >;
 
     "UpdateHashflowRouter(address,address)": TypedContractEvent<

@@ -60,6 +60,7 @@ export interface RenovaCommandDeckInterface extends Interface {
     nameOrSignatureOrTopic:
       | "CreateQuest"
       | "Initialized"
+      | "MintItems"
       | "OwnershipTransferred"
       | "UpdateHashflowRouter"
       | "UpdateQuestOwner"
@@ -249,6 +250,19 @@ export namespace InitializedEvent {
   export type OutputTuple = [version: bigint];
   export interface OutputObject {
     version: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace MintItemsEvent {
+  export type InputTuple = [rootId: BytesLike, player: AddressLike];
+  export type OutputTuple = [rootId: string, player: string];
+  export interface OutputObject {
+    rootId: string;
+    player: string;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -579,6 +593,13 @@ export interface RenovaCommandDeck extends BaseContract {
     InitializedEvent.OutputObject
   >;
   getEvent(
+    key: "MintItems"
+  ): TypedContractEvent<
+    MintItemsEvent.InputTuple,
+    MintItemsEvent.OutputTuple,
+    MintItemsEvent.OutputObject
+  >;
+  getEvent(
     key: "OwnershipTransferred"
   ): TypedContractEvent<
     OwnershipTransferredEvent.InputTuple,
@@ -628,6 +649,17 @@ export interface RenovaCommandDeck extends BaseContract {
       InitializedEvent.InputTuple,
       InitializedEvent.OutputTuple,
       InitializedEvent.OutputObject
+    >;
+
+    "MintItems(bytes32,address)": TypedContractEvent<
+      MintItemsEvent.InputTuple,
+      MintItemsEvent.OutputTuple,
+      MintItemsEvent.OutputObject
+    >;
+    MintItems: TypedContractEvent<
+      MintItemsEvent.InputTuple,
+      MintItemsEvent.OutputTuple,
+      MintItemsEvent.OutputObject
     >;
 
     "OwnershipTransferred(address,address)": TypedContractEvent<
