@@ -25,13 +25,12 @@ describe('StakingVault', () => {
     hft = await hftFactory.deploy();
 
     // Initialize vaults.
-    const stakingVaultFactory = await hre.ethers.getContractFactory(
-      'StakingVault'
-    );
+    const stakingVaultFactory =
+      await hre.ethers.getContractFactory('StakingVault');
     stakingVault = await stakingVaultFactory.deploy(await hft.getAddress());
 
     stakingVaultForMigration = await stakingVaultFactory.deploy(
-      await hft.getAddress()
+      await hft.getAddress(),
     );
 
     // Initialize users.
@@ -42,7 +41,7 @@ describe('StakingVault', () => {
     // Deploy Test ERC1271
     const erc1271Factory = await hre.ethers.getContractFactory('TestERC1271');
     erc1271Contract = await erc1271Factory.deploy(
-      await contractUser.getAddress()
+      await contractUser.getAddress(),
     );
 
     // Mint HFT to users.
@@ -55,7 +54,7 @@ describe('StakingVault', () => {
   describe('Stake', () => {
     it('should stake', async () => {
       await expect(
-        stakingVault.connect(user).boostHFTStake(toWei(10), 2 * 365)
+        stakingVault.connect(user).boostHFTStake(toWei(10), 2 * 365),
       ).to.be.revertedWith('ERC20: insufficient allowance');
 
       await hft
@@ -105,7 +104,7 @@ describe('StakingVault', () => {
       ]);
 
       await expect(
-        stakingVault.connect(user).boostHFTStake(0, 3 * 365)
+        stakingVault.connect(user).boostHFTStake(0, 3 * 365),
       ).to.be.revertedWith('StakingVault::_boostHFTStake Time lock too high');
     });
 
@@ -117,7 +116,7 @@ describe('StakingVault', () => {
       ]);
 
       await expect(
-        stakingVault.connect(user).boostHFTStake(toWei(10), 0)
+        stakingVault.connect(user).boostHFTStake(toWei(10), 0),
       ).to.be.revertedWith('ERC20: insufficient allowance');
 
       await hre.ethers.provider.send('evm_setNextBlockTimestamp', [
@@ -133,7 +132,7 @@ describe('StakingVault', () => {
         hft,
         '1',
         toWei(20),
-        approvalDeadline
+        approvalDeadline,
       );
 
       await stakingVault
@@ -145,7 +144,7 @@ describe('StakingVault', () => {
           v,
           r,
           s,
-          toWei(20)
+          toWei(20),
         );
 
       const power = await stakingVault.getStakePower(await user.getAddress());
@@ -167,7 +166,7 @@ describe('StakingVault', () => {
       await erc1271Contract.approve(
         await hft.getAddress(),
         await stakingVault.getAddress(),
-        toWei(100)
+        toWei(100),
       );
 
       await hre.ethers.provider.send('evm_setNextBlockTimestamp', [
@@ -179,11 +178,11 @@ describe('StakingVault', () => {
       await erc1271Contract.boostHFTStake(
         await stakingVault.getAddress(),
         toWei(10),
-        2 * 365
+        2 * 365,
       );
 
       const power = await stakingVault.getStakePower(
-        await erc1271Contract.getAddress()
+        await erc1271Contract.getAddress(),
       );
 
       expect(power).to.equal(toWei(5));
@@ -204,7 +203,7 @@ describe('StakingVault', () => {
       ]);
 
       await expect(
-        stakingVault.connect(user).withdrawHFT(toWei(10), 0)
+        stakingVault.connect(user).withdrawHFT(toWei(10), 0),
       ).to.be.revertedWith('StakingVault::withdrawHFT HFT is locked.');
 
       await hre.ethers.provider.send('evm_setNextBlockTimestamp', [
@@ -215,9 +214,9 @@ describe('StakingVault', () => {
       ]);
 
       await expect(
-        stakingVault.connect(user).withdrawHFT(toWei(10), 0)
+        stakingVault.connect(user).withdrawHFT(toWei(10), 0),
       ).to.be.revertedWith(
-        'StakingVault::withdrawHFT Time lock not specified.'
+        'StakingVault::withdrawHFT Time lock not specified.',
       );
 
       await hre.ethers.provider.send('evm_setNextBlockTimestamp', [
@@ -234,7 +233,7 @@ describe('StakingVault', () => {
 
       const power = await stakingVault.getStakePower(await user.getAddress());
       const contractPower = await stakingVault.getStakePower(
-        await erc1271Contract.getAddress()
+        await erc1271Contract.getAddress(),
       );
 
       expect(power).to.equal(toWei(10) / BigInt(4));
@@ -259,9 +258,9 @@ describe('StakingVault', () => {
       await expect(
         stakingVault
           .connect(user)
-          .transferHFTStake(await stakingVaultForMigration.getAddress())
+          .transferHFTStake(await stakingVaultForMigration.getAddress()),
       ).to.be.revertedWith(
-        'StakingVault::transferHFTStake Target Vault not authorized.'
+        'StakingVault::transferHFTStake Target Vault not authorized.',
       );
       await hre.ethers.provider.send('evm_setNextBlockTimestamp', [
         baselineTimestamp +
@@ -274,7 +273,7 @@ describe('StakingVault', () => {
 
       await stakingVault.updateTargetVaultAuthorization(
         await stakingVaultForMigration.getAddress(),
-        true
+        true,
       );
 
       await hre.ethers.provider.send('evm_setNextBlockTimestamp', [
@@ -289,9 +288,9 @@ describe('StakingVault', () => {
       await expect(
         stakingVault
           .connect(user)
-          .transferHFTStake(await stakingVaultForMigration.getAddress())
+          .transferHFTStake(await stakingVaultForMigration.getAddress()),
       ).to.be.revertedWith(
-        'StakingVault::receiveHFTStakeTransfer Source Vault not authorized.'
+        'StakingVault::receiveHFTStakeTransfer Source Vault not authorized.',
       );
 
       await hre.ethers.provider.send('evm_setNextBlockTimestamp', [
@@ -305,7 +304,7 @@ describe('StakingVault', () => {
 
       await stakingVaultForMigration.updateSourceVaultAuthorization(
         await stakingVault.getAddress(),
-        true
+        true,
       );
 
       await hre.ethers.provider.send('evm_setNextBlockTimestamp', [
@@ -321,17 +320,17 @@ describe('StakingVault', () => {
         .connect(user)
         .transferHFTStake(await stakingVaultForMigration.getAddress());
       const userPowerSource = await stakingVault.getStakePower(
-        await user.getAddress()
+        await user.getAddress(),
       );
 
       expect(userPowerSource).to.eq(0);
 
       const userPowerTarget = await stakingVaultForMigration.getStakePower(
-        await user.getAddress()
+        await user.getAddress(),
       );
 
       expect(userPowerTarget).to.eq(
-        ((toWei(10) / BigInt(4)) * BigInt(3)) / BigInt(4)
+        ((toWei(10) / BigInt(4)) * BigInt(3)) / BigInt(4),
       );
     });
 
@@ -349,17 +348,17 @@ describe('StakingVault', () => {
 
       await erc1271Contract.transferHFTStake(
         await stakingVault.getAddress(),
-        await stakingVaultForMigration.getAddress()
+        await stakingVaultForMigration.getAddress(),
       );
 
       const contractPowerSource = await stakingVault.getStakePower(
-        await erc1271Contract.getAddress()
+        await erc1271Contract.getAddress(),
       );
 
       expect(contractPowerSource).to.eq(0);
 
       const contractPowerTarget = await stakingVaultForMigration.getStakePower(
-        await erc1271Contract.getAddress()
+        await erc1271Contract.getAddress(),
       );
 
       expect(contractPowerTarget).to.eq(toWei(10) / BigInt(4) / BigInt(2));

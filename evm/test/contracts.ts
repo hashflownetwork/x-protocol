@@ -21,7 +21,7 @@ export class ContractFactory {
 
     const hashflowFactory = await ethers.getContractFactory('HashflowFactory');
     const hashflowXChainMessengerFactory = await ethers.getContractFactory(
-      'HashflowLayerZeroMessenger'
+      'HashflowLayerZeroMessenger',
     );
     const hashflowRouter = await ethers.getContractFactory('HashflowRouter');
     const hashflowPool = await ethers.getContractFactory('HashflowPool');
@@ -43,7 +43,7 @@ export class ContractFactory {
 
     const xChainMessenger = await hashflowXChainMessengerFactory.deploy(
       1,
-      await router.getAddress()
+      await router.getAddress(),
     );
 
     const poolImpl = await hashflowPool.deploy(await weth.getAddress());
@@ -55,11 +55,11 @@ export class ContractFactory {
 
     await lzEndpoint.setDestLzEndpoint(
       await xChainMessenger.getAddress(),
-      await lzEndpoint.getAddress()
+      await lzEndpoint.getAddress(),
     );
     await xChainMessenger.updateXChainRemoteAddress(
       1,
-      await xChainMessenger.getAddress()
+      await xChainMessenger.getAddress(),
     );
     await xChainMessenger.updateLzChainIdForHashflowChainId(1, 5555);
     await xChainMessenger.updateLzEndpoint(await lzEndpoint.getAddress());
@@ -88,7 +88,7 @@ export class ContractFactory {
       lzEndpoint,
       tt1,
       tt2,
-      weth
+      weth,
     );
   }
 }
@@ -120,7 +120,7 @@ export class Contracts {
     lzEndpoint: LZEndpointMock,
     tt1: TestToken1,
     tt2: TestToken2,
-    weth: WETH9
+    weth: WETH9,
   ) {
     this.signers = signers;
     this.factory = factory;

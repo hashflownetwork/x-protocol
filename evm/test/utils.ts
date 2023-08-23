@@ -14,7 +14,7 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types';
 export async function sendETH(
   signer: SignerWithAddress,
   value: BigNumberish,
-  recipient: string
+  recipient: string,
 ): Promise<TransactionResponse> {
   const tx = {
     from: await signer.getAddress(),
@@ -95,7 +95,7 @@ export interface XChainRFQMQuoteData {
 
 export async function signQuote(
   quote: QuoteData,
-  signer: Signer
+  signer: Signer,
 ): Promise<string> {
   const digest = hashQuote(quote);
   return await signer.signMessage(Buffer.from(digest.slice(2), 'hex'));
@@ -103,7 +103,7 @@ export async function signQuote(
 
 export async function signQuoteXChain(
   quote: XChainQuoteData,
-  signer: Signer
+  signer: Signer,
 ): Promise<string> {
   const digest = hashQuoteXChain(quote);
   return await signer.signMessage(Buffer.from(digest.slice(2), 'hex'));
@@ -113,7 +113,7 @@ export async function signQuoteRFQMTaker(
   quote: RFQMQuoteData,
   chainId: number,
   routerAddress: string,
-  signer: HardhatEthersSigner
+  signer: HardhatEthersSigner,
 ): Promise<string> {
   const domain: TypedDataDomain = {
     name: 'Hashflow - Router',
@@ -147,13 +147,13 @@ export async function signQuoteRFQMTaker(
       baseTokenAmount: quote.baseTokenAmount,
       quoteTokenAmount: quote.quoteTokenAmount,
       quoteExpiry: quote.quoteExpiry,
-    }
+    },
   );
 }
 
 export async function signQuoteRFQMMaker(
   quote: RFQMQuoteData,
-  signer: Signer
+  signer: Signer,
 ): Promise<string> {
   const digest = hashQuoteRFQMMaker(quote);
   return await signer.signMessage(Buffer.from(digest.slice(2), 'hex'));
@@ -163,7 +163,7 @@ export async function signQuoteXChainRFQMTaker(
   quote: XChainRFQMQuoteData,
   chainId: number,
   routerAddress: string,
-  signer: HardhatEthersSigner
+  signer: HardhatEthersSigner,
 ): Promise<string> {
   const domain: TypedDataDomain = {
     name: 'Hashflow - Router',
@@ -205,13 +205,13 @@ export async function signQuoteXChainRFQMTaker(
       baseTokenAmount: quote.baseTokenAmount,
       quoteTokenAmount: quote.quoteTokenAmount,
       quoteExpiry: quote.quoteExpiry,
-    }
+    },
   );
 }
 
 export async function signQuoteXChainRFQMMaker(
   quote: XChainRFQMQuoteData,
-  signer: Signer
+  signer: Signer,
 ): Promise<string> {
   const digest = hashQuoteXChainRFQMMaker(quote);
   return await signer.signMessage(Buffer.from(digest.slice(2), 'hex'));
@@ -246,7 +246,7 @@ export function hashQuote(quote: QuoteData): string {
       quote.quoteExpiry,
       quote.txid,
       31337,
-    ]
+    ],
   );
 }
 
@@ -275,7 +275,7 @@ export function hashQuoteRFQMMaker(quote: RFQMQuoteData): string {
       quote.quoteExpiry,
       quote.txid,
       31337,
-    ]
+    ],
   );
 }
 
@@ -303,7 +303,7 @@ export function hashQuoteXChain(quote: XChainQuoteData) {
           quote.dstPool,
           quote.srcExternalAccount,
           quote.dstExternalAccount,
-        ]
+        ],
       ),
       quote.dstTrader,
       quote.baseToken,
@@ -314,7 +314,7 @@ export function hashQuoteXChain(quote: XChainQuoteData) {
       quote.nonce,
       quote.txid,
       quote.xChainMessenger,
-    ]
+    ],
   );
 }
 
@@ -341,7 +341,7 @@ export function hashQuoteXChainRFQMMaker(quote: XChainRFQMQuoteData): string {
           quote.dstPool,
           quote.srcExternalAccount,
           quote.dstExternalAccount,
-        ]
+        ],
       ),
       quote.trader,
       quote.baseToken,
@@ -351,7 +351,7 @@ export function hashQuoteXChainRFQMMaker(quote: XChainRFQMQuoteData): string {
       quote.quoteExpiry,
       quote.txid,
       quote.xChainMessenger,
-    ]
+    ],
   );
 }
 
@@ -365,7 +365,7 @@ export async function signERC20Permit(
   tokenName: string,
   tokenVersion: string,
   chainId: number,
-  signer: HardhatEthersSigner
+  signer: HardhatEthersSigner,
 ): Promise<string> {
   const domain: TypedDataDomain = {
     name: tokenName,
@@ -391,7 +391,7 @@ export async function signERC20Permit(
       value: amount,
       nonce,
       deadline,
-    }
+    },
   );
 }
 
@@ -401,7 +401,7 @@ export function expandTo18Decimals(n: number): bigint {
 
 export async function mineBlock(
   hre: HardhatRuntimeEnvironment,
-  timestamp: number
+  timestamp: number,
 ): Promise<void> {
   return hre.ethers.provider.send('evm_mine', [timestamp]);
 }

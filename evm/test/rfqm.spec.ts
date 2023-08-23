@@ -23,7 +23,7 @@ describe('RFQ-M', () => {
     await factory.updatePoolCreatorAuthorization(owner, true);
     await factory.createPool('Hash Capital', signer);
     const createPoolEvents = await factory.queryFilter(
-      factory.filters.CreatePool()
+      factory.filters.CreatePool(),
     );
     const pools = createPoolEvents
       .filter((evt) => evt.args.operations === owner)
@@ -32,7 +32,7 @@ describe('RFQ-M', () => {
 
     privPoolContract = await ethers.getContractAt(
       'HashflowPool',
-      privPoolAddress
+      privPoolAddress,
     );
 
     // Deposit assets into the pool
@@ -71,7 +71,7 @@ describe('RFQ-M', () => {
           quoteData,
           31337,
           await router.getAddress(),
-          signers[3]
+          signers[3],
         ),
         makerSignature: await signQuoteRFQMMaker(quoteData, signers[2]),
       };
@@ -82,7 +82,7 @@ describe('RFQ-M', () => {
 
       await relayerRouter.tradeRFQM(quote);
       await expect(relayerRouter.tradeRFQM(quote)).to.be.revertedWith(
-        'HashflowRouter::_validateRFQMQuote txid has already been used.'
+        'HashflowRouter::_validateRFQMQuote txid has already been used.',
       );
 
       expect(await tt1.balanceOf(trader)).to.equal(expandTo18Decimals(98));
@@ -90,10 +90,10 @@ describe('RFQ-M', () => {
       expect(await tt2.balanceOf(trader)).to.equal(expandTo18Decimals(105));
 
       expect(
-        await privPoolContract.getReserves(await tt1.getAddress())
+        await privPoolContract.getReserves(await tt1.getAddress()),
       ).to.equal(expandTo18Decimals(12));
       expect(
-        await privPoolContract.getReserves(await tt2.getAddress())
+        await privPoolContract.getReserves(await tt2.getAddress()),
       ).to.equal(expandTo18Decimals(15));
     });
 
@@ -124,7 +124,7 @@ describe('RFQ-M', () => {
           quoteData,
           31337,
           await router.getAddress(),
-          signers[3]
+          signers[3],
         ),
         makerSignature: await signQuoteRFQMMaker(quoteData, signers[2]),
       };
@@ -142,7 +142,7 @@ describe('RFQ-M', () => {
         await tt1.name(),
         '1',
         31337,
-        signers[3]
+        signers[3],
       );
 
       if (signature.length !== 132) {
@@ -159,7 +159,7 @@ describe('RFQ-M', () => {
         v,
         r,
         s,
-        quote.baseTokenAmount
+        quote.baseTokenAmount,
       );
 
       expect(await tt1.balanceOf(trader)).to.equal(expandTo18Decimals(96));
@@ -167,10 +167,10 @@ describe('RFQ-M', () => {
       expect(await tt2.balanceOf(trader)).to.equal(expandTo18Decimals(110));
 
       expect(
-        await privPoolContract.getReserves(await tt1.getAddress())
+        await privPoolContract.getReserves(await tt1.getAddress()),
       ).to.equal(expandTo18Decimals(14));
       expect(
-        await privPoolContract.getReserves(await tt2.getAddress())
+        await privPoolContract.getReserves(await tt2.getAddress()),
       ).to.equal(expandTo18Decimals(10));
 
       const quoteData2: RFQMQuoteData = {
@@ -183,7 +183,7 @@ describe('RFQ-M', () => {
           quoteData2,
           31337,
           await router.getAddress(),
-          signers[3]
+          signers[3],
         ),
         makerSignature: await signQuoteRFQMMaker(quoteData2, signers[2]),
       };
@@ -198,7 +198,7 @@ describe('RFQ-M', () => {
         await tt1.name(),
         '1',
         31337,
-        signers[3]
+        signers[3],
       );
 
       const r2 = '0x' + signature2.slice(2, 2 + 64);
@@ -211,7 +211,7 @@ describe('RFQ-M', () => {
         v2,
         r2,
         s2,
-        BigInt(2) ** BigInt(256) - BigInt(1)
+        BigInt(2) ** BigInt(256) - BigInt(1),
       );
 
       expect(await tt1.balanceOf(trader)).to.equal(expandTo18Decimals(94));

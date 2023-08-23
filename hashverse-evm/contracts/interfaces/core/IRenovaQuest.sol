@@ -2,7 +2,7 @@
 
 pragma solidity >=0.8.0;
 
-import '../external/IHashflowRouter.sol';
+import '@hashflow/contracts-evm/contracts/interfaces/IHashflowRouter.sol';
 import '../nft/IRenovaAvatarBase.sol';
 
 /// @title IRenovaQuest

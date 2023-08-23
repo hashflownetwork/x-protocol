@@ -97,7 +97,7 @@ task('wormhole:trade', 'Trades the first leg of X-Chain.')
 
     const routerMetadata = getDeployedContractMetadata(
       'IHashflowRouter',
-      networkName
+      networkName,
     );
 
     if (!routerMetadata) {
@@ -107,14 +107,14 @@ task('wormhole:trade', 'Trades the first leg of X-Chain.')
     const routerContract = await hre.ethers.getContractAt(
       'HashflowRouter',
       routerMetadata.address,
-      traderSigner
+      traderSigner,
     );
 
     const txid =
       '0x' +
       Buffer.from(
         keccak256(Buffer.from(`abcdef${Date.now()}`)).slice(2),
-        'hex'
+        'hex',
       ).toString('hex');
 
     const srcPool = EVM_POOL_ADDRESS_HEX;
@@ -134,7 +134,7 @@ task('wormhole:trade', 'Trades the first leg of X-Chain.')
 
     const messengerMetadata = getDeployedContractMetadata(
       'IHashflowWormholeMessenger',
-      networkName
+      networkName,
     );
 
     if (!messengerMetadata) {
@@ -144,7 +144,7 @@ task('wormhole:trade', 'Trades the first leg of X-Chain.')
     const messengerContract = await hre.ethers.getContractAt(
       'HashflowWormholeMessenger',
       messengerMetadata.address,
-      mainSigner
+      mainSigner,
     );
 
     const baseToken = EVM_TEST_TOKEN_1_ADDRESS_HEX;
@@ -194,7 +194,7 @@ task('wormhole:trade', 'Trades the first leg of X-Chain.')
       const dstContract =
         '0x' +
         padAddressTo32Bytes(
-          xCall ? EVM_DUMMY_X_CHAIN_APP_ADDRESS_HEX : ZERO_ADDRESS
+          xCall ? EVM_DUMMY_X_CHAIN_APP_ADDRESS_HEX : ZERO_ADDRESS,
         ).toString('hex');
 
       let dstContractCalldata = '0x';
@@ -208,7 +208,7 @@ task('wormhole:trade', 'Trades the first leg of X-Chain.')
         await routerContract.tradeXChainRFQT(
           quote,
           dstContract,
-          dstContractCalldata
+          dstContractCalldata,
         )
       ).wait();
       if (!tx) {
@@ -216,7 +216,7 @@ task('wormhole:trade', 'Trades the first leg of X-Chain.')
       }
 
       const emitterAddr = padAddressTo32Bytes(
-        await messengerContract.getAddress()
+        await messengerContract.getAddress(),
       ).toString('hex');
 
       const filter = taskArgs.fastFinality
@@ -226,7 +226,7 @@ task('wormhole:trade', 'Trades the first leg of X-Chain.')
       const logs = await messengerContract.queryFilter(
         filter,
         tx.blockNumber,
-        tx.blockNumber
+        tx.blockNumber,
       );
 
       const txnLogs = logs.filter((l) => l.transactionHash === tx.hash);
@@ -269,7 +269,7 @@ task('wormhole:trade', 'Trades the first leg of X-Chain.')
 
       fs.writeFileSync(
         WORMHOLE_METADATA_FILE_PATH,
-        JSON.stringify(payload, null, 4)
+        JSON.stringify(payload, null, 4),
       );
 
       console.log('Gas Used', tx.gasUsed.toString());
@@ -292,7 +292,7 @@ task('wormhole:relay', 'Relays the VAA on the destination chain').setAction(
 
     const { mainSigner, quoteSigner } = await getSigners(hre);
     const metadata = JSON.parse(
-      fs.readFileSync(WORMHOLE_METADATA_FILE_PATH).toString()
+      fs.readFileSync(WORMHOLE_METADATA_FILE_PATH).toString(),
     ) as WormholeMetadata;
 
     const quoteTokenAddress = '0x' + metadata.quoteToken.slice(2 + 12 * 2);
@@ -302,13 +302,13 @@ task('wormhole:relay', 'Relays the VAA on the destination chain').setAction(
     const quoteToken = await hre.ethers.getContractAt(
       'IERC20',
       quoteTokenAddress,
-      mainSigner
+      mainSigner,
     );
 
     const dummyXApp = await hre.ethers.getContractAt(
       'DummyXChainApp',
       EVM_DUMMY_X_CHAIN_APP_ADDRESS_HEX,
-      mainSigner
+      mainSigner,
     );
 
     const traderBalanceBefore = await quoteToken.balanceOf(dstTraderAddress);
@@ -321,12 +321,12 @@ task('wormhole:relay', 'Relays the VAA on the destination chain').setAction(
 
     console.log(
       'X-Chain App Counter Before',
-      (await dummyXApp.xCounter()).toString()
+      (await dummyXApp.xCounter()).toString(),
     );
 
     const messengerMetadata = getDeployedContractMetadata(
       'IHashflowWormholeMessenger',
-      networkName
+      networkName,
     );
 
     if (!messengerMetadata) {
@@ -336,13 +336,13 @@ task('wormhole:relay', 'Relays the VAA on the destination chain').setAction(
     const messengerContract = await hre.ethers.getContractAt(
       'HashflowWormholeMessenger',
       messengerMetadata.address,
-      quoteSigner
+      quoteSigner,
     );
 
     try {
       const tx = await (
         await messengerContract.wormholeReceive(
-          Buffer.from(metadata.vaaBytes, 'base64')
+          Buffer.from(metadata.vaaBytes, 'base64'),
         )
       ).wait();
       if (!tx) {
@@ -370,7 +370,7 @@ task('wormhole:relay', 'Relays the VAA on the destination chain').setAction(
       console.log('Trader Balance After', traderBalanceAfter.toString());
       console.log(
         'X-Chain App Counter After',
-        (await dummyXApp.xCounter()).toString()
+        (await dummyXApp.xCounter()).toString(),
       );
 
       console.log('Gas Used', tx.gasUsed.toString());
@@ -378,7 +378,7 @@ task('wormhole:relay', 'Relays the VAA on the destination chain').setAction(
       console.log((err as Error).message);
       throw err;
     }
-  }
+  },
 );
 
 task('wormhole:relay:solana', 'Relays a Solana X-Chain trade')
@@ -405,7 +405,7 @@ task('wormhole:relay:solana', 'Relays a Solana X-Chain trade')
     const quoteToken = await hre.ethers.getContractAt(
       'IERC20',
       quoteTokenAddress,
-      mainSigner
+      mainSigner,
     );
 
     const traderBalanceBefore = await quoteToken.balanceOf(dstTraderAddress);
@@ -418,7 +418,7 @@ task('wormhole:relay:solana', 'Relays a Solana X-Chain trade')
 
     const messengerMetadata = getDeployedContractMetadata(
       'IHashflowWormholeMessenger',
-      networkName
+      networkName,
     );
 
     if (!messengerMetadata) {
@@ -428,7 +428,7 @@ task('wormhole:relay:solana', 'Relays a Solana X-Chain trade')
     const messengerContract = await hre.ethers.getContractAt(
       'HashflowWormholeMessenger',
       messengerMetadata.address,
-      quoteSigner
+      quoteSigner,
     );
 
     try {
@@ -454,7 +454,7 @@ task('wormhole:relay:solana', 'Relays a Solana X-Chain trade')
 
 task(
   'wormhole:x-app:check-value',
-  'Prints out the counter and caller'
+  'Prints out the counter and caller',
 ).setAction(async (taskArgs, hre) => {
   const { name: networkName } =
     getNetworkConfigFromHardhatRuntimeEnvironment(hre);
@@ -465,7 +465,7 @@ task(
 
   const xApp = await hre.ethers.getContractAt(
     'DummyXChainApp',
-    EVM_DUMMY_X_CHAIN_APP_ADDRESS_HEX
+    EVM_DUMMY_X_CHAIN_APP_ADDRESS_HEX,
   );
 
   const xCaller = await xApp.xCaller();

@@ -24,10 +24,10 @@ describe('RFQ-T', () => {
       const { factory, router } = contracts;
 
       await expect(factory.renounceOwnership()).to.be.revertedWith(
-        'HashflowFactory: Renouncing ownership not allowed.'
+        'HashflowFactory: Renouncing ownership not allowed.',
       );
       await expect(router.renounceOwnership()).to.be.revertedWith(
-        'HashflowRouter: Renouncing ownership not allowed.'
+        'HashflowRouter: Renouncing ownership not allowed.',
       );
     });
   });
@@ -42,7 +42,7 @@ describe('RFQ-T', () => {
       await factory.createPool(poolName, signer);
 
       const createPoolEvents = await factory.queryFilter(
-        factory.filters.CreatePool()
+        factory.filters.CreatePool(),
       );
       const pools = createPoolEvents
         .filter((evt) => evt.args.operations === owner)
@@ -51,7 +51,7 @@ describe('RFQ-T', () => {
 
       privPoolContract = await hre.ethers.getContractAt(
         'HashflowPool',
-        privPoolAddress
+        privPoolAddress,
       );
     });
 
@@ -59,7 +59,7 @@ describe('RFQ-T', () => {
       const weth = await privPoolContract._WETH();
 
       expect(weth.toLowerCase()).to.equal(
-        (await contracts.weth.getAddress()).toLowerCase()
+        (await contracts.weth.getAddress()).toLowerCase(),
       );
     });
   });
@@ -80,7 +80,7 @@ describe('RFQ-T', () => {
       await tt1.transfer(privPoolAddress, value);
 
       expect(
-        await privPoolContract.getReserves(await tt1.getAddress())
+        await privPoolContract.getReserves(await tt1.getAddress()),
       ).to.equal(value);
     });
   });
@@ -129,12 +129,12 @@ describe('RFQ-T', () => {
       };
 
       await expect(
-        traderRouter.tradeRFQT(quote, { value: expandTo18Decimals(0) })
+        traderRouter.tradeRFQT(quote, { value: expandTo18Decimals(0) }),
       ).to.be.revertedWith(
-        'HashflowRouter::tradeRFQT msg.value should equal effectiveBaseTokenAmount.'
+        'HashflowRouter::tradeRFQT msg.value should equal effectiveBaseTokenAmount.',
       );
       const traderBalanceBefore = await signers[3].provider.getBalance(
-        signers[3].address
+        signers[3].address,
       );
       const traderTokenBalanceBefore = await tt1.balanceOf(trader);
 
@@ -146,7 +146,7 @@ describe('RFQ-T', () => {
       });
 
       const traderBalanceAfter = await signers[3].provider.getBalance(
-        signers[3].address
+        signers[3].address,
       );
       const traderTokenBalanceAfter = await tt1.balanceOf(trader);
 
@@ -156,18 +156,18 @@ describe('RFQ-T', () => {
         .to.be.true;
 
       expect(traderTokenBalanceAfter - traderTokenBalanceBefore).to.equal(
-        expandTo18Decimals(5)
+        expandTo18Decimals(5),
       );
 
       // test for re-submission of the same quote
       await expect(
-        traderRouter.tradeRFQT(quote, { value: expandTo18Decimals(1) })
+        traderRouter.tradeRFQT(quote, { value: expandTo18Decimals(1) }),
       ).to.be.revertedWith('HashflowPool::_updateNonce Invalid nonce.');
       expect(
-        await privPoolContract.getReserves(await tt1.getAddress())
+        await privPoolContract.getReserves(await tt1.getAddress()),
       ).to.equal(expandTo18Decimals(10) - expandTo18Decimals(5));
       expect(await privPoolContract.getReserves(eth)).to.equal(
-        expandTo18Decimals(10) + expandTo18Decimals(2)
+        expandTo18Decimals(10) + expandTo18Decimals(2),
       );
     });
 
@@ -202,14 +202,14 @@ describe('RFQ-T', () => {
       };
 
       await expect(
-        router.connect(signers[3]).tradeRFQT(quote)
+        router.connect(signers[3]).tradeRFQT(quote),
       ).to.be.revertedWith('ERC20: insufficient allowance');
 
       await tt1
         .connect(signers[3])
         .approve(await router.getAddress(), expandTo18Decimals(10000));
       await expect(
-        router.connect(signers[3]).tradeRFQT(quote)
+        router.connect(signers[3]).tradeRFQT(quote),
       ).to.be.revertedWith('ERC20: transfer amount exceeds balance');
     });
 
@@ -246,16 +246,16 @@ describe('RFQ-T', () => {
       await expect(
         router
           .connect(signers[3])
-          .tradeRFQT(quote, { value: expandTo18Decimals(2) })
+          .tradeRFQT(quote, { value: expandTo18Decimals(2) }),
       ).to.be.revertedWith('HashflowRouter::tradeRFQT msg.value should be 0.');
 
       await router.connect(signers[3]).tradeRFQT(quote);
 
       expect(
-        await privPoolContract.getReserves(await tt1.getAddress())
+        await privPoolContract.getReserves(await tt1.getAddress()),
       ).to.equal(expandTo18Decimals(5) + expandTo18Decimals(2));
       expect(await privPoolContract.getReserves(eth)).to.equal(
-        expandTo18Decimals(12) - expandTo18Decimals(5)
+        expandTo18Decimals(12) - expandTo18Decimals(5),
       );
     });
 
@@ -290,7 +290,7 @@ describe('RFQ-T', () => {
 
       mineBlock(hre, now + 20);
       await expect(router.tradeRFQT(quote)).to.be.revertedWith(
-        'HashflowRouter::_validateRFQTQuote Quote has expired.'
+        'HashflowRouter::_validateRFQTQuote Quote has expired.',
       );
     });
 
@@ -329,10 +329,10 @@ describe('RFQ-T', () => {
 
       await router.connect(signers[3]).tradeRFQT(quote);
       expect(
-        await privPoolContract.getReserves(await tt1.getAddress())
+        await privPoolContract.getReserves(await tt1.getAddress()),
       ).to.equal(expandTo18Decimals(7) - expandTo18Decimals(1));
       expect(
-        await privPoolContract.getReserves(await tt2.getAddress())
+        await privPoolContract.getReserves(await tt2.getAddress()),
       ).to.equal(expandTo18Decimals(2));
     });
 
@@ -367,9 +367,9 @@ describe('RFQ-T', () => {
       };
 
       await expect(
-        router.connect(signers[3]).tradeRFQT(quote)
+        router.connect(signers[3]).tradeRFQT(quote),
       ).to.be.revertedWith(
-        'HashflowRouter::_validateRFQTQuote effectiveBaseTokenAmount too high.'
+        'HashflowRouter::_validateRFQTQuote effectiveBaseTokenAmount too high.',
       );
     });
 
@@ -406,10 +406,10 @@ describe('RFQ-T', () => {
       await router.connect(signers[3]).tradeRFQT(quote);
 
       expect(
-        await privPoolContract.getReserves(await tt1.getAddress())
+        await privPoolContract.getReserves(await tt1.getAddress()),
       ).to.equal(expandTo18Decimals(6) - expandTo18Decimals(5) / BigInt(10));
       expect(
-        await privPoolContract.getReserves(await tt2.getAddress())
+        await privPoolContract.getReserves(await tt2.getAddress()),
       ).to.equal(expandTo18Decimals(2) + expandTo18Decimals(1));
     });
   });
@@ -420,19 +420,19 @@ describe('RFQ-T', () => {
       await privPoolContract.removeLiquidity(
         eth,
         ZERO_ADDRESS,
-        expandTo18Decimals(1)
+        expandTo18Decimals(1),
       );
 
       await expect(
         privPoolContract
           .connect(signers[3])
-          .removeLiquidity(eth, ZERO_ADDRESS, expandTo18Decimals(1))
+          .removeLiquidity(eth, ZERO_ADDRESS, expandTo18Decimals(1)),
       ).to.be.revertedWith(
-        'HashflowPool:authorizedOperations Sender must be operator.'
+        'HashflowPool:authorizedOperations Sender must be operator.',
       );
 
       expect(await privPoolContract.getReserves(eth)).to.equal(
-        expandTo18Decimals(7) - expandTo18Decimals(1)
+        expandTo18Decimals(7) - expandTo18Decimals(1),
       );
     });
 
@@ -441,7 +441,7 @@ describe('RFQ-T', () => {
       await privPoolContract.removeLiquidity(
         await tt1.getAddress(),
         ZERO_ADDRESS,
-        expandTo18Decimals(1)
+        expandTo18Decimals(1),
       );
       await expect(
         privPoolContract
@@ -449,14 +449,14 @@ describe('RFQ-T', () => {
           .removeLiquidity(
             await tt1.getAddress(),
             ZERO_ADDRESS,
-            expandTo18Decimals(1)
-          )
+            expandTo18Decimals(1),
+          ),
       ).to.be.revertedWith(
-        'HashflowPool:authorizedOperations Sender must be operator.'
+        'HashflowPool:authorizedOperations Sender must be operator.',
       );
 
       expect(
-        await privPoolContract.getReserves(await tt1.getAddress())
+        await privPoolContract.getReserves(await tt1.getAddress()),
       ).to.equal(expandTo18Decimals(55) / BigInt(10) - expandTo18Decimals(1));
     });
   });

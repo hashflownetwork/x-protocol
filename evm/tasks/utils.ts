@@ -43,7 +43,7 @@ export function isWormholeTestnet(networkName: NetworkNameExtended): boolean {
 
 export function getDeployedContractMetadata(
   contractName: ContractName,
-  networkName: NetworkNameExtended
+  networkName: NetworkNameExtended,
 ): SingleContractMetadata | undefined {
   const contractMetadata: ContractMetadata | undefined =
     getContractMetadata(contractName);
@@ -54,7 +54,7 @@ export function getDeployedContractMetadata(
 export async function registerDeployedContract(
   contract: BaseContract,
   contractName: ContractName,
-  networkName: NetworkNameExtended
+  networkName: NetworkNameExtended,
 ): Promise<void> {
   const contractMetadata = getContractMetadata(contractName) ?? {};
 
@@ -63,7 +63,7 @@ export async function registerDeployedContract(
 
   if (!deploymentTransaction) {
     throw new Error(
-      `Could not find deployment transaction for ${contractName} on ${networkName}`
+      `Could not find deployment transaction for ${contractName} on ${networkName}`,
     );
   }
   const deploymentTransactionHash = deploymentTransaction.hash;
@@ -77,14 +77,14 @@ export async function registerDeployedContract(
 
   fs.writeFileSync(
     contractMetadataFilePath,
-    JSON.stringify(contractMetadata, null, 4)
+    JSON.stringify(contractMetadata, null, 4),
   );
 
   console.log(`Deployed ${contractName} at ${address}`);
 }
 
 export function getNetworkConfigFromHardhatRuntimeEnvironment(
-  hre: HardhatRuntimeEnvironment
+  hre: HardhatRuntimeEnvironment,
 ): NetworkConfigExtended {
   const networkName = hre.hardhatArguments.network as NetworkNameExtended;
 
@@ -92,7 +92,7 @@ export function getNetworkConfigFromHardhatRuntimeEnvironment(
 }
 
 function getContractMetadata(
-  contractName: ContractName
+  contractName: ContractName,
 ): ContractMetadata | undefined {
   const metadataFilePath = getContractMetadataFilePath(contractName);
 
@@ -101,13 +101,13 @@ function getContractMetadata(
   }
 
   return JSON.parse(
-    fs.readFileSync(metadataFilePath).toString()
+    fs.readFileSync(metadataFilePath).toString(),
   ) as ContractMetadata;
 }
 
 function getContractMetadataFilePath(contractName: ContractName): string {
   return path.resolve(
     __dirname,
-    `${CONTRACT_METADATA_DIR}/${contractName}.json`
+    `${CONTRACT_METADATA_DIR}/${contractName}.json`,
   );
 }

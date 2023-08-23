@@ -12,7 +12,6 @@ import '@openzeppelin/contracts/utils/Context.sol';
 
 import '../interfaces/core/IRenovaCommandDeckBase.sol';
 import '../interfaces/core/IRenovaQuest.sol';
-import '../interfaces/external/IHashflowRouter.sol';
 import '../interfaces/nft/IRenovaAvatarBase.sol';
 
 /// @title RenovaQuest
@@ -279,11 +278,11 @@ contract RenovaQuest is
             'RenovaQuest::trade Effective Trader should be player.'
         );
 
-        uint256 quoteTokenAmount = quote.maxQuoteTokenAmount;
-        if (quote.effectiveBaseTokenAmount < quote.maxBaseTokenAmount) {
+        uint256 quoteTokenAmount = quote.quoteTokenAmount;
+        if (quote.effectiveBaseTokenAmount < quote.baseTokenAmount) {
             quoteTokenAmount =
-                (quote.effectiveBaseTokenAmount * quote.maxQuoteTokenAmount) /
-                quote.maxBaseTokenAmount;
+                (quote.effectiveBaseTokenAmount * quote.quoteTokenAmount) /
+                quote.baseTokenAmount;
         }
 
         portfolioTokenBalances[_msgSender()][quote.baseToken] -= quote
@@ -316,7 +315,7 @@ contract RenovaQuest is
 
         uint256 balanceBefore = _questBalanceOf(quote.quoteToken);
 
-        IHashflowRouter(_hashflowRouter).tradeSingleHop{value: msgValue}(quote);
+        IHashflowRouter(_hashflowRouter).tradeRFQT{value: msgValue}(quote);
 
         uint256 balanceAfter = _questBalanceOf(quote.quoteToken);
 

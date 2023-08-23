@@ -69,16 +69,15 @@ task('test:wormhole:full-setup', 'Bootstraps the entire environment').setAction(
     await hre.run('test:wormhole:fund-pool');
     await hre.run('test:wormhole:fund-trader');
     await hre.run('test:wormhole:set-trader-allowance');
-  }
+  },
 );
 
 task(
   'test:wormhole-messenger:initialize:remotes',
-  'Initializes the Messenger Remotes'
+  'Initializes the Messenger Remotes',
 ).setAction(async (taskArgs, hre) => {
-  const networkConfig = await getNetworkConfigFromHardhatRuntimeEnvironment(
-    hre
-  );
+  const networkConfig =
+    await getNetworkConfigFromHardhatRuntimeEnvironment(hre);
   const { name: networkName } = networkConfig;
 
   if (!isWormholeTestnet(networkName)) {
@@ -88,7 +87,7 @@ task(
 
   const messengerMetadata = getDeployedContractMetadata(
     'IHashflowWormholeMessenger',
-    networkConfig.name
+    networkConfig.name,
   );
 
   if (!messengerMetadata) {
@@ -97,7 +96,7 @@ task(
 
   const messengerContract = await hre.ethers.getContractAt(
     'IHashflowWormholeMessenger',
-    messengerMetadata.address
+    messengerMetadata.address,
   );
 
   for (const peerNetworkName of peerNetworksToInitialize) {
@@ -107,7 +106,7 @@ task(
     const config = hre.config.networks[peerNetworkName];
     if (!config) {
       throw new Error(
-        `Could not find Hardhat Config for network ${peerNetworkName}`
+        `Could not find Hardhat Config for network ${peerNetworkName}`,
       );
     }
 
@@ -120,9 +119,8 @@ task(
     const peerMessengerAddressPadded =
       '0x' + padAddressTo32Bytes(peerMessengerAddress).toString('hex');
 
-    const currentRemote = await messengerContract.xChainRemotes(
-      peerHashflowChainId
-    );
+    const currentRemote =
+      await messengerContract.xChainRemotes(peerHashflowChainId);
 
     if (
       currentRemote.toLowerCase() !== peerMessengerAddressPadded.toLowerCase()
@@ -130,11 +128,11 @@ task(
       await (
         await messengerContract.updateXChainRemoteAddress(
           peerHashflowChainId,
-          peerMessengerAddressPadded
+          peerMessengerAddressPadded,
         )
       ).wait();
       console.log(
-        `Set Wormhole X-Chain authorization to ${peerHashflowChainId}:${peerMessengerAddressPadded}`
+        `Set Wormhole X-Chain authorization to ${peerHashflowChainId}:${peerMessengerAddressPadded}`,
       );
     } else {
       console.log(`Chain ${peerHashflowChainId} remote already set. Skipping.`);
@@ -144,7 +142,7 @@ task(
 
 task(
   'test:wormhole-messenger:initialize:remotes:solana',
-  'Initializes the Solana Messenger Remote'
+  'Initializes the Solana Messenger Remote',
 ).setAction(async (taskArgs, hre) => {
   const networkConfig = getNetworkConfigFromHardhatRuntimeEnvironment(hre);
 
@@ -155,7 +153,7 @@ task(
 
   const messengerMetadata = getDeployedContractMetadata(
     'IHashflowWormholeMessenger',
-    networkConfig.name
+    networkConfig.name,
   );
 
   if (!messengerMetadata) {
@@ -164,20 +162,19 @@ task(
 
   const messengerContract = await hre.ethers.getContractAt(
     'IHashflowWormholeMessenger',
-    messengerMetadata.address
+    messengerMetadata.address,
   );
 
   const peerHashflowChainId = SOLANA_HASHFLOW_CHAIN_ID;
 
   const peerMessengerAddress = new PublicKey(
-    SOLANA_EMITTER_ADDRESS_BASE58
+    SOLANA_EMITTER_ADDRESS_BASE58,
   ).toBuffer();
   const peerMessengerAddressPadded =
     '0x' + peerMessengerAddress.toString('hex');
 
-  const currentRemote = await messengerContract.xChainRemotes(
-    peerHashflowChainId
-  );
+  const currentRemote =
+    await messengerContract.xChainRemotes(peerHashflowChainId);
 
   if (
     currentRemote.toLowerCase() !== peerMessengerAddressPadded.toLowerCase()
@@ -185,11 +182,11 @@ task(
     await (
       await messengerContract.updateXChainRemoteAddress(
         peerHashflowChainId,
-        peerMessengerAddressPadded
+        peerMessengerAddressPadded,
       )
     ).wait();
     console.log(
-      `Set Wormhole X-Chain authorization to ${peerHashflowChainId}:${peerMessengerAddressPadded}`
+      `Set Wormhole X-Chain authorization to ${peerHashflowChainId}:${peerMessengerAddressPadded}`,
     );
   } else {
     console.log(`Chain ${peerHashflowChainId} remote already set. Skipping.`);
@@ -204,7 +201,7 @@ task('test:wormhole:create-pool', 'Creates a Pool For Trading').setAction(
 
     const factoryMetadata = getDeployedContractMetadata(
       'IHashflowFactory',
-      networkName
+      networkName,
     );
 
     if (!factoryMetadata) {
@@ -214,11 +211,11 @@ task('test:wormhole:create-pool', 'Creates a Pool For Trading').setAction(
     const factoryContract = await hre.ethers.getContractAt(
       'IHashflowFactory',
       factoryMetadata.address,
-      mainSigner
+      mainSigner,
     );
 
     const createPoolEventsBefore = await factoryContract.queryFilter(
-      factoryContract.filters.CreatePool()
+      factoryContract.filters.CreatePool(),
     );
     let pools = createPoolEventsBefore.map((evt) => evt.args.pool);
 
@@ -234,7 +231,7 @@ task('test:wormhole:create-pool', 'Creates a Pool For Trading').setAction(
     await (await factoryContract.createPool('Hashflow Capital', signer)).wait();
 
     const createPoolEventsAfter = await factoryContract.queryFilter(
-      factoryContract.filters.CreatePool()
+      factoryContract.filters.CreatePool(),
     );
 
     pools = createPoolEventsAfter.map((evt) => evt.args.pool);
@@ -251,12 +248,12 @@ task('test:wormhole:create-pool', 'Creates a Pool For Trading').setAction(
     }
 
     console.log(`Pool deployed to ${poolContractAddress}`);
-  }
+  },
 );
 
 task(
   'test:wormhole:dummy-x-app:deploy',
-  'Deploys a Dummy X-Chain App'
+  'Deploys a Dummy X-Chain App',
 ).setAction(async (taskArgs, hre) => {
   const contractFactory = await hre.ethers.getContractFactory('DummyXChainApp');
 
@@ -269,21 +266,21 @@ task(
     EVM_DUMMY_X_CHAIN_APP_ADDRESS_HEX.toLowerCase()
   ) {
     throw new Error(
-      `Unexpected Dummy X-App address: ${await contract.getAddress()}`
+      `Unexpected Dummy X-App address: ${await contract.getAddress()}`,
     );
   }
 });
 
 task(
   'test:wormhole-messenger:initialize:peer-networks:solana',
-  'Initializes the Solana Hashflow Chain ID'
+  'Initializes the Solana Hashflow Chain ID',
 ).setAction(async (taskArgs, hre) => {
   const { name: networkName } =
     getNetworkConfigFromHardhatRuntimeEnvironment(hre);
 
   const messengerMetadata = getDeployedContractMetadata(
     'IHashflowWormholeMessenger',
-    networkName
+    networkName,
   );
 
   if (!messengerMetadata) {
@@ -292,7 +289,7 @@ task(
 
   const messengerContract = await hre.ethers.getContractAt(
     'IHashflowWormholeMessenger',
-    messengerMetadata.address
+    messengerMetadata.address,
   );
 
   const peerHashflowChainId = SOLANA_HASHFLOW_CHAIN_ID;
@@ -300,42 +297,42 @@ task(
   const peerWormholeChainId = SOLANA_WORMHOLE_CHAIN_ID;
 
   const currentWormholeChainId = Number(
-    await messengerContract.hChainIdToWormholeChainId(peerHashflowChainId)
+    await messengerContract.hChainIdToWormholeChainId(peerHashflowChainId),
   );
 
   if (peerWormholeChainId && currentWormholeChainId !== peerWormholeChainId) {
     await (
       await messengerContract.updateWormholeChainIdForHashflowChainId(
         peerHashflowChainId,
-        peerWormholeChainId
+        peerWormholeChainId,
       )
     ).wait();
     console.log(
-      `Set Wormhole Chain ID ${peerWormholeChainId} for Hashflow Chain ID ${peerHashflowChainId}`
+      `Set Wormhole Chain ID ${peerWormholeChainId} for Hashflow Chain ID ${peerHashflowChainId}`,
     );
   } else {
     console.log(
-      `Skipping Wormhole Chain ID initialization to ${peerHashflowChainId}`
+      `Skipping Wormhole Chain ID initialization to ${peerHashflowChainId}`,
     );
   }
 });
 
 task(
   'test:wormhole-messenger:set-permissioned-relayer',
-  'Sets the permissioned relayer for a target chain'
+  'Sets the permissioned relayer for a target chain',
 ).setAction(async (taskArgs, hre) => {
   const { name: networkName } =
     getNetworkConfigFromHardhatRuntimeEnvironment(hre);
-  const { quoteSigner, mainSigner } = await getSigners(hre);
+  const { quoteSigner } = await getSigners(hre);
 
   const wormholeNetworks = [WORMHOLE1, WORMHOLE2];
   const otherWormholeNetwork = wormholeNetworks.filter(
-    (n) => n.name !== networkName
+    (n) => n.name !== networkName,
   )[0];
 
   const messengerMetadata = getDeployedContractMetadata(
     'IHashflowWormholeMessenger',
-    networkName
+    networkName,
   );
 
   if (!messengerMetadata) {
@@ -344,7 +341,7 @@ task(
 
   const messengerContract = await hre.ethers.getContractAt(
     'IHashflowWormholeMessenger',
-    messengerMetadata.address
+    messengerMetadata.address,
   );
 
   const relayerAddressBytes32 =
@@ -352,19 +349,19 @@ task(
 
   const tx = await messengerContract.updatePermissionedRelayer(
     otherWormholeNetwork.hashflowChainId,
-    relayerAddressBytes32
+    relayerAddressBytes32,
   );
 
   await tx.wait();
 
   console.log(
-    `Updated permissioned relayer to chain ${otherWormholeNetwork.hashflowChainId} to ${relayerAddressBytes32}`
+    `Updated permissioned relayer to chain ${otherWormholeNetwork.hashflowChainId} to ${relayerAddressBytes32}`,
   );
 });
 
 task(
   'test:wormhole:authorize-creator',
-  'Authorizes an address for creating a pool'
+  'Authorizes an address for creating a pool',
 ).setAction(async (taskArgs, hre) => {
   const { name: networkName } =
     getNetworkConfigFromHardhatRuntimeEnvironment(hre);
@@ -372,7 +369,7 @@ task(
 
   const factoryMetadata = getDeployedContractMetadata(
     'IHashflowFactory',
-    networkName
+    networkName,
   );
 
   if (!factoryMetadata) {
@@ -382,13 +379,13 @@ task(
   const factoryContract = await hre.ethers.getContractAt(
     'IHashflowFactory',
     factoryMetadata.address,
-    mainSigner
+    mainSigner,
   );
 
   await (
     await factoryContract.updatePoolCreatorAuthorization(
       await mainSigner.getAddress(),
-      true
+      true,
     )
   ).wait();
 
@@ -397,7 +394,7 @@ task(
 
 task(
   'test:wormhole:fund-pool',
-  'Funds pool with Test Token 1 and Test Token 2'
+  'Funds pool with Test Token 1 and Test Token 2',
 ).setAction(async (taskArgs, hre) => {
   const { name: networkName } =
     getNetworkConfigFromHardhatRuntimeEnvironment(hre);
@@ -408,13 +405,13 @@ task(
   const tt1Contract = await hre.ethers.getContractAt(
     'TestToken1',
     EVM_TEST_TOKEN_1_ADDRESS_HEX,
-    mainSigner
+    mainSigner,
   );
 
   const tt2Contract = await hre.ethers.getContractAt(
     'TestToken2',
     EVM_TEST_TOKEN_2_ADDRESS_HEX,
-    mainSigner
+    mainSigner,
   );
 
   const tt1Balance = await tt1Contract.balanceOf(poolAddress);
@@ -425,7 +422,7 @@ task(
   } else {
     console.log(
       networkName,
-      'Pool already funded with Test Token 1. Skipping transfer.'
+      'Pool already funded with Test Token 1. Skipping transfer.',
     );
   }
 
@@ -437,14 +434,14 @@ task(
   } else {
     console.log(
       networkName,
-      'Pool already funded with Test Token 2. Skipping transfer.'
+      'Pool already funded with Test Token 2. Skipping transfer.',
     );
   }
 });
 
 task(
   'test:wormhole:authorize-x-chain-messenger',
-  'Authorizes the Wormhole X-Chain Messenger'
+  'Authorizes the Wormhole X-Chain Messenger',
 ).setAction(async (taskArgs, hre) => {
   const { name: networkName } =
     getNetworkConfigFromHardhatRuntimeEnvironment(hre);
@@ -453,7 +450,7 @@ task(
 
   const messengerMetadata = getDeployedContractMetadata(
     'IHashflowWormholeMessenger',
-    networkName
+    networkName,
   );
 
   if (!messengerMetadata) {
@@ -465,26 +462,26 @@ task(
   const pool = await hre.ethers.getContractAt(
     'HashflowPool',
     poolAddress,
-    mainSigner
+    mainSigner,
   );
 
   await (
     await pool.updateXChainMessengerAuthorization(
       messengerMetadata.address,
-      true
+      true,
     )
   ).wait();
 
   console.log(
     `Authorized X-Chain Messenger ${
       messengerMetadata.address
-    } for Pool ${await pool.getAddress()}`
+    } for Pool ${await pool.getAddress()}`,
   );
 });
 
 task(
   'test:wormhole:authorize-x-chain-caller',
-  'Authorizes an X-Chain caller.'
+  'Authorizes an X-Chain caller.',
 ).setAction(async (taskArgs, hre) => {
   const { name: networkName } =
     getNetworkConfigFromHardhatRuntimeEnvironment(hre);
@@ -497,12 +494,12 @@ task(
   const dummyXApp = await hre.ethers.getContractAt(
     'DummyXChainApp',
     EVM_DUMMY_X_CHAIN_APP_ADDRESS_HEX,
-    mainSigner
+    mainSigner,
   );
 
   const routerMetadata = getDeployedContractMetadata(
     'IHashflowRouter',
-    networkName
+    networkName,
   );
 
   if (!routerMetadata) {
@@ -513,7 +510,7 @@ task(
     await dummyXApp.authorizeXChainCaller(
       routerMetadata.address,
       WORMHOLE1.hashflowChainId,
-      padAddressTo32Bytes(await traderSigner.getAddress())
+      padAddressTo32Bytes(await traderSigner.getAddress()),
     )
   ).wait();
 
@@ -522,7 +519,7 @@ task(
 
 task(
   'test:wormhole:authorize-x-chain-messenger:caller',
-  'Authorizes an X-Chain Messenger for contract calls.'
+  'Authorizes an X-Chain Messenger for contract calls.',
 ).setAction(async (taskArgs, hre) => {
   const { name: networkName } =
     getNetworkConfigFromHardhatRuntimeEnvironment(hre);
@@ -535,16 +532,16 @@ task(
   const dummyXApp = await hre.ethers.getContractAt(
     'DummyXChainApp',
     EVM_DUMMY_X_CHAIN_APP_ADDRESS_HEX,
-    mainSigner
+    mainSigner,
   );
 
   const routerMetadata = getDeployedContractMetadata(
     'IHashflowRouter',
-    networkName
+    networkName,
   );
   const messengerMetadata = getDeployedContractMetadata(
     'IHashflowWormholeMessenger',
-    networkName
+    networkName,
   );
 
   if (!routerMetadata) {
@@ -557,7 +554,7 @@ task(
   await (
     await dummyXApp.authorizeXChainMessengerCaller(
       routerMetadata.address,
-      messengerMetadata.address
+      messengerMetadata.address,
     )
   ).wait();
 
@@ -566,7 +563,7 @@ task(
 
 task(
   'test:wormhole:authorize-x-chain-pool',
-  'Authorizes the pool for Wormhole X-Chain trading'
+  'Authorizes the pool for Wormhole X-Chain trading',
 ).setAction(async (taskArgs, hre) => {
   const { name: networkName } =
     await getNetworkConfigFromHardhatRuntimeEnvironment(hre);
@@ -578,12 +575,12 @@ task(
   const pool = await hre.ethers.getContractAt(
     'HashflowPool',
     poolAddress,
-    mainSigner
+    mainSigner,
   );
 
   const routerMetadata = getDeployedContractMetadata(
     'IHashflowRouter',
-    networkName
+    networkName,
   );
 
   if (!routerMetadata) {
@@ -593,7 +590,7 @@ task(
   const routerContract = await hre.ethers.getContractAt(
     'IHashflowRouter',
     routerMetadata.address,
-    mainSigner
+    mainSigner,
   );
 
   const wormholeNetworks = [WORMHOLE1, WORMHOLE2];
@@ -605,7 +602,7 @@ task(
       const existingAuth = await routerContract.authorizedXChainPools(
         currentChainPoolBytes32,
         wormholeNetwork.hashflowChainId,
-        peerPoolBytes32
+        peerPoolBytes32,
       );
 
       if (!existingAuth) {
@@ -617,14 +614,14 @@ task(
                 pool: peerPoolBytes32,
               },
             ],
-            true
+            true,
           )
         ).wait();
         console.log(
           networkName,
           `Authorized pool ${peerPoolBytes32.toString('hex')} on ${
             wormholeNetwork.hashflowChainId
-          }`
+          }`,
         );
       } else {
         console.log(networkName, 'Pool already authorized.');
@@ -635,7 +632,7 @@ task(
 
 task(
   'test:wormhole:authorize-x-chain-pool:solana',
-  'Authorizes the Solana Pool for Wormhole X-Chain trading'
+  'Authorizes the Solana Pool for Wormhole X-Chain trading',
 ).setAction(async (taskArgs, hre) => {
   const { name: networkName } =
     getNetworkConfigFromHardhatRuntimeEnvironment(hre);
@@ -647,12 +644,12 @@ task(
   const pool = await hre.ethers.getContractAt(
     'HashflowPool',
     poolAddress,
-    mainSigner
+    mainSigner,
   );
 
   const routerMetadata = getDeployedContractMetadata(
     'IHashflowRouter',
-    networkName
+    networkName,
   );
 
   if (!routerMetadata) {
@@ -662,7 +659,7 @@ task(
   const routerContract = await hre.ethers.getContractAt(
     'IHashflowRouter',
     routerMetadata.address,
-    mainSigner
+    mainSigner,
   );
 
   const peerPoolBytes32 = new PublicKey(SOLANA_POOL_ADDRESS_BASE58).toBuffer();
@@ -670,7 +667,7 @@ task(
   const existingAuth = await routerContract.authorizedXChainPools(
     currentChainPoolBytes32,
     SOLANA_HASHFLOW_CHAIN_ID,
-    peerPoolBytes32
+    peerPoolBytes32,
   );
 
   if (!existingAuth) {
@@ -682,14 +679,14 @@ task(
             pool: peerPoolBytes32,
           },
         ],
-        true
+        true,
       )
     ).wait();
     console.log(
       networkName,
       `Authorized pool ${peerPoolBytes32.toString(
-        'hex'
-      )} on ${SOLANA_HASHFLOW_CHAIN_ID}`
+        'hex',
+      )} on ${SOLANA_HASHFLOW_CHAIN_ID}`,
     );
   } else {
     console.log(networkName, 'Pool already authorized.');
@@ -698,7 +695,7 @@ task(
 
 task(
   'test:wormhole:fund-trader',
-  'Funds account used by trader to swap'
+  'Funds account used by trader to swap',
 ).setAction(async (taskArgs, hre) => {
   const { name: networkName } =
     getNetworkConfigFromHardhatRuntimeEnvironment(hre);
@@ -709,13 +706,13 @@ task(
   const tt1Contract = await hre.ethers.getContractAt(
     'TestToken1',
     EVM_TEST_TOKEN_1_ADDRESS_HEX,
-    mainSigner
+    mainSigner,
   );
 
   const tt2Contract = await hre.ethers.getContractAt(
     'TestToken2',
     EVM_TEST_TOKEN_2_ADDRESS_HEX,
-    mainSigner
+    mainSigner,
   );
 
   const traderBalance = await traderSigner.provider?.getBalance(trader);
@@ -750,7 +747,7 @@ task(
 
 task(
   'test:wormhole:set-trader-allowance',
-  'Sets Test Token allowance to the Router'
+  'Sets Test Token allowance to the Router',
 ).setAction(async (taskArgs, hre) => {
   const { name: networkName } =
     getNetworkConfigFromHardhatRuntimeEnvironment(hre);
@@ -761,18 +758,18 @@ task(
   const tt1Contract = await hre.ethers.getContractAt(
     'TestToken1',
     EVM_TEST_TOKEN_1_ADDRESS_HEX,
-    traderSigner
+    traderSigner,
   );
 
   const tt2Contract = await hre.ethers.getContractAt(
     'TestToken2',
     EVM_TEST_TOKEN_2_ADDRESS_HEX,
-    traderSigner
+    traderSigner,
   );
 
   const routerMetadata = getDeployedContractMetadata(
     'IHashflowRouter',
-    networkName
+    networkName,
   );
 
   if (!routerMetadata) {
@@ -781,11 +778,11 @@ task(
 
   const tt1Allowance = await tt1Contract.allowance(
     trader,
-    routerMetadata.address
+    routerMetadata.address,
   );
   const tt2Allowance = await tt2Contract.allowance(
     trader,
-    routerMetadata.address
+    routerMetadata.address,
   );
 
   if (tt1Allowance === BigInt(0)) {
@@ -809,10 +806,8 @@ task(
 
 task(
   'test:wormhole:test-tokens:deploy',
-  'Deploys the test ERC-20 tokens'
+  'Deploys the test ERC-20 tokens',
 ).setAction(async (taskArgs, hre) => {
-  const networkConfig = getNetworkConfigFromHardhatRuntimeEnvironment(hre);
-
   const contractFactoryTT1 = await hre.ethers.getContractFactory('TestToken1');
 
   const contractFactoryTT2 = await hre.ethers.getContractFactory('TestToken2');
@@ -828,7 +823,7 @@ task(
     EVM_TEST_TOKEN_1_ADDRESS_HEX.toLowerCase()
   ) {
     throw new Error(
-      `Incorrect Test Token 1 address ${await contractTT1.getAddress()}`
+      `Incorrect Test Token 1 address ${await contractTT1.getAddress()}`,
     );
   }
 
@@ -837,7 +832,7 @@ task(
     EVM_TEST_TOKEN_2_ADDRESS_HEX.toLowerCase()
   ) {
     throw new Error(
-      `Incorrect Test Token 2 address ${await contractTT2.getAddress()}`
+      `Incorrect Test Token 2 address ${await contractTT2.getAddress()}`,
     );
   }
 });

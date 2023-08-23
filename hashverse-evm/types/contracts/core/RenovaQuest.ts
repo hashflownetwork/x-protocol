@@ -32,7 +32,7 @@ export declare namespace IRenovaQuest {
   };
 }
 
-export declare namespace IHashflowRouter {
+export declare namespace IQuote {
   export type RFQTQuoteStruct = {
     pool: AddressLike;
     externalAccount: AddressLike;
@@ -41,8 +41,8 @@ export declare namespace IHashflowRouter {
     baseToken: AddressLike;
     quoteToken: AddressLike;
     effectiveBaseTokenAmount: BigNumberish;
-    maxBaseTokenAmount: BigNumberish;
-    maxQuoteTokenAmount: BigNumberish;
+    baseTokenAmount: BigNumberish;
+    quoteTokenAmount: BigNumberish;
     quoteExpiry: BigNumberish;
     nonce: BigNumberish;
     txid: BytesLike;
@@ -57,8 +57,8 @@ export declare namespace IHashflowRouter {
     baseToken: string,
     quoteToken: string,
     effectiveBaseTokenAmount: bigint,
-    maxBaseTokenAmount: bigint,
-    maxQuoteTokenAmount: bigint,
+    baseTokenAmount: bigint,
+    quoteTokenAmount: bigint,
     quoteExpiry: bigint,
     nonce: bigint,
     txid: string,
@@ -71,8 +71,8 @@ export declare namespace IHashflowRouter {
     baseToken: string;
     quoteToken: string;
     effectiveBaseTokenAmount: bigint;
-    maxBaseTokenAmount: bigint;
-    maxQuoteTokenAmount: bigint;
+    baseTokenAmount: bigint;
+    quoteTokenAmount: bigint;
     quoteExpiry: bigint;
     nonce: bigint;
     txid: string;
@@ -169,7 +169,7 @@ export interface RenovaQuestInterface extends Interface {
   encodeFunctionData(functionFragment: "startTime", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "trade",
-    values: [IHashflowRouter.RFQTQuoteStruct]
+    values: [IQuote.RFQTQuoteStruct]
   ): string;
   encodeFunctionData(
     functionFragment: "unloadAllItems",
@@ -466,7 +466,7 @@ export interface RenovaQuest extends BaseContract {
   startTime: TypedContractMethod<[], [bigint], "view">;
 
   trade: TypedContractMethod<
-    [quote: IHashflowRouter.RFQTQuoteStruct],
+    [quote: IQuote.RFQTQuoteStruct],
     [void],
     "payable"
   >;
@@ -565,11 +565,7 @@ export interface RenovaQuest extends BaseContract {
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "trade"
-  ): TypedContractMethod<
-    [quote: IHashflowRouter.RFQTQuoteStruct],
-    [void],
-    "payable"
-  >;
+  ): TypedContractMethod<[quote: IQuote.RFQTQuoteStruct], [void], "payable">;
   getFunction(
     nameOrSignature: "unloadAllItems"
   ): TypedContractMethod<[], [void], "nonpayable">;

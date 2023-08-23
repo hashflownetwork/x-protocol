@@ -62,22 +62,17 @@ describe('Renova', () => {
     baselineTimestamp = Math.floor(Date.now() / 1000) + 100;
 
     const hftFactory = await hre.ethers.getContractFactory('HFT');
-    const stakingVaultFactory = await hre.ethers.getContractFactory(
-      'StakingVault'
-    );
-    const renovaCommandDeckFactory = await hre.ethers.getContractFactory(
-      'RenovaCommandDeck'
-    );
-    const renovaAvatarFactory = await hre.ethers.getContractFactory(
-      'RenovaAvatar'
-    );
+    const stakingVaultFactory =
+      await hre.ethers.getContractFactory('StakingVault');
+    const renovaCommandDeckFactory =
+      await hre.ethers.getContractFactory('RenovaCommandDeck');
+    const renovaAvatarFactory =
+      await hre.ethers.getContractFactory('RenovaAvatar');
     const renovaItemFactory = await hre.ethers.getContractFactory('RenovaItem');
-    const mockHashflowRouterFactory = await hre.ethers.getContractFactory(
-      'MockHashflowRouter'
-    );
-    const mockWormholeFactory = await hre.ethers.getContractFactory(
-      'MockWormhole'
-    );
+    const mockHashflowRouterFactory =
+      await hre.ethers.getContractFactory('MockHashflowRouter');
+    const mockWormholeFactory =
+      await hre.ethers.getContractFactory('MockWormhole');
     const testERC20Factory = await hre.ethers.getContractFactory('TestERC20');
 
     const mockWormhole = await mockWormholeFactory.deploy();
@@ -89,7 +84,7 @@ describe('Renova', () => {
     renovaCommandDeck = (await hre.upgrades.deployProxy(
       renovaCommandDeckFactory,
       [],
-      { initializer: false }
+      { initializer: false },
     )) as unknown as RenovaCommandDeck;
 
     renovaAvatar = (await hre.upgrades.deployProxy(renovaAvatarFactory, [
@@ -124,7 +119,7 @@ describe('Renova', () => {
       await renovaAvatar.getAddress(),
       await renovaItem.getAddress(),
       await mockHashflowRouter.getAddress(),
-      await questOwner.getAddress()
+      await questOwner.getAddress(),
     );
 
     await renovaAvatar.updateMaxCharacterId(0, 2);
@@ -144,7 +139,7 @@ describe('Renova', () => {
 
     it('should mint avatar', async () => {
       await expect(renovaAvatar.connect(playerA).mint(0, 1)).to.be.revertedWith(
-        'RenovaAvatar::mint Insufficient stake.'
+        'RenovaAvatar::mint Insufficient stake.',
       );
       await renovaAvatar.updateMinStakePower(0);
 
@@ -154,13 +149,13 @@ describe('Renova', () => {
       await renovaAvatar.connect(playerE).mint(1, 1);
 
       expect(await renovaAvatar.balanceOf(await playerA.getAddress())).to.equal(
-        1
+        1,
       );
       expect(
-        await renovaAvatar.tokenIds(await playerA.getAddress())
+        await renovaAvatar.tokenIds(await playerA.getAddress()),
       ).to.not.equal(0);
       expect(await renovaAvatar.tokenIds(await playerD.getAddress())).to.equal(
-        0
+        0,
       );
     });
 
@@ -177,7 +172,7 @@ describe('Renova', () => {
 
     it('should not double-mint', async () => {
       await expect(renovaAvatar.connect(playerA).mint(0, 0)).to.be.revertedWith(
-        'RenovaAvatarBase::_mintAvatar Cannot mint more than one Avatar.'
+        'RenovaAvatarBase::_mintAvatar Cannot mint more than one Avatar.',
       );
     });
 
@@ -189,10 +184,10 @@ describe('Renova', () => {
           .transferFrom(
             await playerA.getAddress(),
             await playerB.getAddress(),
-            tokenId
-          )
+            tokenId,
+          ),
       ).to.be.revertedWith(
-        'RenovaAvatarBase::transferFrom Avatars are non-transferrable.'
+        'RenovaAvatarBase::transferFrom Avatars are non-transferrable.',
       );
     });
   });
@@ -200,13 +195,13 @@ describe('Renova', () => {
   describe('Command Deck', () => {
     it('should mint item via admin', async () => {
       expect(await renovaItem.balanceOf(await playerA.getAddress())).to.equal(
-        0
+        0,
       );
 
       await renovaCommandDeck.mintItemAdmin(await playerA.getAddress(), 205);
 
       expect(await renovaItem.balanceOf(await playerA.getAddress())).to.equal(
-        1
+        1,
       );
       expect(await renovaItem.ownerOf(1)).to.equal(await playerA.getAddress());
     });
@@ -217,11 +212,11 @@ describe('Renova', () => {
       const leaves = [
         solidityPackedKeccak256(
           ['address', 'uint256[]'],
-          [await playerA.getAddress(), [20, 50]]
+          [await playerA.getAddress(), [20, 50]],
         ),
         solidityPackedKeccak256(
           ['address', 'uint256[]'],
-          [await playerB.getAddress(), [23]]
+          [await playerB.getAddress(), [23]],
         ),
       ];
 
@@ -240,7 +235,7 @@ describe('Renova', () => {
         await playerA.getAddress(),
         [20, 50],
         rootId,
-        tree.getHexProof(leaves[0])
+        tree.getHexProof(leaves[0]),
       );
 
       await expect(
@@ -248,8 +243,8 @@ describe('Renova', () => {
           await playerA.getAddress(),
           [20, 50],
           rootId,
-          tree.getHexProof(leaves[0])
-        )
+          tree.getHexProof(leaves[0]),
+        ),
       ).to.be.revertedWith('RenovaCommandDeck::mintItems Already minted.');
     });
 
@@ -277,9 +272,9 @@ describe('Renova', () => {
       await expect(
         renovaCommandDeck
           .connect(questOwner)
-          .createQuest(questId, 0, 0, 0, questStartTime, questEndTime)
+          .createQuest(questId, 0, 0, 0, questStartTime, questEndTime),
       ).to.be.revertedWith(
-        'RenovaCommandDeckBase::createQuest Quest already created.'
+        'RenovaCommandDeckBase::createQuest Quest already created.',
       );
     });
   });
@@ -294,9 +289,9 @@ describe('Renova', () => {
       await expect(
         renovaCommandDeck
           .connect(questOwner)
-          .createQuest(questId, 0, 0, 0, questStartTime, questEndTime)
+          .createQuest(questId, 0, 0, 0, questStartTime, questEndTime),
       ).to.be.revertedWith(
-        'RenovaQuest::constructor Start time should be in the future.'
+        'RenovaQuest::constructor Start time should be in the future.',
       );
     });
 
@@ -309,9 +304,9 @@ describe('Renova', () => {
       await expect(
         renovaCommandDeck
           .connect(questOwner)
-          .createQuest(questId, 0, 0, 0, questStartTime, questEndTime)
+          .createQuest(questId, 0, 0, 0, questStartTime, questEndTime),
       ).to.be.revertedWith(
-        'RenovaQuest::constructor End time should be after start time.'
+        'RenovaQuest::constructor End time should be after start time.',
       );
     });
 
@@ -324,7 +319,7 @@ describe('Renova', () => {
       await expect(
         renovaCommandDeck
           .connect(questOwner)
-          .createQuest(questId, 0, 0, 0, questStartTime, questEndTime)
+          .createQuest(questId, 0, 0, 0, questStartTime, questEndTime),
       ).to.be.revertedWith('RenovaQuest::constructor Quest too long.');
     });
 
@@ -341,7 +336,7 @@ describe('Renova', () => {
         2, // Player limit
         0, // Item limit
         questStartTime,
-        questEndTime
+        questEndTime,
       );
 
       await renovaCommandDeck.connect(questOwner).createQuest(
@@ -350,24 +345,23 @@ describe('Renova', () => {
         1, // Player limit
         2, // Item limit
         questStartTime,
-        questEndTime
+        questEndTime,
       );
 
-      const soloQuestAddress = await renovaCommandDeck.questDeploymentAddresses(
-        soloQuestId
-      );
+      const soloQuestAddress =
+        await renovaCommandDeck.questDeploymentAddresses(soloQuestId);
 
       const multiplayerQuestAddress =
         await renovaCommandDeck.questDeploymentAddresses(multiplayerQuestId);
 
       soloQuest = await hre.ethers.getContractAt(
         'RenovaQuest',
-        soloQuestAddress
+        soloQuestAddress,
       );
 
       multiplayerQuest = await hre.ethers.getContractAt(
         'RenovaQuest',
-        multiplayerQuestAddress
+        multiplayerQuestAddress,
       );
 
       await soloQuest.connect(playerA).enter();
@@ -375,7 +369,7 @@ describe('Renova', () => {
 
     it('should not allow players without an avatar to enter', async () => {
       await expect(soloQuest.connect(playerD).enter()).to.be.revertedWith(
-        'RenovaQuest::_enter Player has not minted Avatar.'
+        'RenovaQuest::_enter Player has not minted Avatar.',
       );
 
       await renovaAvatar.connect(playerD).mint(1, 0);
@@ -385,18 +379,18 @@ describe('Renova', () => {
 
     it('should not allow players to enter twice', async () => {
       await expect(soloQuest.connect(playerD).enter()).to.be.revertedWith(
-        'RenovaQuest::_enter Player already registered.'
+        'RenovaQuest::_enter Player already registered.',
       );
     });
 
     it('should respect player caps', async () => {
       await expect(soloQuest.connect(playerB).enter()).to.be.revertedWith(
-        'RenovaQuest::_enter Player cap reached.'
+        'RenovaQuest::_enter Player cap reached.',
       );
 
       await multiplayerQuest.connect(playerA).enter();
       await expect(
-        multiplayerQuest.connect(playerB).enter()
+        multiplayerQuest.connect(playerB).enter(),
       ).to.be.revertedWith('RenovaQuest::_enter Player cap reached.');
     });
 
@@ -414,7 +408,7 @@ describe('Renova', () => {
         ],
         {
           value: toWei(5),
-        }
+        },
       );
     });
 
@@ -425,7 +419,7 @@ describe('Renova', () => {
       await renovaCommandDeck.mintItemAdmin(await playerA.getAddress(), 103);
 
       expect(await renovaItem.balanceOf(await playerA.getAddress())).to.equal(
-        6
+        6,
       );
 
       await renovaItem
@@ -435,38 +429,38 @@ describe('Renova', () => {
       await multiplayerQuest.connect(playerA).loadItems([1, 2]);
 
       expect(
-        await multiplayerQuest.numLoadedItems(await playerA.getAddress())
+        await multiplayerQuest.numLoadedItems(await playerA.getAddress()),
       ).to.equal(2);
 
       await expect(
-        multiplayerQuest.connect(playerA).loadItems([3])
+        multiplayerQuest.connect(playerA).loadItems([3]),
       ).to.be.revertedWith('RenovaQuest::loadItems Too many items.');
 
       expect(await renovaItem.ownerOf(1)).to.equal(
-        await multiplayerQuest.getAddress()
+        await multiplayerQuest.getAddress(),
       );
       expect(await renovaItem.ownerOf(2)).to.equal(
-        await multiplayerQuest.getAddress()
+        await multiplayerQuest.getAddress(),
       );
 
       await expect(
-        multiplayerQuest.connect(playerA).unloadItem(3)
+        multiplayerQuest.connect(playerA).unloadItem(3),
       ).to.be.revertedWith('RenovaQuest::unloadItem Item not loaded.');
       await multiplayerQuest.connect(playerA).unloadItem(1);
 
       expect(await renovaItem.ownerOf(1)).to.equal(await playerA.getAddress());
       expect(await renovaItem.ownerOf(2)).to.equal(
-        await multiplayerQuest.getAddress()
+        await multiplayerQuest.getAddress(),
       );
 
       expect(
-        await multiplayerQuest.numLoadedItems(await playerA.getAddress())
+        await multiplayerQuest.numLoadedItems(await playerA.getAddress()),
       ).to.equal(1);
 
       await multiplayerQuest.connect(playerA).unloadAllItems();
 
       expect(
-        await multiplayerQuest.numLoadedItems(await playerA.getAddress())
+        await multiplayerQuest.numLoadedItems(await playerA.getAddress()),
       ).to.equal(0);
 
       expect(await renovaItem.ownerOf(1)).to.equal(await playerA.getAddress());
@@ -475,27 +469,27 @@ describe('Renova', () => {
       await multiplayerQuest.connect(playerA).loadItems([2]);
 
       expect(
-        await multiplayerQuest.numLoadedItems(await playerA.getAddress())
+        await multiplayerQuest.numLoadedItems(await playerA.getAddress()),
       ).to.equal(1);
     });
 
     it('should deposit assets', async () => {
       expect(await testERC20A.balanceOf(await playerA.getAddress())).to.equal(
-        toWei(1_000)
+        toWei(1_000),
       );
 
       expect(
         await soloQuest.portfolioTokenBalances(
           await playerA.getAddress(),
-          await testERC20A.getAddress()
-        )
+          await testERC20A.getAddress(),
+        ),
       ).to.equal(0);
 
       expect(
         await soloQuest.portfolioTokenBalances(
           await playerA.getAddress(),
-          ZERO_ADDRESS
-        )
+          ZERO_ADDRESS,
+        ),
       ).to.equal(0);
 
       await testERC20A
@@ -514,32 +508,32 @@ describe('Renova', () => {
           { token: await testERC20A.getAddress(), amount: toWei(10) },
           { token: ZERO_ADDRESS, amount: toWei(5) },
         ],
-        { value: toWei(5) }
+        { value: toWei(5) },
       );
 
       expect(await testERC20A.balanceOf(await playerA.getAddress())).to.equal(
-        toWei(990)
+        toWei(990),
       );
 
       expect(
         await soloQuest.portfolioTokenBalances(
           await playerA.getAddress(),
-          await testERC20A.getAddress()
-        )
+          await testERC20A.getAddress(),
+        ),
       ).to.equal(toWei(10));
 
       expect(
         await soloQuest.portfolioTokenBalances(
           await playerA.getAddress(),
-          ZERO_ADDRESS
-        )
+          ZERO_ADDRESS,
+        ),
       ).to.equal(toWei(5));
 
       expect(
         await soloQuest.portfolioTokenBalances(
           await playerA.getAddress(),
-          await testERC20B.getAddress()
-        )
+          await testERC20B.getAddress(),
+        ),
       ).to.equal(toWei(0));
     });
 
@@ -554,9 +548,9 @@ describe('Renova', () => {
         trader: await soloQuest.getAddress(),
         effectiveTrader: await playerA.getAddress(),
         baseToken: await testERC20A.getAddress(),
-        maxBaseTokenAmount: toWei(1),
+        baseTokenAmount: toWei(1),
         quoteToken: await testERC20B.getAddress(),
-        maxQuoteTokenAmount: toWei(2),
+        quoteTokenAmount: toWei(2),
         effectiveBaseTokenAmount: toWei(1),
         quoteExpiry: baselineTimestamp + 3600,
         nonce: 0,
@@ -570,9 +564,9 @@ describe('Renova', () => {
         trader: await soloQuest.getAddress(),
         effectiveTrader: await playerA.getAddress(),
         baseToken: ZERO_ADDRESS,
-        maxBaseTokenAmount: toWei(1),
+        baseTokenAmount: toWei(1),
         quoteToken: await testERC20B.getAddress(),
-        maxQuoteTokenAmount: toWei(2),
+        quoteTokenAmount: toWei(2),
         effectiveBaseTokenAmount: toWei(1),
         quoteExpiry: baselineTimestamp + 3600,
         nonce: 0,
@@ -581,7 +575,7 @@ describe('Renova', () => {
       };
 
       await expect(soloQuest.connect(playerA).trade(quote1)).to.be.revertedWith(
-        'RenovaQuest::trade Quest is not ongoing.'
+        'RenovaQuest::trade Quest is not ongoing.',
       );
 
       await hre.ethers.provider.send('evm_setNextBlockTimestamp', [
@@ -593,22 +587,22 @@ describe('Renova', () => {
       expect(
         await soloQuest.portfolioTokenBalances(
           await playerA.getAddress(),
-          await testERC20A.getAddress()
-        )
+          await testERC20A.getAddress(),
+        ),
       ).to.equal(toWei(9));
 
       expect(
         await soloQuest.portfolioTokenBalances(
           await playerA.getAddress(),
-          await testERC20B.getAddress()
-        )
+          await testERC20B.getAddress(),
+        ),
       ).to.equal(toWei(2));
 
       expect(
         await soloQuest.portfolioTokenBalances(
           await playerA.getAddress(),
-          ZERO_ADDRESS
-        )
+          ZERO_ADDRESS,
+        ),
       ).to.equal(toWei(5));
 
       await soloQuest.connect(playerA).trade(quote2);
@@ -616,28 +610,28 @@ describe('Renova', () => {
       expect(
         await soloQuest.portfolioTokenBalances(
           await playerA.getAddress(),
-          await testERC20A.getAddress()
-        )
+          await testERC20A.getAddress(),
+        ),
       ).to.equal(toWei(9));
 
       expect(
         await soloQuest.portfolioTokenBalances(
           await playerA.getAddress(),
-          await testERC20B.getAddress()
-        )
+          await testERC20B.getAddress(),
+        ),
       ).to.equal(toWei(4));
 
       expect(
         await soloQuest.portfolioTokenBalances(
           await playerA.getAddress(),
-          ZERO_ADDRESS
-        )
+          ZERO_ADDRESS,
+        ),
       ).to.equal(toWei(4));
     });
 
     it('should withdraw assets', async () => {
       await expect(
-        soloQuest.connect(playerA).withdrawTokens([ZERO_ADDRESS])
+        soloQuest.connect(playerA).withdrawTokens([ZERO_ADDRESS]),
       ).to.be.revertedWith('RenovaQuest::withdrawTokens Quest is ongoing.');
 
       await hre.ethers.provider.send('evm_setNextBlockTimestamp', [
@@ -645,21 +639,21 @@ describe('Renova', () => {
       ]);
 
       expect(await testERC20A.balanceOf(await playerA.getAddress())).to.equal(
-        toWei(990)
+        toWei(990),
       );
 
       const ethBalanceBefore = await playerA.provider!.getBalance(
-        await playerA.getAddress()
+        await playerA.getAddress(),
       );
 
       await soloQuest.connect(playerA).withdrawTokens([ZERO_ADDRESS]);
 
       expect(await testERC20A.balanceOf(await playerA.getAddress())).to.equal(
-        toWei(990)
+        toWei(990),
       );
 
       const ethBalanceAfter = await playerA.provider!.getBalance(
-        await playerA.getAddress()
+        await playerA.getAddress(),
       );
 
       expect(ethBalanceAfter - toWei(3)).gt(ethBalanceBefore);
@@ -672,11 +666,11 @@ describe('Renova', () => {
         ]);
 
       expect(await testERC20A.balanceOf(await playerA.getAddress())).to.equal(
-        toWei(999)
+        toWei(999),
       );
 
       expect(await testERC20B.balanceOf(await playerA.getAddress())).to.equal(
-        toWei(1004)
+        toWei(1004),
       );
 
       await soloQuest
@@ -688,17 +682,17 @@ describe('Renova', () => {
         ]);
 
       expect(await testERC20A.balanceOf(await playerA.getAddress())).to.equal(
-        toWei(999)
+        toWei(999),
       );
 
       expect(await testERC20B.balanceOf(await playerA.getAddress())).to.equal(
-        toWei(1004)
+        toWei(1004),
       );
     });
 
     it('should unload items', async () => {
       expect(await renovaItem.ownerOf(2)).to.equal(
-        await multiplayerQuest.getAddress()
+        await multiplayerQuest.getAddress(),
       );
 
       await multiplayerQuest.connect(playerA).unloadAllItems();

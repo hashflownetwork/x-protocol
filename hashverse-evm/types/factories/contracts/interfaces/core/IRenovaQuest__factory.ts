@@ -458,12 +458,12 @@ const _abi = [
           },
           {
             internalType: "uint256",
-            name: "maxBaseTokenAmount",
+            name: "baseTokenAmount",
             type: "uint256",
           },
           {
             internalType: "uint256",
-            name: "maxQuoteTokenAmount",
+            name: "quoteTokenAmount",
             type: "uint256",
           },
           {
@@ -487,7 +487,7 @@ const _abi = [
             type: "bytes",
           },
         ],
-        internalType: "struct IHashflowRouter.RFQTQuote",
+        internalType: "struct IQuote.RFQTQuote",
         name: "quote",
         type: "tuple",
       },
