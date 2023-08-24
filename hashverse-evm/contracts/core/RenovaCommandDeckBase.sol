@@ -86,53 +86,35 @@ abstract contract RenovaCommandDeckBase is
         emit UpdateQuestOwner(questOwner, address(0));
     }
 
-    /// @inheritdoc IRenovaCommandDeckBase
-    function loadItemsForQuest(
+    function depositTokenForQuest(
         address player,
-        uint256[] memory tokenIds
-    ) external override {
-        require(
-            questIdsByDeploymentAddress[_msgSender()] != bytes32(0),
-            'RenovaCommandDeckBase::loadItemsForQuest Quest not registered.'
-        );
-
-        for (uint256 i = 0; i < tokenIds.length; i++) {
-            IERC721(renovaItem).safeTransferFrom(
-                player,
-                _msgSender(),
-                tokenIds[i]
-            );
-        }
-    }
-
-    function depositTokensForQuest(
-        address player,
-        IRenovaQuest.TokenDeposit[] memory tokenDeposits
+        address depositToken,
+        uint256 depositAmount
     ) external override {
         require(
             questIdsByDeploymentAddress[_msgSender()] != bytes32(0),
             'RenovaCommandDeckBase::depositTokensForQuest Quest not registered.'
         );
 
-        for (uint256 i = 0; i < tokenDeposits.length; i++) {
-            if (tokenDeposits[i].token != address(0)) {
-                IERC20Upgradeable(tokenDeposits[i].token).safeTransferFrom(
-                    player,
-                    _msgSender(),
-                    tokenDeposits[i].amount
-                );
-            }
-        }
+        require(
+            IRenovaQuest(_msgSender()).depositToken() == depositToken,
+            'RenovaCommandDeckBase::depositTokenForQuest Incorrect depositToken.'
+        );
+
+        IERC20Upgradeable(depositToken).safeTransferFrom(
+            player,
+            _msgSender(),
+            depositAmount
+        );
     }
 
     /// @inheritdoc IRenovaCommandDeckBase
     function createQuest(
         bytes32 questId,
-        IRenovaQuest.QuestMode questMode,
-        uint256 maxPlayers,
-        uint256 maxItemsPerPlayer,
         uint256 startTime,
-        uint256 endTime
+        uint256 endTime,
+        address depositToken,
+        uint256 minDepositAmount
     ) external override {
         require(
             _msgSender() == questOwner,
@@ -144,14 +126,12 @@ abstract contract RenovaCommandDeckBase is
         );
 
         RenovaQuest quest = new RenovaQuest(
-            questMode,
             renovaAvatar,
-            renovaItem,
             hashflowRouter,
-            maxPlayers,
-            maxItemsPerPlayer,
             startTime,
             endTime,
+            depositToken,
+            minDepositAmount,
             questOwner
         );
 
@@ -161,11 +141,10 @@ abstract contract RenovaCommandDeckBase is
         emit CreateQuest(
             questId,
             address(quest),
-            questMode,
-            maxPlayers,
-            maxItemsPerPlayer,
             startTime,
-            endTime
+            endTime,
+            depositToken,
+            minDepositAmount
         );
     }
 

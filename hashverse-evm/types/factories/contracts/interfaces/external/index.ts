@@ -2,5 +2,4 @@
 /* tslint:disable */
 /* eslint-disable */
 export * as erc from "./erc";
-export { IHashflowRouter__factory } from "./IHashflowRouter__factory";
 export { IWormhole__factory } from "./IWormhole__factory";

@@ -16,7 +16,7 @@ export function toWei(amountEth: BigNumberish, decimals?: number): bigint {
 
 export async function mineBlock(
   hre: HardhatRuntimeEnvironment,
-  timestamp: number
+  timestamp: number,
 ): Promise<void> {
   await hre.ethers.provider.send('evm_mine', [timestamp]);
 }
@@ -36,7 +36,7 @@ export function padAddressTo32Bytes(address: string | Buffer): Buffer {
 export async function sendETH(
   signer: Signer,
   value: BigNumberish,
-  recipient: string
+  recipient: string,
 ): Promise<TransactionResponse> {
   const tx = {
     from: await signer.getAddress(),
@@ -57,7 +57,7 @@ export async function signERC20Permit(
   erc20: ERC20Permit,
   version: string,
   value: BigNumberish,
-  deadline: BigNumberish
+  deadline: BigNumberish,
 ): Promise<{
   r: string;
   s: string;
@@ -90,7 +90,7 @@ export async function signERC20Permit(
       value,
       nonce,
       deadline,
-    }
+    },
   );
 
   return parseSignatureRSV(signature);
@@ -110,7 +110,7 @@ export function parseSignatureRSV(signature: string | Buffer): {
   v: number;
 } {
   const sigString = strip0xPrefix(
-    Buffer.isBuffer(signature) ? signature.toString('hex') : signature
+    Buffer.isBuffer(signature) ? signature.toString('hex') : signature,
   );
 
   if (sigString.length !== 130) {

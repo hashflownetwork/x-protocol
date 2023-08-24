@@ -12,7 +12,6 @@ import '@openzeppelin/contracts/utils/Context.sol';
 
 import '../interfaces/core/IRenovaCommandDeckBase.sol';
 import '../interfaces/core/IRenovaQuest.sol';
-import '../interfaces/external/IHashflowRouter.sol';
 import '../interfaces/nft/IRenovaAvatarBase.sol';
 
 /// @title RenovaQuest
@@ -29,18 +28,22 @@ contract RenovaQuest is
 
     address private immutable _renovaCommandDeck;
     address private immutable _renovaAvatar;
-    address private immutable _renovaItem;
     address private immutable _hashflowRouter;
 
-    QuestMode private immutable _questMode;
-    uint256 private immutable _maxPlayers;
-    uint256 private immutable _maxItemsPerPlayer;
-
+    /// @inheritdoc IRenovaQuest
     uint256 public immutable startTime;
+
+    /// @inheritdoc IRenovaQuest
     uint256 public immutable endTime;
 
     /// @inheritdoc IRenovaQuest
-    address public questOwner;
+    address public immutable depositToken;
+
+    /// @inheritdoc IRenovaQuest
+    uint256 public immutable minDepositAmount;
+
+    /// @inheritdoc IRenovaQuest
+    address public immutable questOwner;
 
     /// @inheritdoc IRenovaQuest
     mapping(address => bool) public registered;
@@ -56,32 +59,19 @@ contract RenovaQuest is
         public numRegisteredPlayersPerFaction;
 
     /// @inheritdoc IRenovaQuest
-    mapping(address => uint256[]) public loadedItems;
-
-    /// @inheritdoc IRenovaQuest
-    mapping(address => uint256) public numLoadedItems;
-
-    /// @inheritdoc IRenovaQuest
     mapping(address => mapping(address => uint256))
         public portfolioTokenBalances;
 
     constructor(
-        QuestMode questMode,
         address renovaAvatar,
-        address renovaItem,
         address hashflowRouter,
-        uint256 maxPlayers,
-        uint256 maxItemsPerPlayer,
         uint256 _startTime,
         uint256 _endTime,
+        address _depositToken,
+        uint256 _minDepositAmount,
         address _questOwner
     ) {
         _renovaCommandDeck = _msgSender();
-
-        _questMode = questMode;
-
-        _maxPlayers = maxPlayers;
-        _maxItemsPerPlayer = maxItemsPerPlayer;
 
         require(
             _startTime > block.timestamp,
@@ -92,19 +82,27 @@ contract RenovaQuest is
             'RenovaQuest::constructor End time should be after start time.'
         );
         require(
-            (_endTime - _startTime) <= (1 days) * 31,
+            (_endTime - _startTime) <= (1 days) * 31 * 4,
             'RenovaQuest::constructor Quest too long.'
         );
 
         startTime = _startTime;
         endTime = _endTime;
+        depositToken = _depositToken;
+        minDepositAmount = _minDepositAmount;
+
+        allowedTokens[depositToken] = true;
 
         questOwner = _questOwner;
 
         _renovaAvatar = renovaAvatar;
-        _renovaItem = renovaItem;
         _hashflowRouter = hashflowRouter;
+
+        emit UpdateTokenAuthorizationStatus(depositToken, true);
     }
+
+    /// @dev Fallback function to receive native token.
+    receive() external payable {}
 
     /// @inheritdoc IRenovaQuest
     function updateTokenAuthorization(
@@ -132,102 +130,16 @@ contract RenovaQuest is
     }
 
     /// @inheritdoc IRenovaQuest
-    function enterLoadDeposit(
-        uint256[] memory tokenIds,
-        TokenDeposit[] memory tokenDeposits
-    ) external payable override {
-        _enter(_msgSender());
-
-        if (tokenIds.length > 0) {
-            _loadItems(_msgSender(), tokenIds);
-        }
-
-        if (tokenDeposits.length > 0) {
-            _depositTokens(_msgSender(), tokenDeposits);
-        }
-    }
-
-    /// @inheritdoc IRenovaQuest
-    function enter() external override nonReentrant {
-        _enter(_msgSender());
-    }
-
-    /// @inheritdoc IRenovaQuest
-    function loadItems(uint256[] memory tokenIds) external override {
-        _loadItems(_msgSender(), tokenIds);
-    }
-
-    /// @inheritdoc IRenovaQuest
-    function depositTokens(
-        TokenDeposit[] memory tokenDeposits
+    function depositAndEnter(
+        uint256 depositAmount
     ) external payable override nonReentrant {
-        _depositTokens(_msgSender(), tokenDeposits);
-    }
-
-    function unloadItem(uint256 tokenId) external override {
-        uint256 idx = 0;
-        uint256 numLoadedItemsForPlayer = loadedItems[_msgSender()].length;
-
-        while (
-            idx < numLoadedItemsForPlayer &&
-            loadedItems[_msgSender()][idx] != tokenId
-        ) {
-            idx++;
-        }
-
-        require(
-            idx < numLoadedItemsForPlayer,
-            'RenovaQuest::unloadItem Item not loaded.'
-        );
-
-        loadedItems[_msgSender()][idx] = loadedItems[_msgSender()][
-            numLoadedItemsForPlayer - 1
-        ];
-        loadedItems[_msgSender()].pop();
-
-        numLoadedItems[_msgSender()] -= 1;
-
-        emit UnloadItem(_msgSender(), tokenId);
-        IERC721(_renovaItem).safeTransferFrom(
-            address(this),
-            _msgSender(),
-            tokenId
-        );
-    }
-
-    /// @inheritdoc IRenovaQuest
-    function unloadAllItems() external override {
-        require(
-            block.timestamp < startTime || block.timestamp >= endTime,
-            'RenovaQuest::unloadAllItems Quest is ongoing.'
-        );
-
-        uint256[] memory allLoadedItems = loadedItems[_msgSender()];
-
-        for (uint256 i = 0; i < allLoadedItems.length; i++) {
-            emit UnloadItem(_msgSender(), allLoadedItems[i]);
-            IERC721(_renovaItem).safeTransferFrom(
-                address(this),
-                _msgSender(),
-                allLoadedItems[i]
-            );
-        }
-
-        uint256[] memory empty;
-
-        loadedItems[_msgSender()] = empty;
-        numLoadedItems[_msgSender()] = 0;
+        _depositAndEnter(_msgSender(), depositAmount);
     }
 
     /// @inheritdoc IRenovaQuest
     function withdrawTokens(
         address[] memory tokens
     ) external override nonReentrant {
-        require(
-            block.timestamp < startTime || block.timestamp >= endTime,
-            'RenovaQuest::withdrawTokens Quest is ongoing.'
-        );
-
         for (uint256 i = 0; i < tokens.length; i++) {
             uint256 amount = portfolioTokenBalances[_msgSender()][tokens[i]];
             if (amount == 0) {
@@ -279,11 +191,11 @@ contract RenovaQuest is
             'RenovaQuest::trade Effective Trader should be player.'
         );
 
-        uint256 quoteTokenAmount = quote.maxQuoteTokenAmount;
-        if (quote.effectiveBaseTokenAmount < quote.maxBaseTokenAmount) {
+        uint256 quoteTokenAmount = quote.quoteTokenAmount;
+        if (quote.effectiveBaseTokenAmount < quote.baseTokenAmount) {
             quoteTokenAmount =
-                (quote.effectiveBaseTokenAmount * quote.maxQuoteTokenAmount) /
-                quote.maxBaseTokenAmount;
+                (quote.effectiveBaseTokenAmount * quote.quoteTokenAmount) /
+                quote.baseTokenAmount;
         }
 
         portfolioTokenBalances[_msgSender()][quote.baseToken] -= quote
@@ -316,7 +228,7 @@ contract RenovaQuest is
 
         uint256 balanceBefore = _questBalanceOf(quote.quoteToken);
 
-        IHashflowRouter(_hashflowRouter).tradeSingleHop{value: msgValue}(quote);
+        IHashflowRouter(_hashflowRouter).tradeRFQT{value: msgValue}(quote);
 
         uint256 balanceAfter = _questBalanceOf(quote.quoteToken);
 
@@ -326,17 +238,21 @@ contract RenovaQuest is
         );
     }
 
-    /// @notice Registers a player for the quest.
-    /// @param player The address of the player.
-    function _enter(address player) internal {
+    /// @notice Deposits tokens and registers the player for the Quest.
+    /// @param player The address of the player depositing tokens.
+    /// @param depositAmount The amount of token to deposit.
+    function _depositAndEnter(address player, uint256 depositAmount) internal {
         require(
-            block.timestamp < startTime,
-            'RenovaQuest::_enter Can only enter before the quest starts.'
+            block.timestamp < endTime,
+            'RenovaQuest::_depositAndEnter Can only deposit before the quest ends.'
         );
-
+        require(
+            depositAmount >= minDepositAmount,
+            'RenovaQuest::_depositAndEnter Deposit amount too low.'
+        );
         require(
             !registered[player],
-            'RenovaQuest::_enter Player already registered.'
+            'RenovaQuest::_depositAndEnter Player has already entered the quest.'
         );
 
         uint256 avatarTokenId = IRenovaAvatarBase(_renovaAvatar).tokenIds(
@@ -344,117 +260,32 @@ contract RenovaQuest is
         );
         require(
             avatarTokenId != 0,
-            'RenovaQuest::_enter Player has not minted Avatar.'
+            'RenovaQuest::_depositAndEnter Player has not minted Avatar.'
         );
 
-        IRenovaAvatarBase.RenovaFaction faction = IRenovaAvatarBase(
-            _renovaAvatar
-        ).factions(_msgSender());
-
-        if (_questMode == QuestMode.SOLO) {
+        if (depositToken == address(0)) {
             require(
-                _maxPlayers == 0 || numRegisteredPlayers < _maxPlayers,
-                'RenovaQuest::_enter Player cap reached.'
+                msg.value == depositAmount,
+                'RenovaQuest::_depositAndEnter msg.value should equal amount.'
             );
         } else {
             require(
-                _maxPlayers == 0 ||
-                    numRegisteredPlayersPerFaction[faction] < _maxPlayers,
-                'RenovaQuest::_enter Player cap reached.'
+                msg.value == 0,
+                'RenovaQuest::_depositAndEnter msg.value should be 0.'
             );
         }
-
-        emit RegisterPlayer(player);
-
-        numRegisteredPlayers++;
-        numRegisteredPlayersPerFaction[faction]++;
 
         registered[player] = true;
-    }
+        portfolioTokenBalances[player][depositToken] += depositAmount;
+        numRegisteredPlayers++;
 
-    /// @notice Loads items into the Quest.
-    /// @param player The address of the player loading the items.
-    /// @param tokenIds The Token IDs of the loaded items.
-    function _loadItems(address player, uint256[] memory tokenIds) internal {
-        require(
-            block.timestamp < startTime,
-            'RenovaQuest::loadItems Can only load item before the quest starts.'
-        );
+        emit DepositToken(player, depositToken, depositAmount);
+        emit RegisterPlayer(player);
 
-        require(
-            registered[player],
-            'RenovaQuest::loadItems Player not registered.'
-        );
-
-        uint256 _numLoadedItems = numLoadedItems[player];
-
-        require(
-            (_numLoadedItems + tokenIds.length) <= _maxItemsPerPlayer,
-            'RenovaQuest::loadItems Too many items.'
-        );
-
-        IRenovaCommandDeckBase(_renovaCommandDeck).loadItemsForQuest(
+        IRenovaCommandDeckBase(_renovaCommandDeck).depositTokenForQuest(
             player,
-            tokenIds
-        );
-
-        for (uint256 i = 0; i < tokenIds.length; i++) {
-            loadedItems[player].push(tokenIds[i]);
-
-            emit LoadItem(player, tokenIds[i]);
-        }
-
-        _numLoadedItems += tokenIds.length;
-
-        numLoadedItems[player] = _numLoadedItems;
-    }
-
-    /// @notice Deposits tokens prior to the beginning of the Quest.
-    /// @param player The address of the player depositing tokens.
-    /// @param tokenDeposits The addresses and amounts of tokens to deposit.
-    function _depositTokens(
-        address player,
-        TokenDeposit[] memory tokenDeposits
-    ) internal {
-        require(
-            block.timestamp < startTime,
-            'RenovaQuest::depositToken Can only deposit before the quest starts.'
-        );
-        require(
-            registered[player],
-            'RenovaQuest::depositToken Player not registered.'
-        );
-
-        uint256 totalNativeToken = 0;
-
-        for (uint256 i = 0; i < tokenDeposits.length; i += 1) {
-            require(
-                allowedTokens[tokenDeposits[i].token],
-                'RenovaQuest::_depositTokens Token not allowed.'
-            );
-            if (tokenDeposits[i].token == address(0)) {
-                totalNativeToken += tokenDeposits[i].amount;
-            }
-
-            emit DepositToken(
-                player,
-                tokenDeposits[i].token,
-                tokenDeposits[i].amount
-            );
-
-            portfolioTokenBalances[player][
-                tokenDeposits[i].token
-            ] += tokenDeposits[i].amount;
-        }
-
-        require(
-            msg.value == totalNativeToken,
-            'RenovaQuest::depositToken msg.value should equal amount.'
-        );
-
-        IRenovaCommandDeckBase(_renovaCommandDeck).depositTokensForQuest(
-            player,
-            tokenDeposits
+            depositToken,
+            depositAmount
         );
     }
 

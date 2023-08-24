@@ -23,16 +23,7 @@ import type {
   TypedContractMethod,
 } from "../../../common";
 
-export declare namespace IRenovaQuest {
-  export type TokenDepositStruct = { token: AddressLike; amount: BigNumberish };
-
-  export type TokenDepositStructOutput = [token: string, amount: bigint] & {
-    token: string;
-    amount: bigint;
-  };
-}
-
-export declare namespace IHashflowRouter {
+export declare namespace IQuote {
   export type RFQTQuoteStruct = {
     pool: AddressLike;
     externalAccount: AddressLike;
@@ -41,8 +32,8 @@ export declare namespace IHashflowRouter {
     baseToken: AddressLike;
     quoteToken: AddressLike;
     effectiveBaseTokenAmount: BigNumberish;
-    maxBaseTokenAmount: BigNumberish;
-    maxQuoteTokenAmount: BigNumberish;
+    baseTokenAmount: BigNumberish;
+    quoteTokenAmount: BigNumberish;
     quoteExpiry: BigNumberish;
     nonce: BigNumberish;
     txid: BytesLike;
@@ -57,8 +48,8 @@ export declare namespace IHashflowRouter {
     baseToken: string,
     quoteToken: string,
     effectiveBaseTokenAmount: bigint,
-    maxBaseTokenAmount: bigint,
-    maxQuoteTokenAmount: bigint,
+    baseTokenAmount: bigint,
+    quoteTokenAmount: bigint,
     quoteExpiry: bigint,
     nonce: bigint,
     txid: string,
@@ -71,8 +62,8 @@ export declare namespace IHashflowRouter {
     baseToken: string;
     quoteToken: string;
     effectiveBaseTokenAmount: bigint;
-    maxBaseTokenAmount: bigint;
-    maxQuoteTokenAmount: bigint;
+    baseTokenAmount: bigint;
+    quoteTokenAmount: bigint;
     quoteExpiry: bigint;
     nonce: bigint;
     txid: string;
@@ -84,13 +75,10 @@ export interface IRenovaQuestInterface extends Interface {
   getFunction(
     nameOrSignature:
       | "allowedTokens"
-      | "depositTokens"
+      | "depositAndEnter"
+      | "depositToken"
       | "endTime"
-      | "enter"
-      | "enterLoadDeposit"
-      | "loadItems"
-      | "loadedItems"
-      | "numLoadedItems"
+      | "minDepositAmount"
       | "numRegisteredPlayers"
       | "numRegisteredPlayersPerFaction"
       | "portfolioTokenBalances"
@@ -98,8 +86,6 @@ export interface IRenovaQuestInterface extends Interface {
       | "registered"
       | "startTime"
       | "trade"
-      | "unloadAllItems"
-      | "unloadItem"
       | "updateTokenAuthorization"
       | "withdrawTokens"
   ): FunctionFragment;
@@ -107,10 +93,8 @@ export interface IRenovaQuestInterface extends Interface {
   getEvent(
     nameOrSignatureOrTopic:
       | "DepositToken"
-      | "LoadItem"
       | "RegisterPlayer"
       | "Trade"
-      | "UnloadItem"
       | "UpdateTokenAuthorizationStatus"
       | "WithdrawToken"
   ): EventFragment;
@@ -120,26 +104,17 @@ export interface IRenovaQuestInterface extends Interface {
     values: [AddressLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "depositTokens",
-    values: [IRenovaQuest.TokenDepositStruct[]]
+    functionFragment: "depositAndEnter",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "depositToken",
+    values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "endTime", values?: undefined): string;
-  encodeFunctionData(functionFragment: "enter", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "enterLoadDeposit",
-    values: [BigNumberish[], IRenovaQuest.TokenDepositStruct[]]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "loadItems",
-    values: [BigNumberish[]]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "loadedItems",
-    values: [AddressLike, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "numLoadedItems",
-    values: [AddressLike]
+    functionFragment: "minDepositAmount",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "numRegisteredPlayers",
@@ -164,15 +139,7 @@ export interface IRenovaQuestInterface extends Interface {
   encodeFunctionData(functionFragment: "startTime", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "trade",
-    values: [IHashflowRouter.RFQTQuoteStruct]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "unloadAllItems",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "unloadItem",
-    values: [BigNumberish]
+    values: [IQuote.RFQTQuoteStruct]
   ): string;
   encodeFunctionData(
     functionFragment: "updateTokenAuthorization",
@@ -188,22 +155,16 @@ export interface IRenovaQuestInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "depositTokens",
+    functionFragment: "depositAndEnter",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "depositToken",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "endTime", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "enter", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "enterLoadDeposit",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "loadItems", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "loadedItems",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "numLoadedItems",
+    functionFragment: "minDepositAmount",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -222,11 +183,6 @@ export interface IRenovaQuestInterface extends Interface {
   decodeFunctionResult(functionFragment: "registered", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "startTime", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "trade", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "unloadAllItems",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "unloadItem", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "updateTokenAuthorization",
     data: BytesLike
@@ -248,19 +204,6 @@ export namespace DepositTokenEvent {
     player: string;
     token: string;
     amount: bigint;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
-}
-
-export namespace LoadItemEvent {
-  export type InputTuple = [player: AddressLike, tokenId: BigNumberish];
-  export type OutputTuple = [player: string, tokenId: bigint];
-  export interface OutputObject {
-    player: string;
-    tokenId: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -301,19 +244,6 @@ export namespace TradeEvent {
     quoteToken: string;
     baseTokenAmount: bigint;
     quoteTokenAmount: bigint;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
-}
-
-export namespace UnloadItemEvent {
-  export type InputTuple = [player: AddressLike, tokenId: BigNumberish];
-  export type OutputTuple = [player: string, tokenId: bigint];
-  export interface OutputObject {
-    player: string;
-    tokenId: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -397,38 +327,17 @@ export interface IRenovaQuest extends BaseContract {
 
   allowedTokens: TypedContractMethod<[token: AddressLike], [boolean], "view">;
 
-  depositTokens: TypedContractMethod<
-    [tokenDeposits: IRenovaQuest.TokenDepositStruct[]],
+  depositAndEnter: TypedContractMethod<
+    [depositAmount: BigNumberish],
     [void],
     "payable"
   >;
+
+  depositToken: TypedContractMethod<[], [string], "view">;
 
   endTime: TypedContractMethod<[], [bigint], "view">;
 
-  enter: TypedContractMethod<[], [void], "nonpayable">;
-
-  enterLoadDeposit: TypedContractMethod<
-    [
-      tokenIds: BigNumberish[],
-      tokenDeposits: IRenovaQuest.TokenDepositStruct[]
-    ],
-    [void],
-    "payable"
-  >;
-
-  loadItems: TypedContractMethod<
-    [tokenIds: BigNumberish[]],
-    [void],
-    "nonpayable"
-  >;
-
-  loadedItems: TypedContractMethod<
-    [player: AddressLike, idx: BigNumberish],
-    [bigint],
-    "view"
-  >;
-
-  numLoadedItems: TypedContractMethod<[player: AddressLike], [bigint], "view">;
+  minDepositAmount: TypedContractMethod<[], [bigint], "view">;
 
   numRegisteredPlayers: TypedContractMethod<[], [bigint], "view">;
 
@@ -451,17 +360,9 @@ export interface IRenovaQuest extends BaseContract {
   startTime: TypedContractMethod<[], [bigint], "view">;
 
   trade: TypedContractMethod<
-    [quote: IHashflowRouter.RFQTQuoteStruct],
+    [quote: IQuote.RFQTQuoteStruct],
     [void],
     "payable"
-  >;
-
-  unloadAllItems: TypedContractMethod<[], [void], "nonpayable">;
-
-  unloadItem: TypedContractMethod<
-    [tokenId: BigNumberish],
-    [void],
-    "nonpayable"
   >;
 
   updateTokenAuthorization: TypedContractMethod<
@@ -484,41 +385,17 @@ export interface IRenovaQuest extends BaseContract {
     nameOrSignature: "allowedTokens"
   ): TypedContractMethod<[token: AddressLike], [boolean], "view">;
   getFunction(
-    nameOrSignature: "depositTokens"
-  ): TypedContractMethod<
-    [tokenDeposits: IRenovaQuest.TokenDepositStruct[]],
-    [void],
-    "payable"
-  >;
+    nameOrSignature: "depositAndEnter"
+  ): TypedContractMethod<[depositAmount: BigNumberish], [void], "payable">;
+  getFunction(
+    nameOrSignature: "depositToken"
+  ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "endTime"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
-    nameOrSignature: "enter"
-  ): TypedContractMethod<[], [void], "nonpayable">;
-  getFunction(
-    nameOrSignature: "enterLoadDeposit"
-  ): TypedContractMethod<
-    [
-      tokenIds: BigNumberish[],
-      tokenDeposits: IRenovaQuest.TokenDepositStruct[]
-    ],
-    [void],
-    "payable"
-  >;
-  getFunction(
-    nameOrSignature: "loadItems"
-  ): TypedContractMethod<[tokenIds: BigNumberish[]], [void], "nonpayable">;
-  getFunction(
-    nameOrSignature: "loadedItems"
-  ): TypedContractMethod<
-    [player: AddressLike, idx: BigNumberish],
-    [bigint],
-    "view"
-  >;
-  getFunction(
-    nameOrSignature: "numLoadedItems"
-  ): TypedContractMethod<[player: AddressLike], [bigint], "view">;
+    nameOrSignature: "minDepositAmount"
+  ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "numRegisteredPlayers"
   ): TypedContractMethod<[], [bigint], "view">;
@@ -543,17 +420,7 @@ export interface IRenovaQuest extends BaseContract {
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "trade"
-  ): TypedContractMethod<
-    [quote: IHashflowRouter.RFQTQuoteStruct],
-    [void],
-    "payable"
-  >;
-  getFunction(
-    nameOrSignature: "unloadAllItems"
-  ): TypedContractMethod<[], [void], "nonpayable">;
-  getFunction(
-    nameOrSignature: "unloadItem"
-  ): TypedContractMethod<[tokenId: BigNumberish], [void], "nonpayable">;
+  ): TypedContractMethod<[quote: IQuote.RFQTQuoteStruct], [void], "payable">;
   getFunction(
     nameOrSignature: "updateTokenAuthorization"
   ): TypedContractMethod<
@@ -573,13 +440,6 @@ export interface IRenovaQuest extends BaseContract {
     DepositTokenEvent.OutputObject
   >;
   getEvent(
-    key: "LoadItem"
-  ): TypedContractEvent<
-    LoadItemEvent.InputTuple,
-    LoadItemEvent.OutputTuple,
-    LoadItemEvent.OutputObject
-  >;
-  getEvent(
     key: "RegisterPlayer"
   ): TypedContractEvent<
     RegisterPlayerEvent.InputTuple,
@@ -592,13 +452,6 @@ export interface IRenovaQuest extends BaseContract {
     TradeEvent.InputTuple,
     TradeEvent.OutputTuple,
     TradeEvent.OutputObject
-  >;
-  getEvent(
-    key: "UnloadItem"
-  ): TypedContractEvent<
-    UnloadItemEvent.InputTuple,
-    UnloadItemEvent.OutputTuple,
-    UnloadItemEvent.OutputObject
   >;
   getEvent(
     key: "UpdateTokenAuthorizationStatus"
@@ -627,17 +480,6 @@ export interface IRenovaQuest extends BaseContract {
       DepositTokenEvent.OutputObject
     >;
 
-    "LoadItem(address,uint256)": TypedContractEvent<
-      LoadItemEvent.InputTuple,
-      LoadItemEvent.OutputTuple,
-      LoadItemEvent.OutputObject
-    >;
-    LoadItem: TypedContractEvent<
-      LoadItemEvent.InputTuple,
-      LoadItemEvent.OutputTuple,
-      LoadItemEvent.OutputObject
-    >;
-
     "RegisterPlayer(address)": TypedContractEvent<
       RegisterPlayerEvent.InputTuple,
       RegisterPlayerEvent.OutputTuple,
@@ -658,17 +500,6 @@ export interface IRenovaQuest extends BaseContract {
       TradeEvent.InputTuple,
       TradeEvent.OutputTuple,
       TradeEvent.OutputObject
-    >;
-
-    "UnloadItem(address,uint256)": TypedContractEvent<
-      UnloadItemEvent.InputTuple,
-      UnloadItemEvent.OutputTuple,
-      UnloadItemEvent.OutputObject
-    >;
-    UnloadItem: TypedContractEvent<
-      UnloadItemEvent.InputTuple,
-      UnloadItemEvent.OutputTuple,
-      UnloadItemEvent.OutputObject
     >;
 
     "UpdateTokenAuthorizationStatus(address,bool)": TypedContractEvent<

@@ -3,5 +3,4 @@
 /* eslint-disable */
 import type * as erc from "./erc";
 export type { erc };
-export type { IHashflowRouter } from "./IHashflowRouter";
 export type { IWormhole } from "./IWormhole";

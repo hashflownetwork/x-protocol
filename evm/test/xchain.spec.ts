@@ -12,10 +12,7 @@ import {
   padAddressTo32Bytes,
   ZERO_ADDRESS,
 } from './utils';
-import {
-  HashflowPool,
-  IHashflowLayerZeroMessenger,
-} from '../types/index';
+import { HashflowPool, IHashflowLayerZeroMessenger } from '../types/index';
 import { Contracts, ContractFactory } from './contracts';
 
 const eth = ZERO_ADDRESS;
@@ -34,7 +31,7 @@ describe('X-Chain', () => {
     await factory.createPool('Hash Capital 1', signer);
     await factory.createPool('Hash Capital 2', signer);
     const createPoolEvents = await factory.queryFilter(
-      factory.filters.CreatePool()
+      factory.filters.CreatePool(),
     );
     const pools = createPoolEvents
       .filter((evt) => evt.args.operations === owner)
@@ -44,11 +41,11 @@ describe('X-Chain', () => {
 
     privPoolContract1 = await ethers.getContractAt(
       'HashflowPool',
-      privPoolAddress1
+      privPoolAddress1,
     );
     privPoolContract2 = await ethers.getContractAt(
       'HashflowPool',
-      privPoolAddress2
+      privPoolAddress2,
     );
 
     await sendETH(signers[0], expandTo18Decimals(10), privPoolAddress1);
@@ -95,18 +92,18 @@ describe('X-Chain', () => {
       };
 
       expect(await privPoolContract1.getReserves(eth)).to.equal(
-        expandTo18Decimals(10)
+        expandTo18Decimals(10),
       );
       expect(
-        await privPoolContract2.getReserves(await tt1.getAddress())
+        await privPoolContract2.getReserves(await tt1.getAddress()),
       ).to.equal(expandTo18Decimals(10));
       await privPoolContract1.updateXChainMessengerAuthorization(
         await xChainMessenger.getAddress(),
-        true
+        true,
       );
       await privPoolContract2.updateXChainMessengerAuthorization(
         await xChainMessenger.getAddress(),
-        true
+        true,
       );
       await privPoolContract1.updateXChainPoolAuthorization(
         [
@@ -115,7 +112,7 @@ describe('X-Chain', () => {
             pool: padAddressTo32Bytes(privPoolAddress2),
           },
         ],
-        true
+        true,
       );
 
       const { blockNumber: tradeBlockNumber } =
@@ -128,7 +125,7 @@ describe('X-Chain', () => {
           Buffer.from(''),
           {
             value: expandTo18Decimals(2),
-          }
+          },
         );
 
       if (!tradeBlockNumber) {
@@ -136,10 +133,10 @@ describe('X-Chain', () => {
       }
 
       expect(await privPoolContract1.getReserves(eth)).to.equal(
-        expandTo18Decimals(11)
+        expandTo18Decimals(11),
       );
       expect(
-        await privPoolContract2.getReserves(await tt1.getAddress())
+        await privPoolContract2.getReserves(await tt1.getAddress()),
       ).to.equal(expandTo18Decimals(10));
 
       await privPoolContract2.updateXChainPoolAuthorization(
@@ -149,7 +146,7 @@ describe('X-Chain', () => {
             pool: padAddressTo32Bytes(privPoolAddress1),
           },
         ],
-        true
+        true,
       );
 
       // We check for a stored payload.
@@ -175,11 +172,11 @@ describe('X-Chain', () => {
         5555,
         path,
         nonce,
-        payload
+        payload,
       );
 
       expect(
-        await privPoolContract2.getReserves(await tt1.getAddress())
+        await privPoolContract2.getReserves(await tt1.getAddress()),
       ).to.equal(expandTo18Decimals(5));
 
       // Payload cannot be retried again.
@@ -188,10 +185,10 @@ describe('X-Chain', () => {
           5555,
           path,
           nonce,
-          payload
-        )
+          payload,
+        ),
       ).to.be.revertedWith(
-        'HashflowLayerZeroMessenger::retryPayload Payload not found.'
+        'HashflowLayerZeroMessenger::retryPayload Payload not found.',
       );
     });
 
@@ -226,10 +223,10 @@ describe('X-Chain', () => {
       };
 
       expect(
-        await privPoolContract1.getReserves(await tt1.getAddress())
+        await privPoolContract1.getReserves(await tt1.getAddress()),
       ).to.equal(expandTo18Decimals(10));
       expect(
-        await privPoolContract2.getReserves(await tt2.getAddress())
+        await privPoolContract2.getReserves(await tt2.getAddress()),
       ).to.equal(expandTo18Decimals(10));
 
       // Set allowance for TT1, so that it can be traded.
@@ -244,7 +241,7 @@ describe('X-Chain', () => {
             quote,
             31337,
             await router.getAddress(),
-            signers[3]
+            signers[3],
           ),
           makerSignature: await signQuoteXChainRFQMMaker(quote, signers[2]),
         },
@@ -252,15 +249,15 @@ describe('X-Chain', () => {
         Buffer.from(''),
         {
           value: expandTo18Decimals(1),
-        }
+        },
       );
 
       expect(
-        await privPoolContract1.getReserves(await tt1.getAddress())
+        await privPoolContract1.getReserves(await tt1.getAddress()),
       ).to.equal(expandTo18Decimals(15));
 
       expect(
-        await privPoolContract2.getReserves(await tt2.getAddress())
+        await privPoolContract2.getReserves(await tt2.getAddress()),
       ).to.equal(expandTo18Decimals(5));
 
       expect(await tt1.balanceOf(trader)).to.equal(expandTo18Decimals(100));
@@ -284,7 +281,7 @@ describe('X-Chain', () => {
         await tt1.name(),
         '1',
         31337,
-        signers[3]
+        signers[3],
       );
 
       const r = '0x' + permit.slice(2, 2 + 64);
@@ -298,7 +295,7 @@ describe('X-Chain', () => {
             quote2,
             31337,
             await router.getAddress(),
-            signers[3]
+            signers[3],
           ),
           makerSignature: await signQuoteXChainRFQMMaker(quote2, signers[2]),
         },
@@ -311,7 +308,7 @@ describe('X-Chain', () => {
         BigInt(2) ** BigInt(256) - BigInt(1),
         {
           value: expandTo18Decimals(1),
-        }
+        },
       );
 
       expect(await tt1.balanceOf(trader)).to.equal(expandTo18Decimals(95));
@@ -367,15 +364,12 @@ describe('X-Chain', () => {
 
       const traderEthBalance1 = await provider.getBalance(trader);
 
-      const externalAccount1EthBalance1 = await provider.getBalance(
-        mmExternalAccount
-      );
-      const externalAccount1WethBalance1 = await weth.balanceOf(
-        mmExternalAccount
-      );
-      const externalAccount2Tt1Balance1 = await tt1.balanceOf(
-        mmExternalAccount2
-      );
+      const externalAccount1EthBalance1 =
+        await provider.getBalance(mmExternalAccount);
+      const externalAccount1WethBalance1 =
+        await weth.balanceOf(mmExternalAccount);
+      const externalAccount2Tt1Balance1 =
+        await tt1.balanceOf(mmExternalAccount2);
 
       // We set allowance for 5 TT1.
       await tt1
@@ -391,24 +385,21 @@ describe('X-Chain', () => {
         Buffer.from(''),
         {
           value: expandTo18Decimals(2),
-        }
+        },
       );
       const traderEthBalance2 = await provider.getBalance(trader);
       const traderTt1Balance2 = await tt1.balanceOf(trader);
-      const externalAccount1EthBalance2 = await provider.getBalance(
-        mmExternalAccount
-      );
-      const externalAccount1WethBalance2 = await weth.balanceOf(
-        mmExternalAccount
-      );
-      const externalAccount2Tt1Balance2 = await tt1.balanceOf(
-        mmExternalAccount2
-      );
+      const externalAccount1EthBalance2 =
+        await provider.getBalance(mmExternalAccount);
+      const externalAccount1WethBalance2 =
+        await weth.balanceOf(mmExternalAccount);
+      const externalAccount2Tt1Balance2 =
+        await tt1.balanceOf(mmExternalAccount2);
 
       // externalAccount does not receive ETH, but receives WETH instead.
       expect(externalAccount1EthBalance1).to.equal(externalAccount1EthBalance2);
       expect(
-        externalAccount1WethBalance2 - externalAccount1WethBalance1
+        externalAccount1WethBalance2 - externalAccount1WethBalance1,
       ).to.equal(expandTo18Decimals(1));
 
       // Trader received 5 TT1.
@@ -416,12 +407,12 @@ describe('X-Chain', () => {
 
       // Trader was deducted the ETH.
       expect(traderEthBalance1 - traderEthBalance2).to.be.greaterThanOrEqual(
-        expandTo18Decimals(2)
+        expandTo18Decimals(2),
       );
 
       // Nothing was deducted from externalAccount 2.
       expect(
-        externalAccount2Tt1Balance1 - externalAccount2Tt1Balance2
+        externalAccount2Tt1Balance1 - externalAccount2Tt1Balance2,
       ).to.equal(expandTo18Decimals(5));
     });
 
@@ -433,7 +424,7 @@ describe('X-Chain', () => {
         throw new Error(`Missing provider`);
       }
       const balanceUa1 = await provider.getBalance(
-        await xChainMessenger.getAddress()
+        await xChainMessenger.getAddress(),
       );
 
       await signers[0].sendTransaction({
@@ -442,13 +433,13 @@ describe('X-Chain', () => {
       });
 
       const balanceUa2 = await provider.getBalance(
-        await xChainMessenger.getAddress()
+        await xChainMessenger.getAddress(),
       );
 
       await xChainMessenger.withdrawFunds();
 
       const balanceUa3 = await provider.getBalance(
-        await xChainMessenger.getAddress()
+        await xChainMessenger.getAddress(),
       );
 
       expect(balanceUa2 - balanceUa1).to.equal(BigInt(1000000));

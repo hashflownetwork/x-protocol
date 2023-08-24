@@ -23,23 +23,13 @@ import type {
   TypedContractMethod,
 } from "../../common";
 
-export declare namespace IRenovaQuest {
-  export type TokenDepositStruct = { token: AddressLike; amount: BigNumberish };
-
-  export type TokenDepositStructOutput = [token: string, amount: bigint] & {
-    token: string;
-    amount: bigint;
-  };
-}
-
 export interface RenovaCommandDeckSatelliteInterface extends Interface {
   getFunction(
     nameOrSignature:
       | "createQuest"
-      | "depositTokensForQuest"
+      | "depositTokenForQuest"
       | "hashflowRouter"
       | "initialize"
-      | "loadItemsForQuest"
       | "owner"
       | "questDeploymentAddresses"
       | "questIdsByDeploymentAddress"
@@ -63,18 +53,11 @@ export interface RenovaCommandDeckSatelliteInterface extends Interface {
 
   encodeFunctionData(
     functionFragment: "createQuest",
-    values: [
-      BytesLike,
-      BigNumberish,
-      BigNumberish,
-      BigNumberish,
-      BigNumberish,
-      BigNumberish
-    ]
+    values: [BytesLike, BigNumberish, BigNumberish, AddressLike, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "depositTokensForQuest",
-    values: [AddressLike, IRenovaQuest.TokenDepositStruct[]]
+    functionFragment: "depositTokenForQuest",
+    values: [AddressLike, AddressLike, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "hashflowRouter",
@@ -83,10 +66,6 @@ export interface RenovaCommandDeckSatelliteInterface extends Interface {
   encodeFunctionData(
     functionFragment: "initialize",
     values: [AddressLike, AddressLike, AddressLike, AddressLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "loadItemsForQuest",
-    values: [AddressLike, BigNumberish[]]
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
@@ -131,7 +110,7 @@ export interface RenovaCommandDeckSatelliteInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "depositTokensForQuest",
+    functionFragment: "depositTokenForQuest",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -139,10 +118,6 @@ export interface RenovaCommandDeckSatelliteInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "loadItemsForQuest",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "questDeploymentAddresses",
@@ -180,29 +155,26 @@ export namespace CreateQuestEvent {
   export type InputTuple = [
     questId: BytesLike,
     questAddress: AddressLike,
-    questMode: BigNumberish,
-    maxPlayers: BigNumberish,
-    maxItemsPerPlayer: BigNumberish,
     startTime: BigNumberish,
-    endTime: BigNumberish
+    endTime: BigNumberish,
+    depositToken: AddressLike,
+    minDepositAmount: BigNumberish
   ];
   export type OutputTuple = [
     questId: string,
     questAddress: string,
-    questMode: bigint,
-    maxPlayers: bigint,
-    maxItemsPerPlayer: bigint,
     startTime: bigint,
-    endTime: bigint
+    endTime: bigint,
+    depositToken: string,
+    minDepositAmount: bigint
   ];
   export interface OutputObject {
     questId: string;
     questAddress: string;
-    questMode: bigint;
-    maxPlayers: bigint;
-    maxItemsPerPlayer: bigint;
     startTime: bigint;
     endTime: bigint;
+    depositToken: string;
+    minDepositAmount: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -310,18 +282,21 @@ export interface RenovaCommandDeckSatellite extends BaseContract {
   createQuest: TypedContractMethod<
     [
       questId: BytesLike,
-      questMode: BigNumberish,
-      maxPlayers: BigNumberish,
-      maxItemsPerPlayer: BigNumberish,
       startTime: BigNumberish,
-      endTime: BigNumberish
+      endTime: BigNumberish,
+      depositToken: AddressLike,
+      minDepositAmount: BigNumberish
     ],
     [void],
     "nonpayable"
   >;
 
-  depositTokensForQuest: TypedContractMethod<
-    [player: AddressLike, tokenDeposits: IRenovaQuest.TokenDepositStruct[]],
+  depositTokenForQuest: TypedContractMethod<
+    [
+      player: AddressLike,
+      depositToken: AddressLike,
+      depositAmount: BigNumberish
+    ],
     [void],
     "nonpayable"
   >;
@@ -335,12 +310,6 @@ export interface RenovaCommandDeckSatellite extends BaseContract {
       _hashflowRouter: AddressLike,
       _questOwner: AddressLike
     ],
-    [void],
-    "nonpayable"
-  >;
-
-  loadItemsForQuest: TypedContractMethod<
-    [player: AddressLike, tokenIds: BigNumberish[]],
     [void],
     "nonpayable"
   >;
@@ -394,19 +363,22 @@ export interface RenovaCommandDeckSatellite extends BaseContract {
   ): TypedContractMethod<
     [
       questId: BytesLike,
-      questMode: BigNumberish,
-      maxPlayers: BigNumberish,
-      maxItemsPerPlayer: BigNumberish,
       startTime: BigNumberish,
-      endTime: BigNumberish
+      endTime: BigNumberish,
+      depositToken: AddressLike,
+      minDepositAmount: BigNumberish
     ],
     [void],
     "nonpayable"
   >;
   getFunction(
-    nameOrSignature: "depositTokensForQuest"
+    nameOrSignature: "depositTokenForQuest"
   ): TypedContractMethod<
-    [player: AddressLike, tokenDeposits: IRenovaQuest.TokenDepositStruct[]],
+    [
+      player: AddressLike,
+      depositToken: AddressLike,
+      depositAmount: BigNumberish
+    ],
     [void],
     "nonpayable"
   >;
@@ -422,13 +394,6 @@ export interface RenovaCommandDeckSatellite extends BaseContract {
       _hashflowRouter: AddressLike,
       _questOwner: AddressLike
     ],
-    [void],
-    "nonpayable"
-  >;
-  getFunction(
-    nameOrSignature: "loadItemsForQuest"
-  ): TypedContractMethod<
-    [player: AddressLike, tokenIds: BigNumberish[]],
     [void],
     "nonpayable"
   >;
@@ -500,7 +465,7 @@ export interface RenovaCommandDeckSatellite extends BaseContract {
   >;
 
   filters: {
-    "CreateQuest(bytes32,address,uint8,uint256,uint256,uint256,uint256)": TypedContractEvent<
+    "CreateQuest(bytes32,address,uint256,uint256,address,uint256)": TypedContractEvent<
       CreateQuestEvent.InputTuple,
       CreateQuestEvent.OutputTuple,
       CreateQuestEvent.OutputObject

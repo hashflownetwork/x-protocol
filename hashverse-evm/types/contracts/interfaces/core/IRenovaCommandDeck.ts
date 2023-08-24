@@ -23,24 +23,28 @@ import type {
   TypedContractMethod,
 } from "../../../common";
 
-export declare namespace IRenovaQuest {
-  export type TokenDepositStruct = { token: AddressLike; amount: BigNumberish };
-
-  export type TokenDepositStructOutput = [token: string, amount: bigint] & {
-    token: string;
-    amount: bigint;
+export declare namespace IRenovaCommandDeck {
+  export type ItemMintSpecStruct = {
+    hashverseItemIds: BigNumberish[];
+    rootId: BytesLike;
+    proof: BytesLike[];
   };
+
+  export type ItemMintSpecStructOutput = [
+    hashverseItemIds: bigint[],
+    rootId: string,
+    proof: string[]
+  ] & { hashverseItemIds: bigint[]; rootId: string; proof: string[] };
 }
 
 export interface IRenovaCommandDeckInterface extends Interface {
   getFunction(
     nameOrSignature:
       | "createQuest"
-      | "depositTokensForQuest"
+      | "depositTokenForQuest"
       | "hashflowRouter"
       | "initialize"
       | "itemMerkleRoots"
-      | "loadItemsForQuest"
       | "mintItemAdmin"
       | "mintItems"
       | "questDeploymentAddresses"
@@ -64,18 +68,11 @@ export interface IRenovaCommandDeckInterface extends Interface {
 
   encodeFunctionData(
     functionFragment: "createQuest",
-    values: [
-      BytesLike,
-      BigNumberish,
-      BigNumberish,
-      BigNumberish,
-      BigNumberish,
-      BigNumberish
-    ]
+    values: [BytesLike, BigNumberish, BigNumberish, AddressLike, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "depositTokensForQuest",
-    values: [AddressLike, IRenovaQuest.TokenDepositStruct[]]
+    functionFragment: "depositTokenForQuest",
+    values: [AddressLike, AddressLike, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "hashflowRouter",
@@ -90,16 +87,12 @@ export interface IRenovaCommandDeckInterface extends Interface {
     values: [BytesLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "loadItemsForQuest",
-    values: [AddressLike, BigNumberish[]]
-  ): string;
-  encodeFunctionData(
     functionFragment: "mintItemAdmin",
     values: [AddressLike, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "mintItems",
-    values: [AddressLike, BigNumberish[], BytesLike, BytesLike[]]
+    values: [AddressLike, IRenovaCommandDeck.ItemMintSpecStruct[]]
   ): string;
   encodeFunctionData(
     functionFragment: "questDeploymentAddresses",
@@ -139,7 +132,7 @@ export interface IRenovaCommandDeckInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "depositTokensForQuest",
+    functionFragment: "depositTokenForQuest",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -149,10 +142,6 @@ export interface IRenovaCommandDeckInterface extends Interface {
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "itemMerkleRoots",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "loadItemsForQuest",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -192,29 +181,26 @@ export namespace CreateQuestEvent {
   export type InputTuple = [
     questId: BytesLike,
     questAddress: AddressLike,
-    questMode: BigNumberish,
-    maxPlayers: BigNumberish,
-    maxItemsPerPlayer: BigNumberish,
     startTime: BigNumberish,
-    endTime: BigNumberish
+    endTime: BigNumberish,
+    depositToken: AddressLike,
+    minDepositAmount: BigNumberish
   ];
   export type OutputTuple = [
     questId: string,
     questAddress: string,
-    questMode: bigint,
-    maxPlayers: bigint,
-    maxItemsPerPlayer: bigint,
     startTime: bigint,
-    endTime: bigint
+    endTime: bigint,
+    depositToken: string,
+    minDepositAmount: bigint
   ];
   export interface OutputObject {
     questId: string;
     questAddress: string;
-    questMode: bigint;
-    maxPlayers: bigint;
-    maxItemsPerPlayer: bigint;
     startTime: bigint;
     endTime: bigint;
+    depositToken: string;
+    minDepositAmount: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -323,18 +309,21 @@ export interface IRenovaCommandDeck extends BaseContract {
   createQuest: TypedContractMethod<
     [
       questId: BytesLike,
-      questMode: BigNumberish,
-      maxPlayers: BigNumberish,
-      maxItemsPerPlayer: BigNumberish,
       startTime: BigNumberish,
-      endTime: BigNumberish
+      endTime: BigNumberish,
+      depositToken: AddressLike,
+      minDepositAmount: BigNumberish
     ],
     [void],
     "nonpayable"
   >;
 
-  depositTokensForQuest: TypedContractMethod<
-    [player: AddressLike, tokenDeposits: IRenovaQuest.TokenDepositStruct[]],
+  depositTokenForQuest: TypedContractMethod<
+    [
+      player: AddressLike,
+      depositToken: AddressLike,
+      depositAmount: BigNumberish
+    ],
     [void],
     "nonpayable"
   >;
@@ -354,12 +343,6 @@ export interface IRenovaCommandDeck extends BaseContract {
 
   itemMerkleRoots: TypedContractMethod<[rootId: BytesLike], [string], "view">;
 
-  loadItemsForQuest: TypedContractMethod<
-    [player: AddressLike, tokenIds: BigNumberish[]],
-    [void],
-    "nonpayable"
-  >;
-
   mintItemAdmin: TypedContractMethod<
     [tokenOwner: AddressLike, hashverseItemId: BigNumberish],
     [void],
@@ -369,9 +352,7 @@ export interface IRenovaCommandDeck extends BaseContract {
   mintItems: TypedContractMethod<
     [
       tokenOwner: AddressLike,
-      hashverseItemIds: BigNumberish[],
-      rootId: BytesLike,
-      proof: BytesLike[]
+      mintSpecs: IRenovaCommandDeck.ItemMintSpecStruct[]
     ],
     [void],
     "nonpayable"
@@ -422,19 +403,22 @@ export interface IRenovaCommandDeck extends BaseContract {
   ): TypedContractMethod<
     [
       questId: BytesLike,
-      questMode: BigNumberish,
-      maxPlayers: BigNumberish,
-      maxItemsPerPlayer: BigNumberish,
       startTime: BigNumberish,
-      endTime: BigNumberish
+      endTime: BigNumberish,
+      depositToken: AddressLike,
+      minDepositAmount: BigNumberish
     ],
     [void],
     "nonpayable"
   >;
   getFunction(
-    nameOrSignature: "depositTokensForQuest"
+    nameOrSignature: "depositTokenForQuest"
   ): TypedContractMethod<
-    [player: AddressLike, tokenDeposits: IRenovaQuest.TokenDepositStruct[]],
+    [
+      player: AddressLike,
+      depositToken: AddressLike,
+      depositAmount: BigNumberish
+    ],
     [void],
     "nonpayable"
   >;
@@ -457,13 +441,6 @@ export interface IRenovaCommandDeck extends BaseContract {
     nameOrSignature: "itemMerkleRoots"
   ): TypedContractMethod<[rootId: BytesLike], [string], "view">;
   getFunction(
-    nameOrSignature: "loadItemsForQuest"
-  ): TypedContractMethod<
-    [player: AddressLike, tokenIds: BigNumberish[]],
-    [void],
-    "nonpayable"
-  >;
-  getFunction(
     nameOrSignature: "mintItemAdmin"
   ): TypedContractMethod<
     [tokenOwner: AddressLike, hashverseItemId: BigNumberish],
@@ -475,9 +452,7 @@ export interface IRenovaCommandDeck extends BaseContract {
   ): TypedContractMethod<
     [
       tokenOwner: AddressLike,
-      hashverseItemIds: BigNumberish[],
-      rootId: BytesLike,
-      proof: BytesLike[]
+      mintSpecs: IRenovaCommandDeck.ItemMintSpecStruct[]
     ],
     [void],
     "nonpayable"
@@ -548,7 +523,7 @@ export interface IRenovaCommandDeck extends BaseContract {
   >;
 
   filters: {
-    "CreateQuest(bytes32,address,uint8,uint256,uint256,uint256,uint256)": TypedContractEvent<
+    "CreateQuest(bytes32,address,uint256,uint256,address,uint256)": TypedContractEvent<
       CreateQuestEvent.InputTuple,
       CreateQuestEvent.OutputTuple,
       CreateQuestEvent.OutputObject
