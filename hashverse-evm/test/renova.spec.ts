@@ -205,12 +205,13 @@ describe('Renova', () => {
     });
 
     it('should mint item via Merkle root', async () => {
-      const rootId = keccak256(Buffer.from('root'));
+      const rootIdA = keccak256(Buffer.from('rootA'));
+      const rootIdB = keccak256(Buffer.from('rootB'));
 
-      const leaves = [
+      const leavesA = [
         solidityPackedKeccak256(
           ['address', 'uint256[]'],
-          [await playerA.getAddress(), [20, 50]],
+          [await playerA.getAddress(), [50]],
         ),
         solidityPackedKeccak256(
           ['address', 'uint256[]'],
@@ -218,31 +219,55 @@ describe('Renova', () => {
         ),
       ];
 
-      const tree = new MerkleTree(leaves, keccak256, {
+      const leavesB = [
+        solidityPackedKeccak256(
+          ['address', 'uint256[]'],
+          [await playerA.getAddress(), [20]],
+        ),
+      ];
+
+      const treeA = new MerkleTree(leavesA, keccak256, {
         hashLeaves: false,
         sort: true,
       });
 
-      const root = tree.getRoot();
+      const treeB = new MerkleTree(leavesB, keccak256, {
+        hashLeaves: false,
+        sort: true,
+      });
+
+      const rootA = treeA.getRoot();
+      const rootB = treeB.getRoot();
 
       await renovaCommandDeck
         .connect(questOwner)
-        .uploadItemMerkleRoot(rootId, root);
+        .uploadItemMerkleRoot(rootIdA, rootA);
 
-      await renovaCommandDeck.mintItems(
-        await playerA.getAddress(),
-        [20, 50],
-        rootId,
-        tree.getHexProof(leaves[0]),
-      );
+      await renovaCommandDeck
+        .connect(questOwner)
+        .uploadItemMerkleRoot(rootIdB, rootB);
+
+      await renovaCommandDeck.mintItems(await playerA.getAddress(), [
+        {
+          hashverseItemIds: [50],
+          rootId: rootIdA,
+          proof: treeA.getHexProof(leavesA[0]),
+        },
+        {
+          hashverseItemIds: [20],
+          rootId: rootIdB,
+          proof: treeB.getHexProof(leavesB[0]),
+        },
+      ]);
 
       await expect(
-        renovaCommandDeck.mintItems(
-          await playerA.getAddress(),
-          [20, 50],
-          rootId,
-          tree.getHexProof(leaves[0]),
-        ),
+        renovaCommandDeck.mintItems(await playerA.getAddress(), [
+          {
+            hashverseItemIds: [50],
+            rootId: rootIdA,
+            proof: treeA.getHexProof(leavesA[0]),
+          },
+        ]),
       ).to.be.revertedWith('RenovaCommandDeck::mintItems Already minted.');
     });
 

@@ -23,6 +23,20 @@ import type {
   TypedContractMethod,
 } from "../../../common";
 
+export declare namespace IRenovaCommandDeck {
+  export type ItemMintSpecStruct = {
+    hashverseItemIds: BigNumberish[];
+    rootId: BytesLike;
+    proof: BytesLike[];
+  };
+
+  export type ItemMintSpecStructOutput = [
+    hashverseItemIds: bigint[],
+    rootId: string,
+    proof: string[]
+  ] & { hashverseItemIds: bigint[]; rootId: string; proof: string[] };
+}
+
 export interface IRenovaCommandDeckInterface extends Interface {
   getFunction(
     nameOrSignature:
@@ -78,7 +92,7 @@ export interface IRenovaCommandDeckInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "mintItems",
-    values: [AddressLike, BigNumberish[], BytesLike, BytesLike[]]
+    values: [AddressLike, IRenovaCommandDeck.ItemMintSpecStruct[]]
   ): string;
   encodeFunctionData(
     functionFragment: "questDeploymentAddresses",
@@ -338,9 +352,7 @@ export interface IRenovaCommandDeck extends BaseContract {
   mintItems: TypedContractMethod<
     [
       tokenOwner: AddressLike,
-      hashverseItemIds: BigNumberish[],
-      rootId: BytesLike,
-      proof: BytesLike[]
+      mintSpecs: IRenovaCommandDeck.ItemMintSpecStruct[]
     ],
     [void],
     "nonpayable"
@@ -440,9 +452,7 @@ export interface IRenovaCommandDeck extends BaseContract {
   ): TypedContractMethod<
     [
       tokenOwner: AddressLike,
-      hashverseItemIds: BigNumberish[],
-      rootId: BytesLike,
-      proof: BytesLike[]
+      mintSpecs: IRenovaCommandDeck.ItemMintSpecStruct[]
     ],
     [void],
     "nonpayable"

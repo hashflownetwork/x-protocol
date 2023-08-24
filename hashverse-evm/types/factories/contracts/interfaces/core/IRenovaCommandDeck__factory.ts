@@ -270,19 +270,26 @@ const _abi = [
         type: "address",
       },
       {
-        internalType: "uint256[]",
-        name: "hashverseItemIds",
-        type: "uint256[]",
-      },
-      {
-        internalType: "bytes32",
-        name: "rootId",
-        type: "bytes32",
-      },
-      {
-        internalType: "bytes32[]",
-        name: "proof",
-        type: "bytes32[]",
+        components: [
+          {
+            internalType: "uint256[]",
+            name: "hashverseItemIds",
+            type: "uint256[]",
+          },
+          {
+            internalType: "bytes32",
+            name: "rootId",
+            type: "bytes32",
+          },
+          {
+            internalType: "bytes32[]",
+            name: "proof",
+            type: "bytes32[]",
+          },
+        ],
+        internalType: "struct IRenovaCommandDeck.ItemMintSpec[]",
+        name: "mintSpecs",
+        type: "tuple[]",
       },
     ],
     name: "mintItems",

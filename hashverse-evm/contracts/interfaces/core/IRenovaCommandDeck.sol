@@ -9,6 +9,15 @@ import './IRenovaCommandDeckBase.sol';
 /// @notice See {IRenovaCommandDeckBase}
 /// @dev Deployed on the main chain.
 interface IRenovaCommandDeck is IRenovaCommandDeckBase {
+    struct ItemMintSpec {
+        /// @param hashverseItemIds Hashverse Item IDs for items to mint
+        uint256[] hashverseItemIds;
+        /// @param rootId ID of the Merkle Root.
+        bytes32 rootId;
+        /// @param proof The Merkle proof.
+        bytes32[] proof;
+    }
+
     /// @notice Emitted when a new Merkle root is added for item minting.
     /// @param rootId The ID of the Root.
     /// @param root The Root.
@@ -42,14 +51,10 @@ interface IRenovaCommandDeck is IRenovaCommandDeckBase {
 
     /// @notice Mints a set of items via Merkle root.
     /// @param tokenOwner The wallet receiving the item.
-    /// @param hashverseItemIds The Hashverse Item IDs of the minted items.
-    /// @param rootId The ID of the Merkle root to use.
-    /// @param proof The Merkle proof.
+    /// @param mintSpecs Collection of Merkle proofs for items to mint.
     function mintItems(
         address tokenOwner,
-        uint256[] calldata hashverseItemIds,
-        bytes32 rootId,
-        bytes32[] calldata proof
+        ItemMintSpec[] calldata mintSpecs
     ) external;
 
     /// @notice Mints an item via admin privileges.

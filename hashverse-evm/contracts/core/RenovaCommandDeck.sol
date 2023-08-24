@@ -37,34 +37,42 @@ contract RenovaCommandDeck is IRenovaCommandDeck, RenovaCommandDeckBase {
     /// @inheritdoc IRenovaCommandDeck
     function mintItems(
         address tokenOwner,
-        uint256[] calldata hashverseItemIds,
-        bytes32 rootId,
-        bytes32[] calldata proof
+        ItemMintSpec[] calldata mintSpecs
     ) external override {
-        require(
-            !_mintedItems[rootId][tokenOwner],
-            'RenovaCommandDeck::mintItems Already minted.'
-        );
+        for (uint256 specIdx = 0; specIdx < mintSpecs.length; specIdx++) {
+            bytes32 rootId = mintSpecs[specIdx].rootId;
+            uint256[] memory hashverseItemIds = mintSpecs[specIdx]
+                .hashverseItemIds;
 
-        bytes32 root = itemMerkleRoots[rootId];
-        require(
-            root != bytes32(0),
-            'RenovaCommandDeck::mintItems Root not found.'
-        );
+            require(
+                !_mintedItems[rootId][tokenOwner],
+                'RenovaCommandDeck::mintItems Already minted.'
+            );
 
-        bytes32 leaf = keccak256(
-            abi.encodePacked(tokenOwner, hashverseItemIds)
-        );
+            bytes32 root = itemMerkleRoots[rootId];
+            require(
+                root != bytes32(0),
+                'RenovaCommandDeck::mintItems Root not found.'
+            );
 
-        require(
-            MerkleProofUpgradeable.verifyCalldata(proof, root, leaf),
-            'RenovaCommandDeck::mintItems Proof invalid.'
-        );
+            bytes32 leaf = keccak256(
+                abi.encodePacked(tokenOwner, hashverseItemIds)
+            );
 
-        _mintedItems[rootId][tokenOwner] = true;
+            require(
+                MerkleProofUpgradeable.verifyCalldata(
+                    mintSpecs[specIdx].proof,
+                    root,
+                    leaf
+                ),
+                'RenovaCommandDeck::mintItems Proof invalid.'
+            );
 
-        for (uint256 i = 0; i < hashverseItemIds.length; i++) {
-            _mintItem(tokenOwner, hashverseItemIds[i]);
+            _mintedItems[rootId][tokenOwner] = true;
+
+            for (uint256 i = 0; i < hashverseItemIds.length; i++) {
+                _mintItem(tokenOwner, hashverseItemIds[i]);
+            }
         }
     }
 
