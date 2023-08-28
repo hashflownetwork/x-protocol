@@ -56,7 +56,7 @@ export interface RenovaCommandDeckBaseInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "depositTokenForQuest",
-    values: [AddressLike, AddressLike, BigNumberish]
+    values: [AddressLike, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "hashflowRouter",
@@ -286,11 +286,7 @@ export interface RenovaCommandDeckBase extends BaseContract {
   >;
 
   depositTokenForQuest: TypedContractMethod<
-    [
-      player: AddressLike,
-      depositToken: AddressLike,
-      depositAmount: BigNumberish
-    ],
+    [player: AddressLike, depositAmount: BigNumberish],
     [void],
     "nonpayable"
   >;
@@ -357,11 +353,7 @@ export interface RenovaCommandDeckBase extends BaseContract {
   getFunction(
     nameOrSignature: "depositTokenForQuest"
   ): TypedContractMethod<
-    [
-      player: AddressLike,
-      depositToken: AddressLike,
-      depositAmount: BigNumberish
-    ],
+    [player: AddressLike, depositAmount: BigNumberish],
     [void],
     "nonpayable"
   >;
