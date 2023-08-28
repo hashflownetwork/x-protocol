@@ -282,11 +282,12 @@ contract RenovaQuest is
         emit DepositToken(player, depositToken, depositAmount);
         emit RegisterPlayer(player);
 
-        IRenovaCommandDeckBase(_renovaCommandDeck).depositTokenForQuest(
-            player,
-            depositToken,
-            depositAmount
-        );
+        if (depositToken != address(0)) {
+            IRenovaCommandDeckBase(_renovaCommandDeck).depositTokenForQuest(
+                player,
+                depositAmount
+            );
+        }
     }
 
     /// @notice Returns the amount of token that this Quest currently holds.

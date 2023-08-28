@@ -86,9 +86,9 @@ abstract contract RenovaCommandDeckBase is
         emit UpdateQuestOwner(questOwner, address(0));
     }
 
+    /// @inheritdoc IRenovaCommandDeckBase
     function depositTokenForQuest(
         address player,
-        address depositToken,
         uint256 depositAmount
     ) external override {
         require(
@@ -96,9 +96,11 @@ abstract contract RenovaCommandDeckBase is
             'RenovaCommandDeckBase::depositTokensForQuest Quest not registered.'
         );
 
+        address depositToken = IRenovaQuest(_msgSender()).depositToken();
+
         require(
-            IRenovaQuest(_msgSender()).depositToken() == depositToken,
-            'RenovaCommandDeckBase::depositTokenForQuest Incorrect depositToken.'
+            depositToken != address(0),
+            'RenovaCommandDeckBase::depositTokenForQuest Deposit Token cannot be native token.'
         );
 
         IERC20Upgradeable(depositToken).safeTransferFrom(

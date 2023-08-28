@@ -12,8 +12,12 @@ import '../nft/IRenovaAvatarBase.sol';
 
 Quests can be Solo (every player for themselves), or multiplayer (Faction vs Faction).
 
-Quests have a start time and end time. Players can deposit assets and load items before the
-Quest starts. They can unload items and withdraw assets after the quest ends.
+Quests have a start time and end time. Trading happens during those time bounds.
+
+Quests each have a deposit token and a minimum deposit amount.
+Only one deposit is allowed.
+
+Deposits can occur at any time prior to quest end. Withdrawals can occur at any time.
 
 Players need to first register for a Quest.
 

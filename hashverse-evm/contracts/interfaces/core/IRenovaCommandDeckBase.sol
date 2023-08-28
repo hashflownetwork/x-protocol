@@ -76,12 +76,10 @@ interface IRenovaCommandDeckBase {
 
     /// @notice Deposits tokens into a Quest.
     /// @param player The address of the player depositing the tokens.
-    /// @param depositToken The token to deposit.
     /// @param depositAmount The deposit amount.
     /// @dev This function helps save gas by only setting allowance to this contract.
     function depositTokenForQuest(
         address player,
-        address depositToken,
         uint256 depositAmount
     ) external;
 

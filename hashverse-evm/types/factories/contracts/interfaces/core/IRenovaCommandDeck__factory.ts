@@ -169,11 +169,6 @@ const _abi = [
         type: "address",
       },
       {
-        internalType: "address",
-        name: "depositToken",
-        type: "address",
-      },
-      {
         internalType: "uint256",
         name: "depositAmount",
         type: "uint256",
