@@ -12,6 +12,9 @@ import '@openzeppelin/hardhat-upgrades';
 
 import { NetworkUserConfig } from 'hardhat/types';
 
+import './tasks/upgrade';
+import './tasks/update';
+
 dotenv.config();
 
 const providedAccounts = process.env.PRIVATE_KEY
