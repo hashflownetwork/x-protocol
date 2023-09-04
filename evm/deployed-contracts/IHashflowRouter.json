@@ -18,5 +18,29 @@
     "wormhole2": {
         "address": "0x2c5f3c004878923f55A2a255F89Fe29393177509",
         "deploymentTransactionHash": "0x1a625393aea5579c93d0dc90c86a650baee03f2c5d0b4e1d9c85b00a2c30ecdd"
+    },
+    "ethereum": {
+        "address": "0x55084eE0fEf03f14a305cd24286359A35D735151",
+        "deploymentTransactionHash": "0x89ded8a7efaec848cc4230e160dbfdb262008d43276b75d0647d2f96938aefb1"
+    },
+    "arbitrum": {
+        "address": "0x55084eE0fEf03f14a305cd24286359A35D735151",
+        "deploymentTransactionHash": "0xed0c8759a387acbba80a0ba985c151f3086fe407e0ffb1a83bdebb7ef44a724c"
+    },
+    "optimism": {
+        "address": "0xCa310B1B942A30Ff4b40a5E1b69AB4607eC79Bc1",
+        "deploymentTransactionHash": "0x7e34cd22200c7f85e40c654cbb6db0bccf168e645e09958faf8154a3e2768e3d"
+    },
+    "polygon": {
+        "address": "0x55084eE0fEf03f14a305cd24286359A35D735151",
+        "deploymentTransactionHash": "0xfaa849569efd415d8859217d2ec907ab531d932d625d8c9feeb48f4829b9fc34"
+    },
+    "bnb": {
+        "address": "0x55084eE0fEf03f14a305cd24286359A35D735151",
+        "deploymentTransactionHash": "0x094f160d022e2e4b6a0165a40064703e78373863de8cae38ba51e441a904e0cb"
+    },
+    "avalanche": {
+        "address": "0x55084eE0fEf03f14a305cd24286359A35D735151",
+        "deploymentTransactionHash": "0x5d2dc069f3f129d7f93b479644a3f58a87952bbd66ab465bf7013e5d5ca727aa"
     }
 }

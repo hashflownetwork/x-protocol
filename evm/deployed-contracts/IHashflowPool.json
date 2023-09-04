@@ -18,5 +18,29 @@
     "mumbai": {
         "address": "0xb56AaAfD327E1A369085E689caD6Df7A880e638C",
         "deploymentTransactionHash": "0x08c0522f588aa15c1d1cec06edd60a1ab944ac0cadc2cf2a048be72146f8ca7a"
+    },
+    "ethereum": {
+        "address": "0xCa310B1B942A30Ff4b40a5E1b69AB4607eC79Bc1",
+        "deploymentTransactionHash": "0xc0b7e3fe79bbbec38a22ad59ef1c4e3b5ac5562452b55879fa1383d399e11349"
+    },
+    "arbitrum": {
+        "address": "0xCa310B1B942A30Ff4b40a5E1b69AB4607eC79Bc1",
+        "deploymentTransactionHash": "0x8fcd6cbe3588d7bac878e0f1b494ed04736fb09aa94a1a1b5cb6e156299e11c2"
+    },
+    "optimism": {
+        "address": "0x3efC75C8BeF358669b31c5c2d1F54FAe9d5dE8FD",
+        "deploymentTransactionHash": "0xc629e67df9e7ddf4973e1ecdc7ed06ff85005d7e8540424172fe1a544715ec26"
+    },
+    "polygon": {
+        "address": "0xCa310B1B942A30Ff4b40a5E1b69AB4607eC79Bc1",
+        "deploymentTransactionHash": "0xcee498d4a6795ca3188bceebdc7ca5a28f9a5c7147464dedb7066dd2f20355a0"
+    },
+    "bnb": {
+        "address": "0xCa310B1B942A30Ff4b40a5E1b69AB4607eC79Bc1",
+        "deploymentTransactionHash": "0x792124e0b21cb28b468ab9509269cc09e86a1dc3bd6da38ea79fc8f66ee8c172"
+    },
+    "avalanche": {
+        "address": "0xCa310B1B942A30Ff4b40a5E1b69AB4607eC79Bc1",
+        "deploymentTransactionHash": "0xc81e235fe8efa08dcb1e554d46529d176f3a393e13e48143877c258a38ad07b6"
     }
 }
