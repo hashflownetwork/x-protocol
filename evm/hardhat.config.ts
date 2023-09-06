@@ -13,6 +13,7 @@ import { NetworkUserConfig } from 'hardhat/types';
 
 import './tasks/core';
 import './tasks/deploy';
+import './tasks/operations';
 import './tasks/integration-tests/wormhole-setup';
 import './tasks/integration-tests/wormhole-trade';
 
