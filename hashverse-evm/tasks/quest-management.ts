@@ -1,6 +1,7 @@
 import { task } from 'hardhat/config';
 import {
   getDeployedContractMetadata,
+  getFireblocksSigner,
   getNetworkConfigFromHardhatRuntimeEnvironment,
   isRenovaHub,
 } from './utils';
@@ -47,6 +48,7 @@ task('command-deck:create-quest', 'Creates a Quest')
     'minDepositAmount',
     'The minimum amount to be deposited in order to enter the quest',
   )
+  .addFlag('fireblocks', 'Whether to use Fireblocks wallet')
   .setAction(async (taskArgs, hre) => {
     const questId = hre.ethers.keccak256(Buffer.from(`${Math.random()}`));
 
@@ -67,9 +69,14 @@ task('command-deck:create-quest', 'Creates a Quest')
       );
     }
 
+    const signer = taskArgs.fireblocks
+      ? await getFireblocksSigner(hre)
+      : (await hre.ethers.getSigners())[0]!;
+
     const commandDeck = await hre.ethers.getContractAt(
       'IRenovaCommandDeckBase',
       contractMetadata.address,
+      signer,
     );
 
     const tx = await commandDeck.createQuest(
