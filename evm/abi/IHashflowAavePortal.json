@@ -1,0 +1,375 @@
+[
+    {
+        "anonymous": false,
+        "inputs": [],
+        "name": "Freeze",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "asset",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "aToken",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "target",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "bytes32",
+                "name": "txid",
+                "type": "bytes32"
+            }
+        ],
+        "name": "ReceiveAssetPosition",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "asset",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "aToken",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint16",
+                "name": "dstHashflowChainId",
+                "type": "uint16"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "dstAsset",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "dstAmount",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "target",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "bytes32",
+                "name": "txid",
+                "type": "bytes32"
+            },
+            {
+                "indexed": false,
+                "internalType": "bytes32",
+                "name": "dstContract",
+                "type": "bytes32"
+            },
+            {
+                "indexed": false,
+                "internalType": "bytes",
+                "name": "dstCalldata",
+                "type": "bytes"
+            }
+        ],
+        "name": "TransferAssetPosition",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "bool",
+                "name": "killswitch",
+                "type": "bool"
+            }
+        ],
+        "name": "UpdateKillswitch",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "uint16",
+                "name": "hashflowChainId",
+                "type": "uint16"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "portal",
+                "type": "address"
+            }
+        ],
+        "name": "UpdateRemotePortal",
+        "type": "event"
+    },
+    {
+        "inputs": [],
+        "name": "aavePool",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "freeze",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "frozen",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "hashflowRouter",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "killswitch",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "asset",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address",
+                "name": "onBehalfOf",
+                "type": "address"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "txid",
+                "type": "bytes32"
+            }
+        ],
+        "name": "receiveAssetPosition",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "components": [
+                    {
+                        "internalType": "uint16",
+                        "name": "srcChainId",
+                        "type": "uint16"
+                    },
+                    {
+                        "internalType": "uint16",
+                        "name": "dstChainId",
+                        "type": "uint16"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "srcPool",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "bytes32",
+                        "name": "dstPool",
+                        "type": "bytes32"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "srcExternalAccount",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "bytes32",
+                        "name": "dstExternalAccount",
+                        "type": "bytes32"
+                    },
+                    {
+                        "internalType": "bytes32",
+                        "name": "dstTrader",
+                        "type": "bytes32"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "baseToken",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "bytes32",
+                        "name": "quoteToken",
+                        "type": "bytes32"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "baseTokenAmount",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "quoteTokenAmount",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "quoteExpiry",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "nonce",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "bytes32",
+                        "name": "txid",
+                        "type": "bytes32"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "xChainMessenger",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "bytes",
+                        "name": "signature",
+                        "type": "bytes"
+                    }
+                ],
+                "internalType": "struct IHashflowAavePortal.XChainQuote",
+                "name": "quote",
+                "type": "tuple"
+            },
+            {
+                "internalType": "address",
+                "name": "target",
+                "type": "address"
+            }
+        ],
+        "name": "transferAssetPosition",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bool",
+                "name": "killswitch",
+                "type": "bool"
+            }
+        ],
+        "name": "updateKillswitch",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint16",
+                "name": "hashflowChainId",
+                "type": "uint16"
+            },
+            {
+                "internalType": "address",
+                "name": "portal",
+                "type": "address"
+            }
+        ],
+        "name": "updateRemotePortal",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "wormholeMessenger",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }
+]

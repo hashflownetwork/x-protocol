@@ -16,6 +16,7 @@ import './tasks/deploy';
 import './tasks/operations';
 import './tasks/integration-tests/wormhole-setup';
 import './tasks/integration-tests/wormhole-trade';
+import './tasks/integration-tests/aave-xapp-test';
 
 dotenv.config();
 
@@ -103,7 +104,12 @@ if (process.env.ARBISCAN_API_KEY) {
 }
 
 const config: HardhatUserConfig = {
-  networks,
+  networks: {
+    ...networks,
+    hardhat: {
+      chainId: Number(process.env.HARDHAT_CHAIN_ID ?? 31337),
+    },
+  },
   solidity: {
     compilers: [
       {

@@ -11,6 +11,7 @@ import ILayerZeroNonceContract from '../artifacts/contracts/interfaces/external/
 import IWeth from '../artifacts/contracts/interfaces/external/IWETH.sol/IWETH.json';
 import IERC20 from '../artifacts/@openzeppelin/contracts/token/ERC20/IERC20.sol/IERC20.json';
 import ERC20 from '../artifacts/@openzeppelin/contracts/token/ERC20/ERC20.sol/ERC20.json';
+import IHashflowAavePortal from '../artifacts/contracts/interfaces/xapp/IHashflowAavePortal.sol/IHashflowAavePortal.json';
 
 const abiDirectory = 'abi/';
 
@@ -27,6 +28,7 @@ const allArtifacts = [
   IWormhole,
   ILayerZeroEndpoint,
   ILayerZeroNonceContract,
+  IHashflowAavePortal,
   IWeth,
   IERC20,
   ERC20,
