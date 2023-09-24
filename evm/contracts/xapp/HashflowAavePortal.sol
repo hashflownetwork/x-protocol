@@ -86,7 +86,7 @@ contract HashflowAavePortal is IHashflowAavePortal, Ownable2Step {
         require(
             bytes32(uint256(uint160(uint256(quote.dstTrader)))) ==
                 quote.dstTrader,
-            'HashflowAavePortal::transferAssetPosition dstTrader it not EVM address.'
+            'HashflowAavePortal::transferAssetPosition dstTrader is not EVM address.'
         );
 
         require(
