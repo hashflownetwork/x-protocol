@@ -13,13 +13,18 @@ import {DataTypes} from '@aave/core-v3/contracts/protocol/libraries/types/DataTy
 import '@openzeppelin/contracts/access/Ownable2Step.sol';
 import '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 import '@openzeppelin/contracts/utils/Address.sol';
+import '@openzeppelin/contracts/security/ReentrancyGuard.sol';
 
 import '../interfaces/xapp/IHashflowAavePortal.sol';
 
 /// @title HashflowAavePortal
 /// @author Hashflow Foundation
 /// @notice AAVE v3 Portal implementation leveraging Hashflow X-Chain RFQ.
-contract HashflowAavePortal is IHashflowAavePortal, Ownable2Step {
+contract HashflowAavePortal is
+    IHashflowAavePortal,
+    Ownable2Step,
+    ReentrancyGuard
+{
     using SafeERC20 for IERC20;
     using Address for address;
 
@@ -76,7 +81,7 @@ contract HashflowAavePortal is IHashflowAavePortal, Ownable2Step {
         XChainQuote memory quote,
         uint256 underlyingAssetAmount,
         address target
-    ) external override {
+    ) external override nonReentrant {
         require(
             killswitch,
             'HashflowAavePortal::transferAssetPosition Portal is off.'
