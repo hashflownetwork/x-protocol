@@ -54,6 +54,15 @@ contract HashflowAavePortal is IHashflowAavePortal, Ownable2Step {
             'HashflowAavePortal::constructor Hashflow Router must be a contract.'
         );
 
+        require(
+            _wormholeMessenger != address(0),
+            'HashflowAavePortal::constructor Wormhole Messenger cannot be 0 address.'
+        );
+        require(
+            _wormholeMessenger.isContract(),
+            'HashflowAavePortal::constructor Wormhole Messenger must be a contract.'
+        );
+
         aavePool = _aavePool;
         hashflowRouter = _hashflowRouter;
         wormholeMessenger = _wormholeMessenger;
@@ -71,6 +80,16 @@ contract HashflowAavePortal is IHashflowAavePortal, Ownable2Step {
         require(
             killswitch,
             'HashflowAavePortal::transferAssetPosition Portal is off.'
+        );
+
+        require(
+            target != address(0),
+            'HashflowAavePortal::transferAssetPosition target cannot be 0 address.'
+        );
+
+        require(
+            quote.srcChainId != quote.dstChainId,
+            'HashflowAavePortal::transferAssetPosition Source and Destination chains should be different.'
         );
 
         require(
@@ -248,6 +267,12 @@ contract HashflowAavePortal is IHashflowAavePortal, Ownable2Step {
         address portal
     ) external onlyOwner {
         require(!frozen, 'HashflowAavePortal::updateRemotePortal Frozen.');
+
+        require(
+            portal != address(0),
+            'HashflowAavePortal::updateRemotePortal Portal should not be 0 address.'
+        );
+
         address previousPortal = remotePortals[hashflowChainId];
         remotePortals[hashflowChainId] = portal;
 
