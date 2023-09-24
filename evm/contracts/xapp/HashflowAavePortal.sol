@@ -139,6 +139,12 @@ contract HashflowAavePortal is IHashflowAavePortal, Ownable2Step {
                 underlyingAssetAmount,
                 address(this)
             );
+            uint256 currentBalance = IERC20(quote.baseToken).balanceOf(
+                address(this)
+            );
+            if (effectiveBaseTokenAmount > currentBalance) {
+                effectiveBaseTokenAmount = currentBalance;
+            }
             /// @dev This check should never fail if AAVE Pool works correctly.
             require(
                 effectiveBaseTokenAmount <= quote.baseTokenAmount,
