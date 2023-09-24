@@ -343,7 +343,7 @@ export interface IHashflowAavePortal extends BaseContract {
       target: AddressLike
     ],
     [void],
-    "nonpayable"
+    "payable"
   >;
 
   updateKillswitch: TypedContractMethod<
@@ -400,7 +400,7 @@ export interface IHashflowAavePortal extends BaseContract {
       target: AddressLike
     ],
     [void],
-    "nonpayable"
+    "payable"
   >;
   getFunction(
     nameOrSignature: "updateKillswitch"

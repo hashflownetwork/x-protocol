@@ -81,7 +81,7 @@ contract HashflowAavePortal is
         XChainQuote memory quote,
         uint256 underlyingAssetAmount,
         address target
-    ) external override nonReentrant {
+    ) external payable override nonReentrant {
         require(
             killswitch,
             'HashflowAavePortal::transferAssetPosition Portal is off.'
@@ -205,7 +205,7 @@ contract HashflowAavePortal is
             quote.txid
         );
 
-        IHashflowRouter(hashflowRouter).tradeXChainRFQT(
+        IHashflowRouter(hashflowRouter).tradeXChainRFQT{value: msg.value}(
             hashflowRFQTQuote,
             dstContract,
             dstCalldata

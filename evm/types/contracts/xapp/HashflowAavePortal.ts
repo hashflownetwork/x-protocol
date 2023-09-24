@@ -429,7 +429,7 @@ export interface HashflowAavePortal extends BaseContract {
       target: AddressLike
     ],
     [void],
-    "nonpayable"
+    "payable"
   >;
 
   transferOwnership: TypedContractMethod<
@@ -507,7 +507,7 @@ export interface HashflowAavePortal extends BaseContract {
       target: AddressLike
     ],
     [void],
-    "nonpayable"
+    "payable"
   >;
   getFunction(
     nameOrSignature: "transferOwnership"

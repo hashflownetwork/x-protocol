@@ -114,7 +114,7 @@ interface IHashflowAavePortal {
         XChainQuote memory quote,
         uint256 underlyingAssetAmount,
         address target
-    ) external;
+    ) external payable;
 
     /// @notice Finishes the transfer on the destination chain. Called by the Router.
     /// @param asset The underlying asset being supplied.

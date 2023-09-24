@@ -340,7 +340,7 @@ const _abi = [
     ],
     name: "transferAssetPosition",
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "payable",
     type: "function",
   },
   {
