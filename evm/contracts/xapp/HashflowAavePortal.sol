@@ -219,10 +219,12 @@ contract HashflowAavePortal is IHashflowAavePortal, Ownable2Step {
         DataTypes.ReserveData memory reserveData = IPool(aavePool)
             .getReserveData(asset);
         address aToken = reserveData.aTokenAddress;
-        require(
-            aToken != address(0),
-            'HashflowAavePortal::receiveAssetPosition aToken not found.'
-        );
+
+        // If this is not a supported AAVE V3 asset, we simply send the token to the user.
+        if (aToken == address(0)) {
+            IERC20(asset).transfer(onBehalfOf, amount);
+            return;
+        }
 
         IPool(aavePool).mintUnbacked(asset, amount, onBehalfOf, 0);
 
