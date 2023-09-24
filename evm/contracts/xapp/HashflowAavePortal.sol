@@ -283,6 +283,13 @@ contract HashflowAavePortal is IHashflowAavePortal, Ownable2Step {
         emit Freeze();
     }
 
+    /// @dev We do not allow the owner to renounce ownership.
+    function renounceOwnership() public view override onlyOwner {
+        revert(
+            'HashflowAavePortal::renounceOwnership Renouncing ownership not allowed.'
+        );
+    }
+
     function _addressToBytes32(
         address _address
     ) private pure returns (bytes32) {

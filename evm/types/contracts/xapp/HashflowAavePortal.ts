@@ -420,7 +420,7 @@ export interface HashflowAavePortal extends BaseContract {
 
   remotePortals: TypedContractMethod<[arg0: BigNumberish], [string], "view">;
 
-  renounceOwnership: TypedContractMethod<[], [void], "nonpayable">;
+  renounceOwnership: TypedContractMethod<[], [void], "view">;
 
   transferAssetPosition: TypedContractMethod<
     [
@@ -497,7 +497,7 @@ export interface HashflowAavePortal extends BaseContract {
   ): TypedContractMethod<[arg0: BigNumberish], [string], "view">;
   getFunction(
     nameOrSignature: "renounceOwnership"
-  ): TypedContractMethod<[], [void], "nonpayable">;
+  ): TypedContractMethod<[], [void], "view">;
   getFunction(
     nameOrSignature: "transferAssetPosition"
   ): TypedContractMethod<
