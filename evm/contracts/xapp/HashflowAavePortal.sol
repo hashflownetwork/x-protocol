@@ -242,22 +242,23 @@ contract HashflowAavePortal is IHashflowAavePortal, Ownable2Step {
         address portal
     ) external onlyOwner {
         require(!frozen, 'HashflowAavePortal::updateRemotePortal Frozen.');
-        if (remotePortals[hashflowChainId] != address(0)) {
+        address previousPortal = remotePortals[hashflowChainId];
+        remotePortals[hashflowChainId] = portal;
+
+        emit UpdateRemotePortal(hashflowChainId, portal);
+
+        if (previousPortal != address(0)) {
             IHashflowRouter(hashflowRouter).updateXChainCallerAuthorization(
                 hashflowChainId,
-                _addressToBytes32(remotePortals[hashflowChainId]),
+                _addressToBytes32(previousPortal),
                 false
             );
         }
-        remotePortals[hashflowChainId] = portal;
-
         IHashflowRouter(hashflowRouter).updateXChainCallerAuthorization(
             hashflowChainId,
             _addressToBytes32(portal),
             true
         );
-
-        emit UpdateRemotePortal(hashflowChainId, portal);
     }
 
     /// @inheritdoc IHashflowAavePortal
