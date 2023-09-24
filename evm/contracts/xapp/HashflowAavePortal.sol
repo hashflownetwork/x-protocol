@@ -65,6 +65,7 @@ contract HashflowAavePortal is IHashflowAavePortal, Ownable2Step {
     /// @inheritdoc IHashflowAavePortal
     function transferAssetPosition(
         XChainQuote memory quote,
+        uint256 underlyingAssetAmount,
         address target
     ) external override {
         require(
@@ -135,7 +136,7 @@ contract HashflowAavePortal is IHashflowAavePortal, Ownable2Step {
         {
             uint256 effectiveBaseTokenAmount = IPool(aavePool).withdraw(
                 quote.baseToken,
-                quote.baseTokenAmount,
+                underlyingAssetAmount,
                 address(this)
             );
             /// @dev This check should never fail if AAVE Pool works correctly.

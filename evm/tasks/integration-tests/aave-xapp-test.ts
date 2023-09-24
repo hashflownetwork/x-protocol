@@ -356,6 +356,7 @@ task('aave:source-leg', 'Runs the X-Chain trade on source chain').setAction(
 
     const transaction = await portal.transferAssetPosition(
       { ...xChainQuoteData, signature },
+      xChainQuoteData.baseTokenAmount,
       ACCOUNT_WITH_POSITION,
     );
 

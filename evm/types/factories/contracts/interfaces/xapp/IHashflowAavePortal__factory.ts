@@ -328,6 +328,11 @@ const _abi = [
         type: "tuple",
       },
       {
+        internalType: "uint256",
+        name: "underlyingAssetAmount",
+        type: "uint256",
+      },
+      {
         internalType: "address",
         name: "target",
         type: "address",

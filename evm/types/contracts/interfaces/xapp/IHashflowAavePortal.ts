@@ -121,7 +121,7 @@ export interface IHashflowAavePortalInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "transferAssetPosition",
-    values: [IHashflowAavePortal.XChainQuoteStruct, AddressLike]
+    values: [IHashflowAavePortal.XChainQuoteStruct, BigNumberish, AddressLike]
   ): string;
   encodeFunctionData(
     functionFragment: "updateKillswitch",
@@ -337,7 +337,11 @@ export interface IHashflowAavePortal extends BaseContract {
   >;
 
   transferAssetPosition: TypedContractMethod<
-    [quote: IHashflowAavePortal.XChainQuoteStruct, target: AddressLike],
+    [
+      quote: IHashflowAavePortal.XChainQuoteStruct,
+      underlyingAssetAmount: BigNumberish,
+      target: AddressLike
+    ],
     [void],
     "nonpayable"
   >;
@@ -390,7 +394,11 @@ export interface IHashflowAavePortal extends BaseContract {
   getFunction(
     nameOrSignature: "transferAssetPosition"
   ): TypedContractMethod<
-    [quote: IHashflowAavePortal.XChainQuoteStruct, target: AddressLike],
+    [
+      quote: IHashflowAavePortal.XChainQuoteStruct,
+      underlyingAssetAmount: BigNumberish,
+      target: AddressLike
+    ],
     [void],
     "nonpayable"
   >;

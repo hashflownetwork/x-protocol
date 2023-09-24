@@ -146,7 +146,7 @@ export interface HashflowAavePortalInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "transferAssetPosition",
-    values: [IHashflowAavePortal.XChainQuoteStruct, AddressLike]
+    values: [IHashflowAavePortal.XChainQuoteStruct, BigNumberish, AddressLike]
   ): string;
   encodeFunctionData(
     functionFragment: "transferOwnership",
@@ -423,7 +423,11 @@ export interface HashflowAavePortal extends BaseContract {
   renounceOwnership: TypedContractMethod<[], [void], "nonpayable">;
 
   transferAssetPosition: TypedContractMethod<
-    [quote: IHashflowAavePortal.XChainQuoteStruct, target: AddressLike],
+    [
+      quote: IHashflowAavePortal.XChainQuoteStruct,
+      underlyingAssetAmount: BigNumberish,
+      target: AddressLike
+    ],
     [void],
     "nonpayable"
   >;
@@ -497,7 +501,11 @@ export interface HashflowAavePortal extends BaseContract {
   getFunction(
     nameOrSignature: "transferAssetPosition"
   ): TypedContractMethod<
-    [quote: IHashflowAavePortal.XChainQuoteStruct, target: AddressLike],
+    [
+      quote: IHashflowAavePortal.XChainQuoteStruct,
+      underlyingAssetAmount: BigNumberish,
+      target: AddressLike
+    ],
     [void],
     "nonpayable"
   >;
