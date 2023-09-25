@@ -13,19 +13,25 @@ import {DataTypes} from '@aave/core-v3/contracts/protocol/libraries/types/DataTy
 import '@openzeppelin/contracts/access/Ownable2Step.sol';
 import '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 import '@openzeppelin/contracts/utils/Address.sol';
+import '@openzeppelin/contracts/security/ReentrancyGuard.sol';
 
 import '../interfaces/xapp/IHashflowAavePortal.sol';
 
 /// @title HashflowAavePortal
 /// @author Hashflow Foundation
 /// @notice AAVE v3 Portal implementation leveraging Hashflow X-Chain RFQ.
-contract HashflowAavePortal is IHashflowAavePortal, Ownable2Step {
+contract HashflowAavePortal is
+    IHashflowAavePortal,
+    Ownable2Step,
+    ReentrancyGuard
+{
     using SafeERC20 for IERC20;
     using Address for address;
 
-    address public aavePool;
-    address public hashflowRouter;
-    address public wormholeMessenger;
+    address public immutable aavePool;
+    address public immutable hashflowRouter;
+    address public immutable wormholeMessenger;
+
     bool public killswitch;
     bool public frozen;
 
@@ -54,6 +60,15 @@ contract HashflowAavePortal is IHashflowAavePortal, Ownable2Step {
             'HashflowAavePortal::constructor Hashflow Router must be a contract.'
         );
 
+        require(
+            _wormholeMessenger != address(0),
+            'HashflowAavePortal::constructor Wormhole Messenger cannot be 0 address.'
+        );
+        require(
+            _wormholeMessenger.isContract(),
+            'HashflowAavePortal::constructor Wormhole Messenger must be a contract.'
+        );
+
         aavePool = _aavePool;
         hashflowRouter = _hashflowRouter;
         wormholeMessenger = _wormholeMessenger;
@@ -65,11 +80,22 @@ contract HashflowAavePortal is IHashflowAavePortal, Ownable2Step {
     /// @inheritdoc IHashflowAavePortal
     function transferAssetPosition(
         XChainQuote memory quote,
+        uint256 underlyingAssetAmount,
         address target
-    ) external override {
+    ) external payable override nonReentrant {
         require(
             killswitch,
             'HashflowAavePortal::transferAssetPosition Portal is off.'
+        );
+
+        require(
+            target != address(0),
+            'HashflowAavePortal::transferAssetPosition target cannot be 0 address.'
+        );
+
+        require(
+            quote.srcChainId != quote.dstChainId,
+            'HashflowAavePortal::transferAssetPosition Source and Destination chains should be different.'
         );
 
         require(
@@ -85,7 +111,7 @@ contract HashflowAavePortal is IHashflowAavePortal, Ownable2Step {
         require(
             bytes32(uint256(uint160(uint256(quote.dstTrader)))) ==
                 quote.dstTrader,
-            'HashflowAavePortal::transferAssetPosition dstTrader it not EVM address.'
+            'HashflowAavePortal::transferAssetPosition dstTrader is not EVM address.'
         );
 
         require(
@@ -107,7 +133,17 @@ contract HashflowAavePortal is IHashflowAavePortal, Ownable2Step {
             'HashflowAavePortal::transferAssetPosition aToken not found.'
         );
 
-        IAToken(aToken).transferFrom(
+        // The Portal should not hold any aTokens. If it did, it would mean that something
+        // erroneous occurred. We send these exceptional aTokens to the owner, who can
+        // make the assessment around how to remedy.
+        if (IAToken(aToken).balanceOf(address(this)) > 0) {
+            IERC20(aToken).safeTransfer(
+                owner(),
+                IAToken(aToken).balanceOf(address(this))
+            );
+        }
+
+        IERC20(aToken).safeTransferFrom(
             _msgSender(),
             address(this),
             IAToken(aToken).balanceOf(_msgSender())
@@ -135,9 +171,15 @@ contract HashflowAavePortal is IHashflowAavePortal, Ownable2Step {
         {
             uint256 effectiveBaseTokenAmount = IPool(aavePool).withdraw(
                 quote.baseToken,
-                quote.baseTokenAmount,
+                underlyingAssetAmount,
                 address(this)
             );
+            uint256 currentBalance = IERC20(quote.baseToken).balanceOf(
+                address(this)
+            );
+            if (effectiveBaseTokenAmount > currentBalance) {
+                effectiveBaseTokenAmount = currentBalance;
+            }
             /// @dev This check should never fail if AAVE Pool works correctly.
             require(
                 effectiveBaseTokenAmount <= quote.baseTokenAmount,
@@ -174,7 +216,7 @@ contract HashflowAavePortal is IHashflowAavePortal, Ownable2Step {
             quote.txid
         );
 
-        IHashflowRouter(hashflowRouter).tradeXChainRFQT(
+        IHashflowRouter(hashflowRouter).tradeXChainRFQT{value: msg.value}(
             hashflowRFQTQuote,
             dstContract,
             dstCalldata
@@ -212,23 +254,33 @@ contract HashflowAavePortal is IHashflowAavePortal, Ownable2Step {
         );
 
         require(
-            msg.sender == hashflowRouter,
+            _msgSender() == hashflowRouter,
             'HashflowAavePortal::receiveAssetPosition Sender must be router.'
         );
 
         DataTypes.ReserveData memory reserveData = IPool(aavePool)
             .getReserveData(asset);
         address aToken = reserveData.aTokenAddress;
-        require(
-            aToken != address(0),
-            'HashflowAavePortal::receiveAssetPosition aToken not found.'
-        );
 
-        IPool(aavePool).mintUnbacked(asset, amount, onBehalfOf, 0);
+        // If this is not a supported AAVE V3 asset, we simply send the token to the user.
+        if (aToken == address(0)) {
+            IERC20(asset).transfer(onBehalfOf, amount);
+            return;
+        }
+
+        try
+            IPool(aavePool).mintUnbacked(asset, amount, onBehalfOf, 0)
+        {} catch {
+            IERC20(asset).transfer(onBehalfOf, amount);
+            return;
+        }
 
         IERC20(asset).forceApprove(aavePool, amount);
 
-        IPool(aavePool).backUnbacked(asset, amount, 0);
+        require(
+            IPool(aavePool).backUnbacked(asset, amount, 0) == amount,
+            'HashflowAavePortal::receiveAssetPosition Backing amount mismatch.'
+        );
 
         emit ReceiveAssetPosition(asset, aToken, amount, onBehalfOf, txid);
     }
@@ -239,22 +291,29 @@ contract HashflowAavePortal is IHashflowAavePortal, Ownable2Step {
         address portal
     ) external onlyOwner {
         require(!frozen, 'HashflowAavePortal::updateRemotePortal Frozen.');
-        if (remotePortals[hashflowChainId] != address(0)) {
+
+        require(
+            portal != address(0),
+            'HashflowAavePortal::updateRemotePortal Portal should not be 0 address.'
+        );
+
+        address previousPortal = remotePortals[hashflowChainId];
+        remotePortals[hashflowChainId] = portal;
+
+        emit UpdateRemotePortal(hashflowChainId, portal);
+
+        if (previousPortal != address(0)) {
             IHashflowRouter(hashflowRouter).updateXChainCallerAuthorization(
                 hashflowChainId,
-                _addressToBytes32(remotePortals[hashflowChainId]),
+                _addressToBytes32(previousPortal),
                 false
             );
         }
-        remotePortals[hashflowChainId] = portal;
-
         IHashflowRouter(hashflowRouter).updateXChainCallerAuthorization(
             hashflowChainId,
             _addressToBytes32(portal),
             true
         );
-
-        emit UpdateRemotePortal(hashflowChainId, portal);
     }
 
     /// @inheritdoc IHashflowAavePortal
@@ -271,6 +330,13 @@ contract HashflowAavePortal is IHashflowAavePortal, Ownable2Step {
         frozen = true;
 
         emit Freeze();
+    }
+
+    /// @dev We do not allow the owner to renounce ownership.
+    function renounceOwnership() public view override onlyOwner {
+        revert(
+            'HashflowAavePortal::renounceOwnership Renouncing ownership not allowed.'
+        );
     }
 
     function _addressToBytes32(

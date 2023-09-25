@@ -146,7 +146,7 @@ export interface HashflowAavePortalInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "transferAssetPosition",
-    values: [IHashflowAavePortal.XChainQuoteStruct, AddressLike]
+    values: [IHashflowAavePortal.XChainQuoteStruct, BigNumberish, AddressLike]
   ): string;
   encodeFunctionData(
     functionFragment: "transferOwnership",
@@ -420,12 +420,16 @@ export interface HashflowAavePortal extends BaseContract {
 
   remotePortals: TypedContractMethod<[arg0: BigNumberish], [string], "view">;
 
-  renounceOwnership: TypedContractMethod<[], [void], "nonpayable">;
+  renounceOwnership: TypedContractMethod<[], [void], "view">;
 
   transferAssetPosition: TypedContractMethod<
-    [quote: IHashflowAavePortal.XChainQuoteStruct, target: AddressLike],
+    [
+      quote: IHashflowAavePortal.XChainQuoteStruct,
+      underlyingAssetAmount: BigNumberish,
+      target: AddressLike
+    ],
     [void],
-    "nonpayable"
+    "payable"
   >;
 
   transferOwnership: TypedContractMethod<
@@ -493,13 +497,17 @@ export interface HashflowAavePortal extends BaseContract {
   ): TypedContractMethod<[arg0: BigNumberish], [string], "view">;
   getFunction(
     nameOrSignature: "renounceOwnership"
-  ): TypedContractMethod<[], [void], "nonpayable">;
+  ): TypedContractMethod<[], [void], "view">;
   getFunction(
     nameOrSignature: "transferAssetPosition"
   ): TypedContractMethod<
-    [quote: IHashflowAavePortal.XChainQuoteStruct, target: AddressLike],
+    [
+      quote: IHashflowAavePortal.XChainQuoteStruct,
+      underlyingAssetAmount: BigNumberish,
+      target: AddressLike
+    ],
     [void],
-    "nonpayable"
+    "payable"
   >;
   getFunction(
     nameOrSignature: "transferOwnership"

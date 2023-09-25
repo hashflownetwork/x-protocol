@@ -108,11 +108,13 @@ interface IHashflowAavePortal {
 
     /// @notice Initiates a position transfer.
     /// @param quote The Quote used for bridging the position.
+    /// @param underlyingAssetAmount Amount to transfer or type(uint256).max for whole balance.
     /// @param target The wallet to receive the aTokens on the destination chain.
     function transferAssetPosition(
         XChainQuote memory quote,
+        uint256 underlyingAssetAmount,
         address target
-    ) external;
+    ) external payable;
 
     /// @notice Finishes the transfer on the destination chain. Called by the Router.
     /// @param asset The underlying asset being supplied.
