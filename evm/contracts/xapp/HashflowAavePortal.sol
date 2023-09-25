@@ -132,6 +132,16 @@ contract HashflowAavePortal is
             'HashflowAavePortal::transferAssetPosition aToken not found.'
         );
 
+        // The Portal should not hold any aTokens. If it did, it would mean that something
+        // erroneous occurred. We send these exceptional aTokens to the owner, who can
+        // make the assessment around how to remedy.
+        if (IAToken(aToken).balanceOf(address(this)) > 0) {
+            IERC20(aToken).safeTransfer(
+                owner(),
+                IAToken(aToken).balanceOf(address(this))
+            );
+        }
+
         IAToken(aToken).transferFrom(
             _msgSender(),
             address(this),
