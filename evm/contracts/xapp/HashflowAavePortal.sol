@@ -28,9 +28,10 @@ contract HashflowAavePortal is
     using SafeERC20 for IERC20;
     using Address for address;
 
-    address public aavePool;
-    address public hashflowRouter;
-    address public wormholeMessenger;
+    address public immutable aavePool;
+    address public immutable hashflowRouter;
+    address public immutable wormholeMessenger;
+
     bool public killswitch;
     bool public frozen;
 
@@ -142,7 +143,7 @@ contract HashflowAavePortal is
             );
         }
 
-        IAToken(aToken).transferFrom(
+        IERC20(aToken).safeTransferFrom(
             _msgSender(),
             address(this),
             IAToken(aToken).balanceOf(_msgSender())
@@ -253,7 +254,7 @@ contract HashflowAavePortal is
         );
 
         require(
-            msg.sender == hashflowRouter,
+            _msgSender() == hashflowRouter,
             'HashflowAavePortal::receiveAssetPosition Sender must be router.'
         );
 
@@ -276,7 +277,10 @@ contract HashflowAavePortal is
 
         IERC20(asset).forceApprove(aavePool, amount);
 
-        IPool(aavePool).backUnbacked(asset, amount, 0);
+        require(
+            IPool(aavePool).backUnbacked(asset, amount, 0) == amount,
+            'HashflowAavePortal::receiveAssetPosition Backing amount mismatch.'
+        );
 
         emit ReceiveAssetPosition(asset, aToken, amount, onBehalfOf, txid);
     }
