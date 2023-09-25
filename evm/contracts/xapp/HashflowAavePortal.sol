@@ -257,7 +257,12 @@ contract HashflowAavePortal is
             return;
         }
 
-        IPool(aavePool).mintUnbacked(asset, amount, onBehalfOf, 0);
+        try
+            IPool(aavePool).mintUnbacked(asset, amount, onBehalfOf, 0)
+        {} catch {
+            IERC20(asset).transfer(onBehalfOf, amount);
+            return;
+        }
 
         IERC20(asset).forceApprove(aavePool, amount);
 
