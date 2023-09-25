@@ -2,6 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export * as external from "./external";
+export * as xapp from "./xapp";
 export * as xchain from "./xchain";
 export { IHashflowFactory__factory } from "./IHashflowFactory__factory";
 export { IHashflowPool__factory } from "./IHashflowPool__factory";

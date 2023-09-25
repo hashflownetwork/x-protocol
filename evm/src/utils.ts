@@ -1,3 +1,5 @@
+import { Signer, BigNumberish, TransactionResponse } from 'ethers';
+
 export const MAIN_NETWORK_NAMES = [
   'ethereum',
   'optimism',
@@ -74,7 +76,7 @@ export type NetworkConfigExtended = NetworkConfigBase & {
 };
 
 export const LOCALHOST = {
-  chainId: 1,
+  chainId: 31337,
   name: 'localhost',
   nativeTokenSymbol: 'ETH',
   nativeTokenName: 'Ether',
@@ -326,4 +328,22 @@ export function padAddressTo32Bytes(address: string | Buffer): Buffer {
   }
 
   return Buffer.from(paddedAddress, 'hex');
+}
+
+export async function sendETH(
+  signer: Signer,
+  value: BigNumberish,
+  recipient: string,
+): Promise<TransactionResponse> {
+  const tx = {
+    from: await signer.getAddress(),
+    to: recipient,
+    value,
+    nonce: await signer.getNonce(),
+    gasLimit: '50000',
+    gasPrice: '100000000000',
+    type: 0,
+  };
+
+  return await signer.sendTransaction(tx);
 }

@@ -3,6 +3,7 @@
 /* eslint-disable */
 export type { DummyXChainApp } from "./DummyXChainApp";
 export type { LZEndpointMock } from "./LZEndpointMock";
+export type { TestRouter } from "./TestRouter";
 export type { TestToken1 } from "./TestToken1";
 export type { TestToken2 } from "./TestToken2";
 export type { WETH9 } from "./WETH9";

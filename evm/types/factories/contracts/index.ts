@@ -4,6 +4,7 @@
 export * as interfaces from "./interfaces";
 export * as pools from "./pools";
 export * as testing from "./testing";
+export * as xapp from "./xapp";
 export * as xchain from "./xchain";
 export { HashflowFactory__factory } from "./HashflowFactory__factory";
 export { HashflowFactoryZkSync__factory } from "./HashflowFactoryZkSync__factory";

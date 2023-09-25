@@ -3,6 +3,8 @@
 /* eslint-disable */
 import type * as external from "./external";
 export type { external };
+import type * as xapp from "./xapp";
+export type { xapp };
 import type * as xchain from "./xchain";
 export type { xchain };
 export type { IHashflowFactory } from "./IHashflowFactory";

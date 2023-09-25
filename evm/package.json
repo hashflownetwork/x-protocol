@@ -26,6 +26,7 @@
   "author": "Victor Ionescu <victor@hashflow.com>",
   "license": "MIT",
   "devDependencies": {
+    "@aave/core-v3": "1.17.2",
     "@fireblocks/fireblocks-web3-provider": "^1.2.3",
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.0",
     "@nomicfoundation/hardhat-ethers": "^3.0.0",
