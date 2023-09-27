@@ -10,6 +10,7 @@ import ILayerZeroEndpoint from '../artifacts/contracts/interfaces/external/ILaye
 import ILayerZeroNonceContract from '../artifacts/contracts/interfaces/external/ILayerZeroNonceContract.sol/ILayerZeroNonceContract.json';
 import IWeth from '../artifacts/contracts/interfaces/external/IWETH.sol/IWETH.json';
 import IERC20 from '../artifacts/@openzeppelin/contracts/token/ERC20/IERC20.sol/IERC20.json';
+import IERC1155 from '../artifacts/@openzeppelin/contracts/token/ERC1155/IERC1155.sol/IERC1155.json';
 import ERC20 from '../artifacts/@openzeppelin/contracts/token/ERC20/ERC20.sol/ERC20.json';
 import IHashflowAavePortal from '../artifacts/contracts/interfaces/xapp/IHashflowAavePortal.sol/IHashflowAavePortal.json';
 
@@ -32,6 +33,7 @@ const allArtifacts = [
   IWeth,
   IERC20,
   ERC20,
+  IERC1155
 ];
 
 for (const artifact of allArtifacts) {

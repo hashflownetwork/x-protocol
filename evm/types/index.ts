@@ -38,6 +38,8 @@ export type { IERC5267 } from "./@openzeppelin/contracts/interfaces/IERC5267";
 export { IERC5267__factory } from "./factories/@openzeppelin/contracts/interfaces/IERC5267__factory";
 export type { Initializable } from "./@openzeppelin/contracts/proxy/utils/Initializable";
 export { Initializable__factory } from "./factories/@openzeppelin/contracts/proxy/utils/Initializable__factory";
+export type { IERC1155 } from "./@openzeppelin/contracts/token/ERC1155/IERC1155";
+export { IERC1155__factory } from "./factories/@openzeppelin/contracts/token/ERC1155/IERC1155__factory";
 export type { ERC20 } from "./@openzeppelin/contracts/token/ERC20/ERC20";
 export { ERC20__factory } from "./factories/@openzeppelin/contracts/token/ERC20/ERC20__factory";
 export type { ERC20Permit } from "./@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit";
@@ -48,6 +50,8 @@ export type { IERC20Permit } from "./@openzeppelin/contracts/token/ERC20/extensi
 export { IERC20Permit__factory } from "./factories/@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit__factory";
 export type { EIP712 } from "./@openzeppelin/contracts/utils/cryptography/EIP712";
 export { EIP712__factory } from "./factories/@openzeppelin/contracts/utils/cryptography/EIP712__factory";
+export type { IERC165 } from "./@openzeppelin/contracts/utils/introspection/IERC165";
+export { IERC165__factory } from "./factories/@openzeppelin/contracts/utils/introspection/IERC165__factory";
 export type { ShortStrings } from "./@openzeppelin/contracts/utils/ShortStrings";
 export { ShortStrings__factory } from "./factories/@openzeppelin/contracts/utils/ShortStrings__factory";
 export type { HashflowFactory } from "./contracts/HashflowFactory";
