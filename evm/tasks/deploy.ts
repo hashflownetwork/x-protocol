@@ -12,6 +12,7 @@ import {
   MAIN_NETWORK_NAMES,
   TEST_NETWORK_NAMES,
   WORMHOLE_NETWORK_NAMES,
+  padAddressTo32Bytes,
 } from '../src/utils';
 
 task('pool:deploy', 'Deploys the HashflowPool implementation').setAction(
@@ -319,8 +320,8 @@ task(
 });
 
 task(
-  'wormhole-messenger:initialize:peer-networks',
-  'Initializes data relayed to peer networks for X-Chain swaps',
+  'wormhole-messenger:initialize:chain-id-mapping',
+  'Initializes Hashflow <-> Wormhole Chain ID pairs for this chain and its peers',
 ).setAction(async (taskArgs, hre) => {
   const networkConfig = getNetworkConfigFromHardhatRuntimeEnvironment(hre);
 
@@ -373,6 +374,74 @@ task(
       console.log(
         `Skipping Wormhole Chain ID initialization to ${peerHashflowChainId}`,
       );
+    }
+  }
+});
+
+task(
+  'wormhole-messenger:initialize:remotes',
+  'Initializes Remote Wormhole messengers',
+).setAction(async (taskArgs, hre) => {
+  const networkConfig = getNetworkConfigFromHardhatRuntimeEnvironment(hre);
+
+  const { name: networkName } = networkConfig;
+
+  const peerNetworksToInitialize = isHardhatMainnet(networkName)
+    ? MAIN_NETWORK_NAMES
+    : isHardhatTestnet(networkName)
+    ? TEST_NETWORK_NAMES
+    : isWormholeTestnet(networkName)
+    ? WORMHOLE_NETWORK_NAMES
+    : [networkName];
+
+  const messengerMetadata = getDeployedContractMetadata(
+    'IHashflowWormholeMessenger',
+    networkConfig.name,
+  );
+
+  if (!messengerMetadata) {
+    throw new Error(`Could not find IHashflowWormholeMessenger metadata`);
+  }
+
+  const messengerContract = await hre.ethers.getContractAt(
+    'IHashflowWormholeMessenger',
+    messengerMetadata.address,
+  );
+
+  for (const peerNetworkName of peerNetworksToInitialize) {
+    if (peerNetworkName === networkName) {
+      continue;
+    }
+    const peerMessengerMetadata = getDeployedContractMetadata(
+      'IHashflowWormholeMessenger',
+      peerNetworkName,
+    );
+    if (!peerMessengerMetadata) {
+      continue;
+    }
+    const paddedPeerMessengerAddress =
+      '0x' + padAddressTo32Bytes(peerMessengerMetadata.address).toString('hex');
+
+    const peerHashflowChainId =
+      HARDHAT_NETWORK_CONFIG_BY_NAME[peerNetworkName].hashflowChainId;
+
+    const currentRemote =
+      await messengerContract.xChainRemotes(peerHashflowChainId);
+
+    if (currentRemote.toLowerCase() !== paddedPeerMessengerAddress) {
+      await (
+        await messengerContract.updateXChainRemoteAddress(
+          peerHashflowChainId,
+          paddedPeerMessengerAddress,
+        )
+      ).wait();
+      console.log(
+        'Initialized remote',
+        peerNetworkName,
+        paddedPeerMessengerAddress,
+      );
+    } else {
+      console.log(`Remote already set`, peerNetworkName);
     }
   }
 });

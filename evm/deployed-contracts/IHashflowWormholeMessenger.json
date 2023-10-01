@@ -6,5 +6,17 @@
     "wormhole2": {
         "address": "0x1aBE68277AE236083947f2551FEe8b885efCA8f5",
         "deploymentTransactionHash": "0x63ef4f75222e2b3a7296f239cde5a6ebf9d24d2a0611937e0cc9d4a4768a4283"
+    },
+    "goerli": {
+        "address": "0xa4dF5Eb76f125cc2632Cd27d9d959457aBeB6c8b",
+        "deploymentTransactionHash": "0xaf5541e3cd5dad236efafb96a3f5fbd07c6dc169b73a927b2d8177539d9d40e1"
+    },
+    "mumbai": {
+        "address": "0x364A75c3769D234B8ACfAC3d3309A6A6a5a06D1c",
+        "deploymentTransactionHash": "0x8797457d6a1aa24d4f89fe8b2ce3a0e38697a76599f00e1e1d9eb37bd8aa048c"
+    },
+    "bnb-testnet": {
+        "address": "0x7CDAb80109D74372F1682ed0E4e65255f20ccbaA",
+        "deploymentTransactionHash": "0xb67eca8c556ed809de966590cfb347160f5ec272c5cbbe98036713dbb3944ab0"
     }
 }

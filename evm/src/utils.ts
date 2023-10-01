@@ -137,6 +137,9 @@ export const OPTIMISM = {
   layerZeroChainId: 111,
   layerZeroNonceContract: '0x5B905fE05F81F3a8ad8B28C6E17779CFAbf76068',
   zksync: false,
+  wormholeChainId: 24,
+  wormholeConsistency: 1,
+  wormholeEndpoint: '0xEe91C335eab126dF5fDB3797EA9d6aD93aeC9722',
 } as const;
 
 export const AVALANCHE = {
