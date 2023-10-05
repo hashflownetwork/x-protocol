@@ -15,6 +15,7 @@ import { NetworkUserConfig } from 'hardhat/types';
 import './tasks/upgrade';
 import './tasks/update';
 import './tasks/quest-management';
+import './tasks/airdrops';
 
 dotenv.config();
 
