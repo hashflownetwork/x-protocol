@@ -247,7 +247,7 @@ contract HashflowAavePortal is
         uint256 amount,
         address onBehalfOf,
         bytes32 txid
-    ) external override {
+    ) external override nonReentrant {
         require(
             killswitch,
             'HashflowAavePortal::receiveAssetPosition Portal is off.'
@@ -264,14 +264,14 @@ contract HashflowAavePortal is
 
         // If this is not a supported AAVE V3 asset, we simply send the token to the user.
         if (aToken == address(0)) {
-            IERC20(asset).transfer(onBehalfOf, amount);
+            IERC20(asset).safeTransfer(onBehalfOf, amount);
             return;
         }
 
         try
             IPool(aavePool).mintUnbacked(asset, amount, onBehalfOf, 0)
         {} catch {
-            IERC20(asset).transfer(onBehalfOf, amount);
+            IERC20(asset).safeTransfer(onBehalfOf, amount);
             return;
         }
 
