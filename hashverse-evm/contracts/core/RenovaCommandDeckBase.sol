@@ -123,6 +123,10 @@ abstract contract RenovaCommandDeckBase is
             'RenovaCommandDeckBase::createQuest Sender must be Quest Owner.'
         );
         require(
+            questId != bytes32(0),
+            'RenovaCommandDeckBase::createQuest Quest ID cannot be 0.'
+        );
+        require(
             questDeploymentAddresses[questId] == address(0),
             'RenovaCommandDeckBase::createQuest Quest already created.'
         );
