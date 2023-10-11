@@ -63,10 +63,6 @@ abstract contract WormholeBaseUpgradeable is
             wormholeChainId != 0,
             'WormholeBaseUpgradeable::updateWormholeRemote wormholeChainId cannot be 0.'
         );
-        require(
-            authorizedRemote != bytes32(0),
-            'WormholeBaseUpgradeable::updateWormholeRemote Remote cannot be 0.'
-        );
         _wormholeRemotes[wormholeChainId] = authorizedRemote;
 
         emit UpdateWormholeRemote(wormholeChainId, authorizedRemote);
