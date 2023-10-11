@@ -50,10 +50,6 @@ contract RenovaQuest is IRenovaQuest, Context, ReentrancyGuard {
     uint256 public numRegisteredPlayers;
 
     /// @inheritdoc IRenovaQuest
-    mapping(IRenovaAvatarBase.RenovaFaction => uint256)
-        public numRegisteredPlayersPerFaction;
-
-    /// @inheritdoc IRenovaQuest
     mapping(address => mapping(address => uint256))
         public portfolioTokenBalances;
 

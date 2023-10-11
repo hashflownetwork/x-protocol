@@ -10,8 +10,6 @@ import '../nft/IRenovaAvatarBase.sol';
 /**
 @notice Contract that represents one Quest. Every Quest gets deployed by the Command Deck.
 
-Quests can be Solo (every player for themselves), or multiplayer (Faction vs Faction).
-
 Quests have a start time and end time. Trading happens during those time bounds.
 
 Quests each have a deposit token and a minimum deposit amount.
@@ -19,17 +17,9 @@ Only one deposit is allowed.
 
 Deposits can occur at any time prior to quest end. Withdrawals can occur at any time.
 
-Players need to first register for a Quest.
-
-There can be a cap on how many players can enter a quest. There can also be a cap on how many
-items a player can load for a quest.
+Players register by depositing.
 */
 interface IRenovaQuest {
-    struct TokenDeposit {
-        address token;
-        uint256 amount;
-    }
-
     /// @notice Emitted when a token authorization status changes.
     /// @param token The address of the token.
     /// @param status Whether the token is allowed for trading.
@@ -103,13 +93,6 @@ interface IRenovaQuest {
     /// @notice Returns the number of registered players.
     /// @return The number of registered players.
     function numRegisteredPlayers() external view returns (uint256);
-
-    /// @notice Returns the number of registered players by faction.
-    /// @param faction The faction.
-    /// @return The number of registered players in the faction.
-    function numRegisteredPlayersPerFaction(
-        IRenovaAvatarBase.RenovaFaction faction
-    ) external view returns (uint256);
 
     /// @notice Returns the token balance for each token the player has in the Quest.
     /// @param player The address of the player.

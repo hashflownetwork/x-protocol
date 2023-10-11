@@ -80,7 +80,6 @@ export interface IRenovaQuestInterface extends Interface {
       | "endTime"
       | "minDepositAmount"
       | "numRegisteredPlayers"
-      | "numRegisteredPlayersPerFaction"
       | "portfolioTokenBalances"
       | "questOwner"
       | "registered"
@@ -119,10 +118,6 @@ export interface IRenovaQuestInterface extends Interface {
   encodeFunctionData(
     functionFragment: "numRegisteredPlayers",
     values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "numRegisteredPlayersPerFaction",
-    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "portfolioTokenBalances",
@@ -169,10 +164,6 @@ export interface IRenovaQuestInterface extends Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "numRegisteredPlayers",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "numRegisteredPlayersPerFaction",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -341,12 +332,6 @@ export interface IRenovaQuest extends BaseContract {
 
   numRegisteredPlayers: TypedContractMethod<[], [bigint], "view">;
 
-  numRegisteredPlayersPerFaction: TypedContractMethod<
-    [faction: BigNumberish],
-    [bigint],
-    "view"
-  >;
-
   portfolioTokenBalances: TypedContractMethod<
     [player: AddressLike, token: AddressLike],
     [bigint],
@@ -399,9 +384,6 @@ export interface IRenovaQuest extends BaseContract {
   getFunction(
     nameOrSignature: "numRegisteredPlayers"
   ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "numRegisteredPlayersPerFaction"
-  ): TypedContractMethod<[faction: BigNumberish], [bigint], "view">;
   getFunction(
     nameOrSignature: "portfolioTokenBalances"
   ): TypedContractMethod<
