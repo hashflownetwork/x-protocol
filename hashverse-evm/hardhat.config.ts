@@ -16,6 +16,7 @@ import './tasks/upgrade';
 import './tasks/update';
 import './tasks/quest-management';
 import './tasks/airdrops';
+import './tasks/wormhole';
 
 dotenv.config();
 
