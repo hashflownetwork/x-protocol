@@ -39,6 +39,10 @@ contract RenovaCommandDeck is IRenovaCommandDeck, RenovaCommandDeckBase {
         address tokenOwner,
         ItemMintSpec[] calldata mintSpecs
     ) external override {
+        require(
+            mintSpecs.length > 0,
+            'RenovaCommandDeck::minItems No mint specs provided.'
+        );
         for (uint256 specIdx = 0; specIdx < mintSpecs.length; specIdx++) {
             bytes32 rootId = mintSpecs[specIdx].rootId;
             uint256[] memory hashverseItemIds = mintSpecs[specIdx]
