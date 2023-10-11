@@ -81,7 +81,6 @@ export interface RenovaQuestInterface extends Interface {
       | "minDepositAmount"
       | "numRegisteredPlayers"
       | "numRegisteredPlayersPerFaction"
-      | "onERC721Received"
       | "portfolioTokenBalances"
       | "questOwner"
       | "registered"
@@ -124,10 +123,6 @@ export interface RenovaQuestInterface extends Interface {
   encodeFunctionData(
     functionFragment: "numRegisteredPlayersPerFaction",
     values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "onERC721Received",
-    values: [AddressLike, AddressLike, BigNumberish, BytesLike]
   ): string;
   encodeFunctionData(
     functionFragment: "portfolioTokenBalances",
@@ -178,10 +173,6 @@ export interface RenovaQuestInterface extends Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "numRegisteredPlayersPerFaction",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "onERC721Received",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -356,12 +347,6 @@ export interface RenovaQuest extends BaseContract {
     "view"
   >;
 
-  onERC721Received: TypedContractMethod<
-    [arg0: AddressLike, arg1: AddressLike, arg2: BigNumberish, arg3: BytesLike],
-    [string],
-    "view"
-  >;
-
   portfolioTokenBalances: TypedContractMethod<
     [arg0: AddressLike, arg1: AddressLike],
     [bigint],
@@ -417,13 +402,6 @@ export interface RenovaQuest extends BaseContract {
   getFunction(
     nameOrSignature: "numRegisteredPlayersPerFaction"
   ): TypedContractMethod<[arg0: BigNumberish], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "onERC721Received"
-  ): TypedContractMethod<
-    [arg0: AddressLike, arg1: AddressLike, arg2: BigNumberish, arg3: BytesLike],
-    [string],
-    "view"
-  >;
   getFunction(
     nameOrSignature: "portfolioTokenBalances"
   ): TypedContractMethod<

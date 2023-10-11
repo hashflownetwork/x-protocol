@@ -17,12 +17,7 @@ import '../interfaces/nft/IRenovaAvatarBase.sol';
 /// @title RenovaQuest
 /// @author Victor Ionescu
 /// @notice See {IRenovaQuest}
-contract RenovaQuest is
-    IRenovaQuest,
-    IERC721Receiver,
-    Context,
-    ReentrancyGuard
-{
+contract RenovaQuest is IRenovaQuest, Context, ReentrancyGuard {
     using SafeERC20 for IERC20;
     using Address for address payable;
 
@@ -117,16 +112,6 @@ contract RenovaQuest is
         allowedTokens[token] = status;
 
         emit UpdateTokenAuthorizationStatus(token, status);
-    }
-
-    /// @inheritdoc IERC721Receiver
-    function onERC721Received(
-        address,
-        address,
-        uint256,
-        bytes calldata
-    ) external pure override returns (bytes4) {
-        return IERC721Receiver.onERC721Received.selector;
     }
 
     /// @inheritdoc IRenovaQuest
