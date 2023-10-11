@@ -18,7 +18,7 @@ abstract contract WormholeBaseUpgradeable is
 {
     using AddressUpgradeable for address payable;
 
-    address private _wormhole;
+    IWormhole private _wormhole;
     uint8 private _wormholeConsistencyLevel;
     mapping(bytes32 => bool) private _processedMessageHashes;
 
@@ -87,7 +87,7 @@ abstract contract WormholeBaseUpgradeable is
         uint256 wormholeMessageFee
     ) internal virtual returns (uint64 sequence) {
         require(
-            _wormhole != address(0),
+            address(_wormhole) != address(0),
             'WormholeBaseUpgradeable::_wormholeSend Wormhole is not defined.'
         );
         require(
@@ -95,9 +95,11 @@ abstract contract WormholeBaseUpgradeable is
             'WormholeBaseUpgradeable:: _wormholeSend Wormhole consistency level is not defined.'
         );
 
-        sequence = IWormhole(_wormhole).publishMessage{
-            value: wormholeMessageFee
-        }(nonce, payload, _wormholeConsistencyLevel);
+        sequence = _wormhole.publishMessage{value: wormholeMessageFee}(
+            nonce,
+            payload,
+            _wormholeConsistencyLevel
+        );
 
         emit WormholeSend(sequence);
     }
@@ -108,7 +110,7 @@ abstract contract WormholeBaseUpgradeable is
         bytes memory encodedVM
     ) internal virtual returns (uint16 emitterChainId, bytes memory payload) {
         require(
-            _wormhole != address(0),
+            address(_wormhole) != address(0),
             'WormholeBaseUpgradeable::_wormholeReceive Wormhole is not defined.'
         );
         require(
@@ -120,7 +122,7 @@ abstract contract WormholeBaseUpgradeable is
             IWormholeStructs.VM memory vm,
             bool valid,
             string memory reason
-        ) = IWormhole(_wormhole).parseAndVerifyVM(encodedVM);
+        ) = _wormhole.parseAndVerifyVM(encodedVM);
 
         require(valid, reason);
         require(
@@ -154,11 +156,11 @@ abstract contract WormholeBaseUpgradeable is
             'WormholeBaseUpgradeable::_updateWormhole Address cannot be 0.'
         );
 
-        emit UpdateWormhole(wormhole, _wormhole);
+        emit UpdateWormhole(wormhole, address(_wormhole));
 
-        _wormhole = wormhole;
+        _wormhole = IWormhole(wormhole);
 
-        uint16 wormholeChainId = IWormhole(_wormhole).chainId();
+        uint16 wormholeChainId = IWormhole(wormhole).chainId();
 
         emit UpdateWormholeChainId(wormholeChainId, _wormholeChainId);
 

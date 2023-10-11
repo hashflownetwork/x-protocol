@@ -131,7 +131,7 @@ abstract contract RenovaAvatarBase is
     ) external override onlyOwner {
         _customBaseURI = customBaseURI;
 
-        emit UpdateCustomURI(_customBaseURI);
+        emit UpdateCustomURI(customBaseURI);
 
         emit BatchMetadataUpdate(1, type(uint256).max);
     }

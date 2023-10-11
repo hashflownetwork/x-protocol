@@ -127,11 +127,14 @@ contract RenovaAvatar is IRenovaAvatar, RenovaAvatarBase {
             'RenovaAvatar::wormholeMintSend msg.value does not cover fees.'
         );
 
+        RenovaFaction faction = factions[_msgSender()];
+        uint256 characterId = characterIds[_msgSender()];
+
         bytes memory payload = abi.encode(
             tokenIds[_msgSender()],
             _msgSender(),
-            factions[_msgSender()],
-            characterIds[_msgSender()],
+            faction,
+            characterId,
             dstWormholeChainId
         );
 
@@ -139,8 +142,8 @@ contract RenovaAvatar is IRenovaAvatar, RenovaAvatarBase {
 
         emit XChainMintOut(
             _msgSender(),
-            factions[_msgSender()],
-            characterIds[_msgSender()],
+            faction,
+            characterId,
             dstWormholeChainId,
             sequence,
             msg.value - wormholeMessageFee

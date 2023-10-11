@@ -74,6 +74,7 @@ export declare namespace IQuote {
 export interface RenovaQuestInterface extends Interface {
   getFunction(
     nameOrSignature:
+      | "MAX_QUEST_LENGTH"
       | "allowedTokens"
       | "depositAndEnter"
       | "depositToken"
@@ -98,6 +99,10 @@ export interface RenovaQuestInterface extends Interface {
       | "WithdrawToken"
   ): EventFragment;
 
+  encodeFunctionData(
+    functionFragment: "MAX_QUEST_LENGTH",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "allowedTokens",
     values: [AddressLike]
@@ -145,6 +150,10 @@ export interface RenovaQuestInterface extends Interface {
     values: [AddressLike[]]
   ): string;
 
+  decodeFunctionResult(
+    functionFragment: "MAX_QUEST_LENGTH",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "allowedTokens",
     data: BytesLike
@@ -316,6 +325,8 @@ export interface RenovaQuest extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
+  MAX_QUEST_LENGTH: TypedContractMethod<[], [bigint], "view">;
+
   allowedTokens: TypedContractMethod<[arg0: AddressLike], [boolean], "view">;
 
   depositAndEnter: TypedContractMethod<
@@ -366,6 +377,9 @@ export interface RenovaQuest extends BaseContract {
     key: string | FunctionFragment
   ): T;
 
+  getFunction(
+    nameOrSignature: "MAX_QUEST_LENGTH"
+  ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "allowedTokens"
   ): TypedContractMethod<[arg0: AddressLike], [boolean], "view">;

@@ -53,6 +53,8 @@ contract RenovaQuest is IRenovaQuest, Context, ReentrancyGuard {
     mapping(address => mapping(address => uint256))
         public portfolioTokenBalances;
 
+    uint256 public constant MAX_QUEST_LENGTH = (1 days) * 31 * 4;
+
     constructor(
         address renovaAvatar,
         address hashflowRouter,
@@ -73,7 +75,7 @@ contract RenovaQuest is IRenovaQuest, Context, ReentrancyGuard {
             'RenovaQuest::constructor End time should be after start time.'
         );
         require(
-            (_endTime - _startTime) <= (1 days) * 31 * 4,
+            (_endTime - _startTime) <= MAX_QUEST_LENGTH,
             'RenovaQuest::constructor Quest too long.'
         );
 
