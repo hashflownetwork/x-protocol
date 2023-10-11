@@ -118,6 +118,11 @@ contract RenovaAvatar is IRenovaAvatar, RenovaAvatarBase {
         );
 
         require(
+            _wormholeRemotes[dstWormholeChainId] != bytes32(0),
+            'RenovaAvatar::wormholeMintSend Unsupported Dst chain.'
+        );
+
+        require(
             msg.value >= wormholeMessageFee,
             'RenovaAvatar::wormholeMintSend msg.value does not cover fees.'
         );
