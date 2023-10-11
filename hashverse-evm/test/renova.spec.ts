@@ -25,8 +25,10 @@ describe('Renova', () => {
   let renovaItem: RenovaItem;
 
   let renovaQuestId: string;
+  let renovaQuestIdNative: string;
 
   let renovaQuest: RenovaQuest;
+  let renovaQuestNative: RenovaQuest;
 
   let testERC20A: TestERC20;
   let testERC20B: TestERC20;
@@ -378,6 +380,7 @@ describe('Renova', () => {
 
     it('should allow players to enter before quest starts', async () => {
       renovaQuestId = keccak256(Buffer.from('renovaQuest'));
+      renovaQuestIdNative = keccak256(Buffer.from('renovaQuestNative'));
 
       const questStartTime = baselineTimestamp + 60;
       const questEndTime = baselineTimestamp + 120;
@@ -392,12 +395,30 @@ describe('Renova', () => {
           toWei(2),
         );
 
+      await renovaCommandDeck
+        .connect(questOwner)
+        .createQuest(
+          renovaQuestIdNative,
+          questStartTime,
+          questEndTime,
+          ZERO_ADDRESS,
+          toWei(1),
+        );
+
       const renovaQuestAddress =
         await renovaCommandDeck.questDeploymentAddresses(renovaQuestId);
+
+      const renovaQuestAddressNative =
+        await renovaCommandDeck.questDeploymentAddresses(renovaQuestIdNative);
 
       renovaQuest = await hre.ethers.getContractAt(
         'RenovaQuest',
         renovaQuestAddress,
+      );
+
+      renovaQuestNative = await hre.ethers.getContractAt(
+        'RenovaQuest',
+        renovaQuestAddressNative,
       );
 
       await testERC20A
@@ -430,6 +451,30 @@ describe('Renova', () => {
         .true;
 
       expect(await renovaQuest.numRegisteredPlayers()).to.equal(BigInt(1));
+
+      await renovaQuestNative.connect(playerA).depositAndEnter(toWei(1), {
+        value: toWei(1),
+      });
+      expect(
+        await renovaQuestNative.portfolioTokenBalances(
+          await playerA.getAddress(),
+          await testERC20A.getAddress(),
+        ),
+      ).to.equal(toWei(0));
+
+      expect(
+        await renovaQuestNative.portfolioTokenBalances(
+          await playerA.getAddress(),
+          ZERO_ADDRESS,
+        ),
+      ).to.equal(toWei(1));
+
+      expect(await renovaQuestNative.registered(await playerA.getAddress())).to
+        .be.true;
+
+      expect(await renovaQuestNative.numRegisteredPlayers()).to.equal(
+        BigInt(1),
+      );
     });
 
     it('should not allow players without an avatar to enter', async () => {
@@ -536,6 +581,54 @@ describe('Renova', () => {
           await testERC20A.getAddress(),
         ),
       ).to.equal(toWei(1));
+
+      expect(
+        await renovaQuest.portfolioTokenBalances(
+          await playerA.getAddress(),
+          await testERC20B.getAddress(),
+        ),
+      ).to.equal(toWei(1));
+
+      expect(
+        await renovaQuest.portfolioTokenBalances(
+          await playerA.getAddress(),
+          ZERO_ADDRESS,
+        ),
+      ).to.equal(toWei(1));
+
+      const quote3 = {
+        pool: ZERO_ADDRESS,
+        externalAccount: ZERO_ADDRESS,
+        trader: await renovaQuest.getAddress(),
+        effectiveTrader: await playerA.getAddress(),
+        baseToken: ZERO_ADDRESS,
+        baseTokenAmount: toWei(1),
+        quoteToken: await testERC20B.getAddress(),
+        quoteTokenAmount: toWei(1),
+        effectiveBaseTokenAmount: toWei(1),
+        quoteExpiry: baselineTimestamp + 3600,
+        nonce: 0,
+        txid: zeroPad(Buffer.from(''), 32),
+        signature: zeroPad(Buffer.from(''), 65),
+      };
+
+      await renovaQuest.connect(playerA).trade(quote3);
+
+      expect(
+        await renovaQuest.portfolioTokenBalances(
+          await playerA.getAddress(),
+          await testERC20B.getAddress(),
+        ),
+      ).to.equal(toWei(2));
+
+      expect(
+        await renovaQuest.portfolioTokenBalances(
+          await playerA.getAddress(),
+          ZERO_ADDRESS,
+        ),
+      ).to.equal(toWei(0));
+
+      await renovaQuest.connect(playerA).trade(quote2);
 
       expect(
         await renovaQuest.portfolioTokenBalances(

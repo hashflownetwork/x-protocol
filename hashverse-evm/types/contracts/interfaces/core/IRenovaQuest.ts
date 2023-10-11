@@ -362,7 +362,7 @@ export interface IRenovaQuest extends BaseContract {
   trade: TypedContractMethod<
     [quote: IQuote.RFQTQuoteStruct],
     [void],
-    "payable"
+    "nonpayable"
   >;
 
   updateTokenAuthorization: TypedContractMethod<
@@ -420,7 +420,7 @@ export interface IRenovaQuest extends BaseContract {
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "trade"
-  ): TypedContractMethod<[quote: IQuote.RFQTQuoteStruct], [void], "payable">;
+  ): TypedContractMethod<[quote: IQuote.RFQTQuoteStruct], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "updateTokenAuthorization"
   ): TypedContractMethod<

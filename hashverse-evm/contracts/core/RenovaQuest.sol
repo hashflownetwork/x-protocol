@@ -145,7 +145,7 @@ contract RenovaQuest is IRenovaQuest, Context, ReentrancyGuard {
     /// @inheritdoc IRenovaQuest
     function trade(
         IHashflowRouter.RFQTQuote memory quote
-    ) external payable override nonReentrant {
+    ) external override nonReentrant {
         require(
             block.timestamp >= startTime && block.timestamp < endTime,
             'RenovaQuest::trade Quest is not ongoing.'

@@ -377,7 +377,7 @@ const _abi = [
     ],
     name: "trade",
     outputs: [],
-    stateMutability: "payable",
+    stateMutability: "nonpayable",
     type: "function",
   },
   {

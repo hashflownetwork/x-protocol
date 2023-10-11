@@ -130,5 +130,5 @@ interface IRenovaQuest {
 
     /// @notice Trades within the Quest.
     /// @param quote The Hashflow Quote.
-    function trade(IHashflowRouter.RFQTQuote memory quote) external payable;
+    function trade(IHashflowRouter.RFQTQuote memory quote) external;
 }
