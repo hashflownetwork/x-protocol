@@ -268,9 +268,22 @@ contract RenovaQuest is IRenovaQuest, Context, ReentrancyGuard {
         emit RegisterPlayer(player);
 
         if (depositToken != address(0)) {
+            uint256 balanceBefore = IERC20(depositToken).balanceOf(
+                address(this)
+            );
+
             IRenovaCommandDeckBase(_renovaCommandDeck).depositTokenForQuest(
                 player,
                 depositAmount
+            );
+
+            uint256 balanceAfter = IERC20(depositToken).balanceOf(
+                address(this)
+            );
+
+            require(
+                balanceAfter == balanceBefore + depositAmount,
+                'RenovaQuest::_depositAndEnter Balance mismatch.'
             );
         }
     }
