@@ -198,12 +198,9 @@ contract RenovaQuest is IRenovaQuest, Context, ReentrancyGuard {
         if (quote.baseToken == address(0)) {
             msgValue = quote.effectiveBaseTokenAmount;
         } else {
-            require(
-                IERC20(quote.baseToken).approve(
-                    _hashflowRouter,
-                    quote.effectiveBaseTokenAmount
-                ),
-                'RenovaQuest::trade Could not approve token.'
+            IERC20(quote.baseToken).forceApprove(
+                _hashflowRouter,
+                quote.effectiveBaseTokenAmount
             );
         }
 
