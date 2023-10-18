@@ -91,3 +91,31 @@ task('command-deck:create-quest', 'Creates a Quest')
 
     console.log(`Created Quest ${questId}`);
   });
+
+task(
+  'quest:update-token-authorization',
+  'Updates whether a token is tradeable within a Quest',
+)
+  .addParam('questAddress', 'The address of the quest')
+  .addParam('tokenAddress', 'The address of the token')
+  .addFlag('revoke', 'Whether we should revoke a token')
+  .addFlag('fireblocks', 'Whether to use Fireblocks wallet')
+  .setAction(async (taskArgs, hre) => {
+    const { questAddress, tokenAddress, revoke } = taskArgs;
+
+    const signer = taskArgs.fireblocks
+      ? await getFireblocksSigner(hre)
+      : (await hre.ethers.getSigners())[0]!;
+
+    const quest = await hre.ethers.getContractAt(
+      'IRenovaQuest',
+      questAddress,
+      signer,
+    );
+
+    const tx = await quest.updateTokenAuthorization(tokenAddress, !revoke);
+
+    await tx.wait();
+
+    console.log(`Updated token authorization for ${tokenAddress} ${!revoke}`);
+  });
