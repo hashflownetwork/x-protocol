@@ -1,11 +1,11 @@
 {
     "wormhole2": {
         "address": "0x966d3e76E7a890A2d7B9AE1E370dC219E920F9D4",
-        "deploymentTransactionHash": "0x792d8cfb81bbd7a1cc947075a78d9741e10909f7d509c35f58c40755d3645704"
+        "deploymentTransactionHash": "0x8495699c6976a0829089661b47505793ccdd782a827eacdd76ffe3003e09c06e"
     },
     "wormhole1": {
         "address": "0x966d3e76E7a890A2d7B9AE1E370dC219E920F9D4",
-        "deploymentTransactionHash": "0x17f3b3166f0e1b6a1de84cfe8364c8ddad878fb6b7608871e7d48e8929c37cce"
+        "deploymentTransactionHash": "0xa36fc3c240a63e35e04d7b32e97f102d8e3309d4e0b0048a43ab4aba18a05b59"
     },
     "goerli": {
         "address": "0xb56AaAfD327E1A369085E689caD6Df7A880e638C",

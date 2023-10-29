@@ -13,11 +13,11 @@
     },
     "wormhole1": {
         "address": "0x2c5f3c004878923f55A2a255F89Fe29393177509",
-        "deploymentTransactionHash": "0x30612c5ed8a224aeb7564ce0be5dd34dddb9c8149d9f96074590b4de3513a6b9"
+        "deploymentTransactionHash": "0xf80cafd13d9283c49c9dea036524a8836363fb62f1630ea41e493a1d595aeb9c"
     },
     "wormhole2": {
         "address": "0x2c5f3c004878923f55A2a255F89Fe29393177509",
-        "deploymentTransactionHash": "0x1a625393aea5579c93d0dc90c86a650baee03f2c5d0b4e1d9c85b00a2c30ecdd"
+        "deploymentTransactionHash": "0x8b6d39285ebd82c30411f7f876c55ba32cad19cc7cc8212d9e2e5f9b4610a0b7"
     },
     "ethereum": {
         "address": "0x55084eE0fEf03f14a305cd24286359A35D735151",

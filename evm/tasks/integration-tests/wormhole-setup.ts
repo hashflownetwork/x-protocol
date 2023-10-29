@@ -44,7 +44,7 @@ task('test:wormhole:full-setup', 'Bootstraps the entire environment').setAction(
     await hre.run('wormhole-messenger:initialize:wormhole');
     await hre.run('wormhole-messenger:initialize:consistency');
     await hre.run('wormhole-messenger:initialize:fast-consistency');
-    await hre.run('wormhole-messenger:initialize:peer-networks');
+    await hre.run('wormhole-messenger:initialize:chain-id-mapping');
     await hre.run('test:wormhole-messenger:initialize:peer-networks:solana');
 
     await hre.run('test:wormhole-messenger:initialize:remotes');
