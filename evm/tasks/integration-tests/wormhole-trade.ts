@@ -403,7 +403,7 @@ task('wormhole:relay:solana', 'Relays a Solana X-Chain trade')
     console.log('TRADER', dstTraderAddress);
 
     const quoteToken = await hre.ethers.getContractAt(
-      'IERC20',
+      '@openzeppelin/contracts/token/ERC20/IERC20.sol:IERC20',
       quoteTokenAddress,
       mainSigner,
     );
