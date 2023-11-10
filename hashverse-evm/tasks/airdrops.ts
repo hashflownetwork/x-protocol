@@ -50,3 +50,59 @@ task('airdrop:items', 'Airdrops Items')
       console.log(`Minted Hashverse Item ID ${itemId} to ${wallet}`);
     }
   });
+
+task('airdrop:items:parallel')
+  .addParam(
+    'airdropFilePath',
+    'The path to the CSV file containing the aidrop params',
+  )
+  .setAction(async (taskArgs, hre) => {
+    const signer = (await hre.ethers.getSigners())[0]!;
+
+    const networkConfig = getNetworkConfigFromHardhatRuntimeEnvironment(hre);
+
+    const commandDeckMetadata = getDeployedContractMetadata(
+      'IRenovaCommandDeck',
+      networkConfig.name,
+    );
+
+    if (!commandDeckMetadata) {
+      throw new Error(`Could not resolve Command Deck metadata`);
+    }
+
+    const renovaCommandDeck = await hre.ethers.getContractAt(
+      'RenovaCommandDeck',
+      commandDeckMetadata?.address,
+    );
+
+    const renovaCommandDeckOwner = await renovaCommandDeck.owner();
+    if (renovaCommandDeckOwner.toLowerCase() !== signer.address.toLowerCase()) {
+      throw new Error('Wrong owner');
+    }
+
+    const rows = fs
+      .readFileSync(taskArgs.airdropFilePath)
+      .toString()
+      .split('\n')
+      .map((r) => r.trim())
+      .filter((p) => p.split(',').length === 2);
+
+    let currentNonce = await signer.getNonce();
+
+    for (const row of rows) {
+      const parts = row.split(',');
+      const wallet = parts[0];
+      const hashverseItemId = Number(parts[1]);
+
+      await renovaCommandDeck.mintItemAdmin(wallet, hashverseItemId);
+
+      console.log(
+        'Sent mint transaction',
+        wallet,
+        hashverseItemId,
+        currentNonce,
+      );
+
+      currentNonce += 1;
+    }
+  });
