@@ -9,8 +9,5 @@ dist
 cache
 artifacts
 
-# Integration tests
-wormhole_test_metadata.json
-
 # IDE
 .idea
