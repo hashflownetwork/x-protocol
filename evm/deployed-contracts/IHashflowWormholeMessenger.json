@@ -18,5 +18,29 @@
     "bnb-testnet": {
         "address": "0x7CDAb80109D74372F1682ed0E4e65255f20ccbaA",
         "deploymentTransactionHash": "0xb67eca8c556ed809de966590cfb347160f5ec272c5cbbe98036713dbb3944ab0"
+    },
+    "ethereum": {
+        "address": "0x0a09B370950f69ADC4c2FbF8677C7b0047599c9F",
+        "deploymentTransactionHash": "0xee560fcea50fd6f0fb5a7e8b6fec572164ee8b354d215bcc397702b486b82888"
+    },
+    "arbitrum": {
+        "address": "0xab24A3306748e72520Db800c3e93d6c861D1BA49",
+        "deploymentTransactionHash": "0x8766e570eb9366a3c977423bd2137154b1fa6b33a8e0210b04f1be3eff858e39"
+    },
+    "optimism": {
+        "address": "0x7CDAb80109D74372F1682ed0E4e65255f20ccbaA",
+        "deploymentTransactionHash": "0xe461f662b41ee62b54fe0ff2b9688e89e1d964cd33f2e528af3222130c344ff8"
+    },
+    "polygon": {
+        "address": "0xfaFb0fc30140D1071606489Ff36B9893F8db80bF",
+        "deploymentTransactionHash": "0x326d05c69b5af8d9e2c848ea2eed38bd89d6e3ff86bcc4126cb5fb3fdc526d9c"
+    },
+    "bnb": {
+        "address": "0x771CaD61ec6Dfde4a67891E982CF433aCA1Af7C8",
+        "deploymentTransactionHash": "0x62c4f3927e6217509c9d6b5c2cdaa117286fb85ad8644110706f641a4b8ece93"
+    },
+    "avalanche": {
+        "address": "0x771CaD61ec6Dfde4a67891E982CF433aCA1Af7C8",
+        "deploymentTransactionHash": "0x2ed10f979b20297a18d1a8bce05f8d6b9e223890d9d9b8457e38cb11655e9bf2"
     }
 }
