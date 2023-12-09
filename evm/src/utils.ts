@@ -103,6 +103,9 @@ export const ETHEREUM = {
   wormholeChainId: 2,
   wormholeEndpoint: '0x98f3c9e6E3fAce36bAAd05FE09d375Ef1464288B',
   wormholeConsistency: 1,
+
+  // We use "safe" instead of "instant".
+  wormholeFastConsistency: 201,
   zksync: false,
 } as const;
 
@@ -174,7 +177,10 @@ export const POLYGON = {
   layerZeroNonceContract: '0x5B905fE05F81F3a8ad8B28C6E17779CFAbf76068',
   wormholeChainId: 5,
   wormholeEndpoint: '0x7A4B5a56256163F07b2C80A7cA55aBE66c4ec4d7',
-  wormholeConsistency: 199,
+  wormholeConsistency: 1,
+
+  // For Polygon, there is no "safe" value. We use "instant".
+  wormholeFastConsistency: 200,
   zksync: false,
 } as const;
 
