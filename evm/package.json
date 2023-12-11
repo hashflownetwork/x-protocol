@@ -1,6 +1,6 @@
 {
   "name": "@hashflow/contracts-evm",
-  "version": "2.0.11",
+  "version": "2.0.12",
   "description": "EVM Smart Contracts for Solidity",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -9,14 +9,14 @@
     "lint": "eslint .",
     "build:contracts": "hardhat compile",
     "build:abi": "ts-node scripts/extractABI.ts",
-    "build:tsc": "tsc",
+    "build:tsc": "rm -rf dist && tsc",
     "build": "yarn build:contracts && yarn build:abi && yarn build:tsc"
   },
   "files": [
     "contracts",
     "deployed-contracts",
-    "types",
     "dist/src",
+    "dist/types",
     "abi"
   ],
   "keywords": [
