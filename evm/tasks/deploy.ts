@@ -14,6 +14,9 @@ import {
   WORMHOLE_NETWORK_NAMES,
   padAddressTo32Bytes,
 } from '../src/utils';
+import * as anchor from '@coral-xyz/anchor';
+import { HASHFLOW_PROGRAM_ADDRESS } from '@hashflow/contracts-solana';
+import { PublicKey } from '@solana/web3.js';
 
 task('pool:deploy', 'Deploys the HashflowPool implementation').setAction(
   async (taskArgs, hre) => {
@@ -445,3 +448,247 @@ task(
     }
   }
 });
+
+task(
+  'wormhole-messenger:initialize:chain-id-mapping:solana',
+  'Initializes Hashflow <-> Wormhole Chain ID pairs for this chain and its peers',
+).setAction(async (taskArgs, hre) => {
+  const networkConfig = getNetworkConfigFromHardhatRuntimeEnvironment(hre);
+
+  if (
+    !isHardhatMainnet(networkConfig.name) &&
+    !isHardhatTestnet(networkConfig.name)
+  ) {
+    throw new Error(`Incorrect network`);
+  }
+
+  const solanaCluster = isHardhatMainnet(networkConfig.name)
+    ? 'mainnet'
+    : 'devnet';
+
+  const hashflowChainId = solanaCluster === 'mainnet' ? 20 : 100;
+
+  const wormholeChainId = 1;
+
+  const messengerMetadata = getDeployedContractMetadata(
+    'IHashflowWormholeMessenger',
+    networkConfig.name,
+  );
+
+  if (!messengerMetadata) {
+    throw new Error(`Could not find IHashflowWormholeMessenger metadata`);
+  }
+
+  const messengerContract = await hre.ethers.getContractAt(
+    'IHashflowWormholeMessenger',
+    messengerMetadata.address,
+  );
+
+  const currentWormholeChainId = Number(
+    await messengerContract.hChainIdToWormholeChainId(hashflowChainId),
+  );
+
+  if (currentWormholeChainId !== wormholeChainId) {
+    const tx = await messengerContract.updateWormholeChainIdForHashflowChainId(
+      hashflowChainId,
+      wormholeChainId,
+    );
+
+    await tx.wait();
+    console.log(
+      `Set Wormhole Chain ID ${wormholeChainId} for Solana Hashflow Chain ID ${hashflowChainId}: ${tx.hash}`,
+    );
+  } else {
+    console.log(
+      `Wormhole Chain ID ${wormholeChainId} already initialized for Solana Hashflow Chain ID ${hashflowChainId}`,
+    );
+  }
+});
+
+task(
+  'wormhole-messenger:initialize:remotes:solana',
+  'Initializes Remote Wormhole messengers',
+).setAction(async (taskArgs, hre) => {
+  const networkConfig = getNetworkConfigFromHardhatRuntimeEnvironment(hre);
+
+  if (
+    !isHardhatMainnet(networkConfig.name) &&
+    !isHardhatTestnet(networkConfig.name)
+  ) {
+    throw new Error(`Incorrect network`);
+  }
+
+  const solanaCluster = isHardhatMainnet(networkConfig.name)
+    ? 'mainnet'
+    : 'devnet';
+
+  const hashflowProgramAddress = HASHFLOW_PROGRAM_ADDRESS[solanaCluster];
+
+  if (!hashflowProgramAddress) {
+    throw new Error(`Hashflow not deployed on cluster`);
+  }
+
+  const hashflowProgramPublicKey = new PublicKey(hashflowProgramAddress);
+
+  const [emitterPDA] = PublicKey.findProgramAddressSync(
+    [anchor.utils.bytes.utf8.encode('emitter')],
+    hashflowProgramPublicKey,
+  );
+
+  const emitterAddressHex = `0x${Buffer.from(emitterPDA.toBytes())
+    .toString('hex')
+    .toLowerCase()}`;
+
+  const hashflowChainId = solanaCluster === 'mainnet' ? 20 : 100;
+
+  const messengerMetadata = getDeployedContractMetadata(
+    'IHashflowWormholeMessenger',
+    networkConfig.name,
+  );
+
+  if (!messengerMetadata) {
+    throw new Error(`Could not find IHashflowWormholeMessenger metadata`);
+  }
+
+  const messengerContract = await hre.ethers.getContractAt(
+    'IHashflowWormholeMessenger',
+    messengerMetadata.address,
+  );
+
+  const currentRemote = await messengerContract.xChainRemotes(hashflowChainId);
+
+  if (currentRemote.toLowerCase() !== emitterAddressHex) {
+    const tx = await messengerContract.updateXChainRemoteAddress(
+      hashflowChainId,
+      emitterPDA.toBytes(),
+    );
+
+    await tx.wait();
+
+    console.log(`Initialized Solana Remote`, tx.hash);
+  } else {
+    console.log('Solana remote already initialized');
+  }
+});
+
+task(
+  'wormhole-messenger:initialize:fast-relayer:evm',
+  'Initializes Fast Relayer on target EVM chain',
+)
+  .addParam('dstHashflowChainId', 'Destination Hashflow Chain ID')
+  .addParam('relayerAddress', 'Relayer Address')
+  .setAction(async (taskArgs, hre) => {
+    const networkConfig = getNetworkConfigFromHardhatRuntimeEnvironment(hre);
+
+    const messengerMetadata = getDeployedContractMetadata(
+      'IHashflowWormholeMessenger',
+      networkConfig.name,
+    );
+
+    if (!messengerMetadata) {
+      throw new Error(`Could not find IHashflowWormholeMessenger metadata`);
+    }
+
+    const messengerContract = await hre.ethers.getContractAt(
+      'IHashflowWormholeMessenger',
+      messengerMetadata.address,
+    );
+
+    const dstHashflowChainId = Number(taskArgs.dstHashflowChainId);
+    const relayerAddress = taskArgs.relayerAddress;
+
+    const relayerAddressPadded = `0x${padAddressTo32Bytes(relayerAddress)
+      .toString('hex')
+      .toLowerCase()}`;
+
+    const wormholeChainId =
+      await messengerContract.hChainIdToWormholeChainId(dstHashflowChainId);
+
+    if (wormholeChainId !== BigInt(0)) {
+      const existingFastRelayer =
+        await messengerContract.permissionedRelayers(dstHashflowChainId);
+
+      if (
+        existingFastRelayer.toLowerCase() !== relayerAddressPadded.toLowerCase()
+      ) {
+        const tx = await messengerContract.updatePermissionedRelayer(
+          dstHashflowChainId,
+          relayerAddressPadded,
+        );
+
+        await tx.wait();
+
+        console.log(
+          `Set relayer to ${relayerAddress} for Hashflow Chain ID ${dstHashflowChainId}: ${tx.hash}`,
+        );
+      } else {
+        console.log(`Fast relayer already set`);
+      }
+    }
+  });
+
+task(
+  'wormhole-messenger:initialize:fast-relayer:solana',
+  'Initializes Fast Relayer on target EVM chain',
+)
+  .addParam('relayerAddress', 'Relayer Address')
+  .setAction(async (taskArgs, hre) => {
+    const networkConfig = getNetworkConfigFromHardhatRuntimeEnvironment(hre);
+
+    if (
+      !isHardhatMainnet(networkConfig.name) &&
+      !isHardhatTestnet(networkConfig.name)
+    ) {
+      throw new Error(`Incorrect network`);
+    }
+    const solanaCluster = isHardhatMainnet(networkConfig.name)
+      ? 'mainnet'
+      : 'devnet';
+
+    const hashflowChainId = solanaCluster === 'mainnet' ? 20 : 100;
+
+    const messengerMetadata = getDeployedContractMetadata(
+      'IHashflowWormholeMessenger',
+      networkConfig.name,
+    );
+
+    if (!messengerMetadata) {
+      throw new Error(`Could not find IHashflowWormholeMessenger metadata`);
+    }
+
+    const messengerContract = await hre.ethers.getContractAt(
+      'IHashflowWormholeMessenger',
+      messengerMetadata.address,
+    );
+
+    const relayerAddress = new PublicKey(taskArgs.relayerAddress);
+
+    const relayerAddressHex = `0x${Buffer.from(relayerAddress.toBytes())
+      .toString('hex')
+      .toLowerCase()}`;
+
+    const wormholeChainId =
+      await messengerContract.hChainIdToWormholeChainId(hashflowChainId);
+
+    if (wormholeChainId !== BigInt(0)) {
+      const existingFastRelayer =
+        await messengerContract.permissionedRelayers(hashflowChainId);
+
+      if (
+        existingFastRelayer.toLowerCase() !== relayerAddressHex.toLowerCase()
+      ) {
+        const tx = await messengerContract.updatePermissionedRelayer(
+          hashflowChainId,
+          relayerAddressHex,
+        );
+
+        await tx.wait();
+
+        console.log(
+          `Set relayer to ${relayerAddress} for Hashflow Chain ID ${hashflowChainId}: ${tx.hash}`,
+        );
+      } else {
+        console.log(`Fast relayer already set`);
+      }
+    }
+  });
