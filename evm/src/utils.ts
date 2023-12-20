@@ -103,9 +103,7 @@ export const ETHEREUM = {
   wormholeChainId: 2,
   wormholeEndpoint: '0x98f3c9e6E3fAce36bAAd05FE09d375Ef1464288B',
   wormholeConsistency: 1,
-
-  // We use "safe" instead of "instant".
-  wormholeFastConsistency: 201,
+  wormholeFastConsistency: 200,
   zksync: false,
 } as const;
 
@@ -219,6 +217,7 @@ export const GOERLI = {
   wormholeChainId: 2,
   wormholeEndpoint: '0x706abc4E45D419950511e474C7B9Ed348A4a716c',
   wormholeConsistency: 1,
+  wormholeFastConsistency: 200,
   zksync: false,
 } as const;
 
