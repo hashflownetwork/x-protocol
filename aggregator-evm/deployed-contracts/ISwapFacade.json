@@ -1,10 +1,14 @@
 {
-  "goerli": {
-    "address": "0xFc40D90731A74750C8Fd43fBE4718846239bc0fa",
-    "deploymentTransactionHash": "0x2702a816fb10e3bf5229e2cdfe5b5d54fce71818202ed08c7dfb7e870c3682bf"
-  },
-  "ethereum": {
-    "address": "0xDa158B39D630c008308A5C4B0C5ecD980aAB5a6e",
-    "deploymentTransactionHash": "0x105533b7bc6d57aa9bd8dfe20aefb24a422d163447a9fcf5c026d04af6acf74f"
-  }
+    "goerli": {
+        "address": "0xFc40D90731A74750C8Fd43fBE4718846239bc0fa",
+        "deploymentTransactionHash": "0x2702a816fb10e3bf5229e2cdfe5b5d54fce71818202ed08c7dfb7e870c3682bf"
+    },
+    "ethereum": {
+        "address": "0xDa158B39D630c008308A5C4B0C5ecD980aAB5a6e",
+        "deploymentTransactionHash": "0x105533b7bc6d57aa9bd8dfe20aefb24a422d163447a9fcf5c026d04af6acf74f"
+    },
+    "arbitrum": {
+        "address": "0x3e8Fb04888700AD28B02Eb60c3DE40CDeB001042",
+        "deploymentTransactionHash": "0x8e1b9ba222b5229bdfe8d46e285e847b00c5518bb3eadd07e39a4fa1593873cc"
+    }
 }
