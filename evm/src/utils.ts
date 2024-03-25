@@ -122,6 +122,7 @@ export const ARBITRUM = {
   wormholeChainId: 23,
   wormholeEndpoint: '0xa5f208e072434bC67592E4C49C1B991BA79BCA46',
   wormholeConsistency: 1,
+  wormholeFastConsistency: 200,
   zksync: false,
 } as const;
 
