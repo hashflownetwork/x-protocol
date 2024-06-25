@@ -42,5 +42,13 @@
     "avalanche": {
         "address": "0x55084eE0fEf03f14a305cd24286359A35D735151",
         "deploymentTransactionHash": "0x5d2dc069f3f129d7f93b479644a3f58a87952bbd66ab465bf7013e5d5ca727aa"
+    },
+    "sepolia": {
+        "address": "0xCa310B1B942A30Ff4b40a5E1b69AB4607eC79Bc1",
+        "deploymentTransactionHash": "0x8eb19473b4eca8b271f6259038090581b18aed3434ebb151d567d643c44045d3"
+    },
+    "base": {
+        "address": "0xCa310B1B942A30Ff4b40a5E1b69AB4607eC79Bc1",
+        "deploymentTransactionHash": "0x06061ac736bb7db65d3d13821ba5ef60f4322c30c0ae2bb5674655e783c48ac7"
     }
 }

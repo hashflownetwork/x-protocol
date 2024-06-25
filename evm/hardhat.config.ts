@@ -80,6 +80,7 @@ const blockscanApiKeys: Record<string, string> = {};
 if (process.env.ETHERSCAN_API_KEY) {
   blockscanApiKeys['mainnet'] = process.env.ETHERSCAN_API_KEY;
   blockscanApiKeys['goerli'] = process.env.ETHERSCAN_API_KEY;
+  blockscanApiKeys['sepolia'] = process.env.ETHERSCAN_API_KEY;
 }
 if (process.env.POLYGONSCAN_API_KEY) {
   blockscanApiKeys['polygon'] = process.env.POLYGONSCAN_API_KEY;
@@ -101,6 +102,10 @@ if (process.env.OPTIMISTIC_ETHERSCAN_API_KEY) {
 
 if (process.env.ARBISCAN_API_KEY) {
   blockscanApiKeys['arbitrumOne'] = process.env.ARBISCAN_API_KEY;
+}
+
+if (process.env.BASESCAN_API_KEY) {
+  blockscanApiKeys['base'] = process.env.BASESCAN_API_KEY;
 }
 
 const config: HardhatUserConfig = {
