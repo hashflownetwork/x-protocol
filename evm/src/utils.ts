@@ -7,6 +7,7 @@ export const MAIN_NETWORK_NAMES = [
   'polygon',
   'bnb',
   'avalanche',
+  'base',
 ] as const;
 
 export const TEST_NETWORK_NAMES = [
@@ -14,6 +15,7 @@ export const TEST_NETWORK_NAMES = [
   'goerli',
   'bnb-testnet',
   'zksync-testnet',
+  'sepolia',
 ] as const;
 
 export const WORMHOLE_NETWORK_NAMES = ['wormhole1', 'wormhole2'] as const;
@@ -36,8 +38,8 @@ export type NetworkNameExtended =
   | (typeof WORMHOLE_NETWORK_NAMES)[number]
   | 'localhost';
 
-type MainnetChainId = 1 | 137 | 56 | 42161 | 10 | 43114;
-type TestnetChainId = 5 | 80001 | 97 | 280;
+type MainnetChainId = 1 | 137 | 56 | 42161 | 10 | 43114 | 8453;
+type TestnetChainId = 5 | 80001 | 97 | 280 | 11155111;
 
 export type ChainId = MainnetChainId | TestnetChainId;
 
@@ -201,8 +203,25 @@ export const BNB = {
   zksync: false,
 } as const;
 
+export const BASE = {
+  chainId: 8453,
+  name: 'base',
+  nativeTokenSymbol: 'ETH',
+  nativeTokenName: 'Ether',
+  nativeTokenDecimals: 18,
+  hashflowChainId: 7,
+  testTokens: false,
+  weth: '0x4200000000000000000000000000000000000006',
+  wormholeChainId: 30,
+  wormholeEndpoint: '0xbebdb6C8ddC678FfA9f8748f85C815C556Dd8ac6',
+  wormholeConsistency: 1,
+  wormholeFastConsistency: 200,
+  zksync: false,
+} as const;
+
 // Testnets.
 
+// DEPRECATED
 export const GOERLI = {
   chainId: 5,
   name: 'goerli',
@@ -222,6 +241,7 @@ export const GOERLI = {
   zksync: false,
 } as const;
 
+// DEPRECATED
 export const MUMBAI = {
   chainId: 80001,
   name: 'mumbai',
@@ -258,6 +278,7 @@ export const BNB_TESTNET = {
   zksync: false,
 } as const;
 
+// DEPRECATED
 export const ZKSYNC_TESTNET = {
   chainId: 280,
   name: 'zksync-testnet',
@@ -268,6 +289,22 @@ export const ZKSYNC_TESTNET = {
   testTokens: false,
   weth: '0x2da10a1e27bf85cedd8ffb1abbe97e53391c0295',
   zksync: true,
+} as const;
+
+export const SEPOLIA = {
+  chainId: 11155111,
+  name: 'sepolia',
+  nativeTokenSymbol: 'ETH',
+  nativeTokenName: 'Ether',
+  nativeTokenDecimals: 18,
+  hashflowChainId: 106,
+  testTokens: false,
+  wormholeChainId: 10002,
+  wormholeEndpoint: '0x4a8bc80Ed5a4067f1CCf107057b8270E0cC11A78',
+  wormholeConsistency: 1,
+  wormholeFastConsistency: 200,
+  weth: '0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14',
+  zksync: false,
 } as const;
 
 // Wormhole
@@ -311,7 +348,9 @@ export const NETWORK_CONFIG_BY_NAME: Record<NetworkName, NetworkConfig> = {
   avalanche: AVALANCHE,
   polygon: POLYGON,
   bnb: BNB,
+  base: BASE,
   goerli: GOERLI,
+  sepolia: SEPOLIA,
   mumbai: MUMBAI,
   'bnb-testnet': BNB_TESTNET,
   'zksync-testnet': ZKSYNC_TESTNET,
