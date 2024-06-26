@@ -61,18 +61,18 @@ if (process.env.BSCSCAN_API_KEY) {
   blockscanApiKeys['bsc'] = process.env.BSCSCAN_API_KEY;
   blockscanApiKeys['bscTestnet'] = process.env.BSCSCAN_API_KEY;
 }
-
 if (process.env.SNOWTRACE_API_KEY) {
   blockscanApiKeys['avalanche'] = process.env.SNOWTRACE_API_KEY;
 }
-
 if (process.env.OPTIMISTIC_ETHERSCAN_API_KEY) {
   blockscanApiKeys['optimisticEthereum'] =
     process.env.OPTIMISTIC_ETHERSCAN_API_KEY;
 }
-
 if (process.env.ARBISCAN_API_KEY) {
   blockscanApiKeys['arbitrumOne'] = process.env.ARBISCAN_API_KEY;
+}
+if (process.env.BASESCAN_API_KEY) {
+  blockscanApiKeys['base'] = process.env.BASESCAN_API_KEY;
 }
 
 const config: HardhatUserConfig = {
