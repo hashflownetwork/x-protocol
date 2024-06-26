@@ -10,5 +10,9 @@
     "arbitrum": {
         "address": "0x3e8Fb04888700AD28B02Eb60c3DE40CDeB001042",
         "deploymentTransactionHash": "0x8e1b9ba222b5229bdfe8d46e285e847b00c5518bb3eadd07e39a4fa1593873cc"
+    },
+    "base": {
+        "address": "0x3e8Fb04888700AD28B02Eb60c3DE40CDeB001042",
+        "deploymentTransactionHash": "0x918ed7fe44f692a0b945c5e5adc6aa4274bced4c2f1ee1eb13d953b92316d126"
     }
 }
