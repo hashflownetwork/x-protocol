@@ -18,6 +18,22 @@ import * as anchor from '@coral-xyz/anchor';
 import { HASHFLOW_PROGRAM_ADDRESS } from '@hashflow/contracts-solana';
 import { PublicKey } from '@solana/web3.js';
 
+task('usdc-usdt:deploy', 'Deploys test USDC / USDT').setAction(
+  async (taskArgs, hre) => {
+    const usdcFactory = await hre.ethers.getContractFactory('USDC');
+    const usdc = await usdcFactory.deploy('1000000000000000');
+    await usdc.waitForDeployment();
+
+    console.log(`Deployed USDC to ${await usdc.getAddress()}`);
+
+    const usdtFactory = await hre.ethers.getContractFactory('USDT');
+    const usdt = await usdtFactory.deploy('1000000000000000');
+    await usdt.waitForDeployment();
+
+    console.log(`Deployed USDT to ${await usdt.getAddress()}`);
+  },
+);
+
 task('pool:deploy', 'Deploys the HashflowPool implementation').setAction(
   async (taskArgs, hre) => {
     const networkConfig = getNetworkConfigFromHardhatRuntimeEnvironment(hre);
