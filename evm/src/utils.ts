@@ -16,6 +16,7 @@ export const TEST_NETWORK_NAMES = [
   'bnb-testnet',
   'zksync-testnet',
   'sepolia',
+  'monad-testnet',
 ] as const;
 
 export const WORMHOLE_NETWORK_NAMES = ['wormhole1', 'wormhole2'] as const;
@@ -39,7 +40,7 @@ export type NetworkNameExtended =
   | 'localhost';
 
 type MainnetChainId = 1 | 137 | 56 | 42161 | 10 | 43114 | 8453;
-type TestnetChainId = 5 | 80001 | 97 | 280 | 11155111;
+type TestnetChainId = 5 | 80001 | 97 | 280 | 11155111 | 10143;
 
 export type ChainId = MainnetChainId | TestnetChainId;
 
@@ -307,6 +308,18 @@ export const SEPOLIA = {
   zksync: false,
 } as const;
 
+export const MONAD_TESTNET = {
+  chainId: 10143,
+  name: 'monad-testnet',
+  nativeTokenSymbol: 'MON',
+  nativeTokenName: 'Monad',
+  nativeTokenDecimals: 18,
+  hashflowChainId: 107,
+  testTokens: false,
+  weth: '0x760AfE86e5de5fa0Ee542fc7B7B713e1c5425701',
+  zksync: false,
+} as const;
+
 // Wormhole
 
 export const WORMHOLE1 = {
@@ -353,6 +366,7 @@ export const NETWORK_CONFIG_BY_NAME: Record<NetworkName, NetworkConfig> = {
   sepolia: SEPOLIA,
   mumbai: MUMBAI,
   'bnb-testnet': BNB_TESTNET,
+  'monad-testnet': MONAD_TESTNET,
   'zksync-testnet': ZKSYNC_TESTNET,
 } as const;
 

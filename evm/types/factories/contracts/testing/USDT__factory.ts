@@ -13,11 +13,8 @@ import type {
   ContractDeployTransaction,
   ContractRunner,
 } from "ethers";
-import type { NonPayableOverrides } from "../../../../common";
-import type {
-  USDT,
-  USDTInterface,
-} from "../../../../contracts/testing/USDT.sol/USDT";
+import type { NonPayableOverrides } from "../../../common";
+import type { USDT, USDTInterface } from "../../../contracts/testing/USDT";
 
 const _abi = [
   {

@@ -1,7 +1,11 @@
+import '@nomicfoundation/hardhat-ethers';
+import '@nomicfoundation/hardhat-verify';
+import '@nomicfoundation/hardhat-chai-matchers';
+import '@typechain/hardhat';
 import { HardhatUserConfig } from 'hardhat/config';
-import '@nomicfoundation/hardhat-toolbox';
 import 'hardhat-gas-reporter';
 import 'hardhat-contract-sizer';
+
 import dotenv from 'dotenv';
 
 import {
@@ -108,6 +112,8 @@ if (process.env.BASESCAN_API_KEY) {
   blockscanApiKeys['base'] = process.env.BASESCAN_API_KEY;
 }
 
+blockscanApiKeys['monadTestnet'] = 'DUMMY';
+
 const config: HardhatUserConfig = {
   networks: {
     ...networks,
@@ -132,8 +138,24 @@ const config: HardhatUserConfig = {
     enabled: process.env.REPORT_GAS !== undefined,
     currency: 'USD',
   },
+  sourcify: {
+    enabled: false,
+    apiUrl: 'https://sourcify-api-monad.blockvision.org/',
+    browserUrl: 'https://testnet.monadexplorer.com/',
+  },
   etherscan: {
+    enabled: false,
     apiKey: blockscanApiKeys,
+    customChains: [
+      {
+        network: 'monadTestnet',
+        chainId: 10143,
+        urls: {
+          apiURL: 'https://explorer.monad-testnet.category.xyz/api',
+          browserURL: 'https://explorer.monad-testnet.category.xyz',
+        },
+      },
+    ],
   },
   contractSizer: {
     alphaSort: true,

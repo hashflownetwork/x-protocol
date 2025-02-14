@@ -210,10 +210,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.USDC__factory>;
     getContractFactory(
-      name: "USDC",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.USDC__factory>;
-    getContractFactory(
       name: "USDT",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.USDT__factory>;
@@ -484,11 +480,6 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.USDC>;
     getContractAt(
-      name: "USDC",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.USDC>;
-    getContractAt(
       name: "USDT",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -711,10 +702,6 @@ declare module "hardhat/types/runtime" {
       name: "TestToken2",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.TestToken2>;
-    deployContract(
-      name: "USDC",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.USDC>;
     deployContract(
       name: "USDC",
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -984,11 +971,6 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.TestToken2>;
-    deployContract(
-      name: "USDC",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.USDC>;
     deployContract(
       name: "USDC",
       args: any[],

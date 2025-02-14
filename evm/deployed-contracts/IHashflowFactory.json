@@ -50,5 +50,9 @@
     "base": {
         "address": "0xdE828fdc3F497F16416D1bB645261C7C6a62DAb5",
         "deploymentTransactionHash": "0xde3a89f936f4e0190e63d578d501ed12c4acdc5990aa9e81e543db45fd4c372d"
+    },
+    "monad-testnet": {
+        "address": "0xdE828fdc3F497F16416D1bB645261C7C6a62DAb5",
+        "deploymentTransactionHash": "0xe85747893bf2bfa16e04030ac86329c53038e77a06beb369b152aa52ef177b42"
     }
 }

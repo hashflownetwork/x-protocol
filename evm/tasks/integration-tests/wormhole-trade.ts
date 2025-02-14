@@ -1,4 +1,3 @@
-import '@nomicfoundation/hardhat-toolbox';
 import { keccak256, Interface } from 'ethers';
 import { task } from 'hardhat/config';
 import axios from 'axios';
