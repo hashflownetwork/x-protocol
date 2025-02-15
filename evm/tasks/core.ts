@@ -1,4 +1,3 @@
-import '@nomicfoundation/hardhat-toolbox';
 import { task } from 'hardhat/config';
 
 task('core:transfer-eth', 'Tranfers ETH to an account')

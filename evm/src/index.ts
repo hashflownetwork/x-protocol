@@ -16,6 +16,7 @@ export {
   GOERLI,
   SEPOLIA,
   ZKSYNC_TESTNET,
+  MONAD_TESTNET,
   ZERO_ADDRESS,
   NETWORK_CONFIG_BY_NAME,
 } from './utils';

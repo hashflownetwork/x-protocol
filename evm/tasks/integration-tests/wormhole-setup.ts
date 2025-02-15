@@ -1,4 +1,3 @@
-import '@nomicfoundation/hardhat-toolbox';
 import { task } from 'hardhat/config';
 import { PublicKey } from '@solana/web3.js';
 
